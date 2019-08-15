@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sign up!{% endblock title %}
+
+{% block body %}
+
+<script src="{% static "scripts/profiles/sign_up.js" %}" async></script>
+<link rel="stylesheet" href="{% static "styles/profiles/sign_up.css" %}">
+
+<ul class="nav nav-tabs hiddenfields">
+    <li><a href="#SIGNUP_PART1_CONTENT" data-toggle="tab" class='not-yet' id="SIGNUP_PART1_TAB"></a></li>
+    <li><a href="#SIGNUP_PART2_CONTENT" data-toggle="tab" class='not-yet' id="SIGNUP_PART2_TAB"></a></li>
+    <li><a href="#SIGNUP_PART3_CONTENT" data-toggle="tab" class='not-yet' id='SIGNUP_PART3_TAB'></a></li>
+    <li><a href="#SIGNUP_PART4_CONTENT" data-toggle="tab" class='not-yet' id='SIGNUP_PART4_TAB'></a></li>
+    <li><a href="#SIGNUP_PART5_CONTENT" data-toggle="tab" class='not-yet' id='SIGNUP_PART5_TAB'></a></li>
+</ul>
+
+<div class="tab-content" id="nav-tabContent">
+    <form method="post">
+        {% csrf_token %}
+        <div class="tab-pane fade" id="SIGNUP_PART1_CONTENT" role="tabpanel">
+            {{ part_1_form.as_p }}
+            part1
+            <a role='button' class='btn btn-primary' id='CONTENT_1_TO_2'>next</a>
+        </div>
+        <div class="tab-pane fade" id="SIGNUP_PART2_CONTENT" role="tabpanel">
+            <a role='button' class='btn btn-primary' id='CONTENT_2_TO_1'>previous</a>
+            {{ part_2_form.as_p }}
+            part2
+            <a role='button' class='btn btn-primary' id='CONTENT_2_TO_3'>next</a>
+        </div>
+        <div class="tab-pane fade" id="SIGNUP_PART3_CONTENT" role="tabpanel">
+            <a role='button' class='btn btn-primary' id='CONTENT_3_TO_2'>previous</a>
+            {{ part_3_form.as_p }}
+            part3
+            <a role='button' class='btn btn-primary' id='CONTENT_3_TO_4'>next</a>
+        </div>
+        <div class="tab-pane fade" id="SIGNUP_PART4_CONTENT" role="tabpanel">
+            <a role='button' class='btn btn-primary' id='CONTENT_4_TO_3'>previous</a>
+            {{ part_4_form.as_p }}
+            part4
+            <a role='button' class='btn btn-primary' id='CONTENT_4_TO_5'>next</a>
+        </div>
+        <div class="tab-pane fade" id="SIGNUP_PART5_CONTENT" role="tabpanel">
+            <a role='button' class='btn btn-primary' id='CONTENT_5_TO_4'>previous</a>
+            {{ part_5_form.as_p }}
+            part5
+        </div>
+    </form>
+</div>
+
+{% endblock body %}

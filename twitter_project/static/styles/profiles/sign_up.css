@@ -1,0 +1,4 @@
+.not-yet {
+    pointer-events: none;
+    color: red;
+}
