@@ -1,26 +1,15 @@
 from django import forms
+from profiles import models
 
 
-class SignUpFormNameEmail:
-    name = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
+class SignUpForm(forms.ModelForm):
+    name_first = forms.CharField(required=True)
+    name_verify = forms.CharField(required=True)
+    email_first = forms.EmailField(required=True)
+    email_verify = forms.EmailField(required=True)
+    code = forms.CharField(required=True)
+    password = forms.CharField(widget=forms.PasswordInput, required=True)
 
-
-class SingUpFormCheckboxes:
-    sync_email = forms.BooleanField()
-    send_news = forms.BooleanField()
-    personal_ads = forms.BooleanField()
-
-
-class SignUpFormNameEmailConfirm:
-    name = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
-
-
-class SignUpFormCode:
-    code = forms.CharField(max_length=8, required=True)
-
-
-class SignUpFormUsernamePassword:
-    username = forms.CharField(max_length=20, required=True)
-    password = forms.CharField(widget=forms.HiddenInput)
+    class Meta:
+        model = models.Profile
+        fields = ['sync_email', 'send_news', 'personalize_ads', 'username']

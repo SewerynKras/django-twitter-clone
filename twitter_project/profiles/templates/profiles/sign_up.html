@@ -7,46 +7,46 @@
 <script src="{% static "scripts/profiles/sign_up.js" %}" async></script>
 <link rel="stylesheet" href="{% static "styles/profiles/sign_up.css" %}">
 
-<ul class="nav nav-tabs hiddenfields">
-    <li><a href="#SIGNUP_PART1_CONTENT" data-toggle="tab" class='not-yet' id="SIGNUP_PART1_TAB"></a></li>
-    <li><a href="#SIGNUP_PART2_CONTENT" data-toggle="tab" class='not-yet' id="SIGNUP_PART2_TAB"></a></li>
-    <li><a href="#SIGNUP_PART3_CONTENT" data-toggle="tab" class='not-yet' id='SIGNUP_PART3_TAB'></a></li>
-    <li><a href="#SIGNUP_PART4_CONTENT" data-toggle="tab" class='not-yet' id='SIGNUP_PART4_TAB'></a></li>
-    <li><a href="#SIGNUP_PART5_CONTENT" data-toggle="tab" class='not-yet' id='SIGNUP_PART5_TAB'></a></li>
+<ul class="nav nav-tabs">
+    <li><a class="not-click" href="#part1" id='tab1'></a></li>
+    <li><a class="not-click" href="#part2" id='tab2'></a></li>
+    <li><a class="not-click" href="#part3" id='tab3'></a></li>
+    <li><a class="not-click" href="#part4" id='tab4'></a></li>
+    <li><a class="not-click" href="#part5" id='tab5'></a></li>
 </ul>
-
-<div class="tab-content" id="nav-tabContent">
-    <form method="post">
-        {% csrf_token %}
-        <div class="tab-pane fade" id="SIGNUP_PART1_CONTENT" role="tabpanel">
-            {{ part_1_form.as_p }}
-            part1
-            <a role='button' class='btn btn-primary' id='CONTENT_1_TO_2'>next</a>
+<p id='current-page'>1 of 5</p>
+<form method="post">
+    {% csrf_token %}
+    <div class="tab-content">
+        <div id="part1" class="tab-pane fade in active">
+            <a role='button' class='btn btn-primary lead_to_2'>next</a>
+            <p>Name:{{ form.name_first }}</p>
+            <p>Email:{{ form.email_first }}</p>
         </div>
-        <div class="tab-pane fade" id="SIGNUP_PART2_CONTENT" role="tabpanel">
-            <a role='button' class='btn btn-primary' id='CONTENT_2_TO_1'>previous</a>
-            {{ part_2_form.as_p }}
-            part2
-            <a role='button' class='btn btn-primary' id='CONTENT_2_TO_3'>next</a>
+        <div id="part2" class="tab-pane fade">
+            <a role='button' class='btn btn-primary lead_to_1'>prev</a>
+            <a role='button' class='btn btn-primary lead_to_3'>next</a>
+            <p>Synchronize email contacts:{{ form.sync_email }}</p>
+            <p>Send news/offers:{{ form.send_news }}</p>
+            <p>Personalize ads:{{ form.personalize_ads }}</p>
         </div>
-        <div class="tab-pane fade" id="SIGNUP_PART3_CONTENT" role="tabpanel">
-            <a role='button' class='btn btn-primary' id='CONTENT_3_TO_2'>previous</a>
-            {{ part_3_form.as_p }}
-            part3
-            <a role='button' class='btn btn-primary' id='CONTENT_3_TO_4'>next</a>
+        <div id="part3" class="tab-pane fade">
+            <a role='button' class='btn btn-primary lead_to_2'>prev</a>
+            <a role='button' class='btn btn-primary lead_to_4'>next</a>
+            <p>Name:{{ form.name_verify }}</p>
+            <p>Email:{{ form.email_verify }}</p>
         </div>
-        <div class="tab-pane fade" id="SIGNUP_PART4_CONTENT" role="tabpanel">
-            <a role='button' class='btn btn-primary' id='CONTENT_4_TO_3'>previous</a>
-            {{ part_4_form.as_p }}
-            part4
-            <a role='button' class='btn btn-primary' id='CONTENT_4_TO_5'>next</a>
+        <div id="part4" class="tab-pane fade">
+            <a role='button' class='btn btn-primary lead_to_3'>prev</a>
+            <a role='button' class='btn btn-primary lead_to_5'>next</a>
+            <p>Code:{{ form.code }}</p>
         </div>
-        <div class="tab-pane fade" id="SIGNUP_PART5_CONTENT" role="tabpanel">
-            <a role='button' class='btn btn-primary' id='CONTENT_5_TO_4'>previous</a>
-            {{ part_5_form.as_p }}
-            part5
+        <div id="part5" class="tab-pane fade">
+            <a role='button' class='btn btn-primary lead_to_4'>prev</a>
+            <p>Username:{{ form.username }}</p>
+            <p>Password:{{ form.password }}</p>
+            <input type="submit" class="btn btn-primary" value='Publish!'>
         </div>
-    </form>
-</div>
-
+    </div>
+</form>
 {% endblock body %}

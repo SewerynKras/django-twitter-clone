@@ -15,11 +15,15 @@ class Profile(models.Model):
                                        width_field=None,
                                        max_length=None,
                                        default='background_pics/DEFAULT.jpg')
+    sync_email = models.BooleanField(default=False)
+    send_news = models.BooleanField(default=False)
+    personalize_ads = models.BooleanField(default=False)
+    username = models.CharField(max_length=20, unique=True)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.user.username)
+        self.slug = slugify(self.username)
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.slug
+        return self.username
