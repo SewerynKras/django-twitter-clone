@@ -12,4 +12,4 @@ class SignUpForm(forms.ModelForm):
 
     class Meta:
         model = models.Profile
-        fields = ['sync_email', 'send_news', 'personalize_ads', 'username']
+        fields = ['sync_email', 'send_news', 'personalize_ads']

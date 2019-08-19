@@ -1,7 +1,8 @@
 from django.views.generic import DetailView, TemplateView
-from profiles import models, forms
+from profiles import models, forms, helpers
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from django.http import JsonResponse
 
 
 class ProfileView(DetailView):
@@ -28,3 +29,15 @@ class SignupView(TemplateView):
             profile.user = user
             profile.save()
             redirect("/")
+
+
+def check_email_AJAX(request):
+    email = request.GET.get("email")
+    if not helpers.is_email_valid(email):
+        error = "Please enter a valid email."
+    elif not helpers.is_email_unique(email):
+        error = "Email has already been taken."
+    else:
+        error = ""
+    response = {"error": error}
+    return JsonResponse(response)

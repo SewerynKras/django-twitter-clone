@@ -13,24 +13,12 @@ $(document).ready(function () {
     $(".nav-tabs a").click(function () {
         $(this).tab('show');
     });
-
-    $(".lead_to_1").click(function () {
-        change_tab(1);
-    });
-    $(".lead_to_2").click(function () {
-        change_tab(2);
-    });
-    $(".lead_to_3").click(function () {
-        change_tab(3);
-    });
-    $(".lead_to_4").click(function () {
-        change_tab(4);
-    });
-    $(".lead_to_5").click(function () {
-        change_tab(5);
+    $(".tab-content a").click(function () {
+        change_tab($(this).attr("lead-to"));
     });
 
     $("#tab1").tab("show");
+    $("input").addClass("form-control")
     $("#id_name_verify").focus(function (e) {
         e.preventDefault();
         change_tab(1);
@@ -41,4 +29,17 @@ $(document).ready(function () {
         change_tab(1);
         $("id_email_first").focus()
     });
-})
+
+    $("#char_count").text("0/50")
+    $("#id_name_first").attr("maxlength", "50")
+});
+
+
+$("#id_name_first").keyup(function () {
+    var len = $(this).val().length;
+    $("#char_count").text(len + "/50");
+});
+
+//TODO: 
+// code validation
+// password validation

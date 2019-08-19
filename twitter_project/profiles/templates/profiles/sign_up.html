@@ -5,48 +5,57 @@
 {% block body %}
 
 <script src="{% static "scripts/profiles/sign_up.js" %}" async></script>
+<script src="{% static "scripts/profiles/ajax.js" %}" async></script>
 <link rel="stylesheet" href="{% static "styles/profiles/sign_up.css" %}">
 
-<ul class="nav nav-tabs">
-    <li><a class="not-click" href="#part1" id='tab1'></a></li>
-    <li><a class="not-click" href="#part2" id='tab2'></a></li>
-    <li><a class="not-click" href="#part3" id='tab3'></a></li>
-    <li><a class="not-click" href="#part4" id='tab4'></a></li>
-    <li><a class="not-click" href="#part5" id='tab5'></a></li>
-</ul>
-<p id='current-page'>1 of 5</p>
-<form method="post">
-    {% csrf_token %}
-    <div class="tab-content">
-        <div id="part1" class="tab-pane fade in active">
-            <a role='button' class='btn btn-primary lead_to_2'>next</a>
-            <p>Name:{{ form.name_first }}</p>
-            <p>Email:{{ form.email_first }}</p>
+<div class="container">
+
+    <ul class="nav nav-tabs">
+        <li><a class="not-click" href="#part1" id='tab1'></a></li>
+        <li><a class="not-click" href="#part2" id='tab2'></a></li>
+        <li><a class="not-click" href="#part3" id='tab3'></a></li>
+        <li><a class="not-click" href="#part4" id='tab4'></a></li>
+        <li><a class="not-click" href="#part5" id='tab5'></a></li>
+    </ul>
+    <p id='current-page'>1 of 5</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="tab-content">
+            <div id="part1" class="tab-pane fade in active">
+                <a role='button' class='btn btn-primary' lead-to="2">next</a>
+                <p>Name:{{ form.name_first }}</p>
+                <p id="char_count"></p>
+                <p>Email:{{ form.email_first }}</p>
+                <p class="error-message" id="error_email_first"></p>
+            </div>
+            <div id="part2" class="tab-pane fade">
+                <a role='button' class='btn btn-primary' lead-to="1">prev</a>
+                <a role='button' class='btn btn-primary' lead-to="3">next</a>
+                <p>Synchronize email contacts:{{ form.sync_email }}</p>
+                <p>Send news/offers:{{ form.send_news }}</p>
+                <p>Personalize ads:{{ form.personalize_ads }}</p>
+            </div>
+            <div id="part3" class="tab-pane fade">
+                <a role='button' class='btn btn-primary' lead-to="2">prev</a>
+                <a role='button' class='btn btn-primary' lead-to="4">next</a>
+                <p>Name:{{ form.name_verify }}</p>
+                <p class="error-message" id="error_name_verify"></p>
+                <p>Email:{{ form.email_verify }}</p>
+                <p class="error-message" id="error_email_verify"></p>
+            </div>
+            <div id="part4" class="tab-pane fade">
+                <a role='button' class='btn btn-primary' lead-to="3">prev</a>
+                <a role='button' class='btn btn-primary' lead-to="5">next</a>
+                <p>Code:{{ form.code }}</p>
+                <p class="error-message" id="error_code"></p>
+            </div>
+            <div id="part5" class="tab-pane fade">
+                <a role='button' class='btn btn-primary' lead-to="4">prev</a>
+                <p>Password:{{ form.password }}</p>
+                <p class="error-message" id="error_password"></p>
+                <input type="submit" class="btn btn-primary" value='Publish!'>
+            </div>
         </div>
-        <div id="part2" class="tab-pane fade">
-            <a role='button' class='btn btn-primary lead_to_1'>prev</a>
-            <a role='button' class='btn btn-primary lead_to_3'>next</a>
-            <p>Synchronize email contacts:{{ form.sync_email }}</p>
-            <p>Send news/offers:{{ form.send_news }}</p>
-            <p>Personalize ads:{{ form.personalize_ads }}</p>
-        </div>
-        <div id="part3" class="tab-pane fade">
-            <a role='button' class='btn btn-primary lead_to_2'>prev</a>
-            <a role='button' class='btn btn-primary lead_to_4'>next</a>
-            <p>Name:{{ form.name_verify }}</p>
-            <p>Email:{{ form.email_verify }}</p>
-        </div>
-        <div id="part4" class="tab-pane fade">
-            <a role='button' class='btn btn-primary lead_to_3'>prev</a>
-            <a role='button' class='btn btn-primary lead_to_5'>next</a>
-            <p>Code:{{ form.code }}</p>
-        </div>
-        <div id="part5" class="tab-pane fade">
-            <a role='button' class='btn btn-primary lead_to_4'>prev</a>
-            <p>Username:{{ form.username }}</p>
-            <p>Password:{{ form.password }}</p>
-            <input type="submit" class="btn btn-primary" value='Publish!'>
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 {% endblock body %}
