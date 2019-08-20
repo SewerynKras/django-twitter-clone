@@ -1,3 +1,7 @@
 .not-click {
     pointer-events: none;
 }
+
+.error-message {
+    color: red;
+}

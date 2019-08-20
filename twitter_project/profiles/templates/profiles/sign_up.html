@@ -5,7 +5,6 @@
 {% block body %}
 
 <script src="{% static "scripts/profiles/sign_up.js" %}" async></script>
-<script src="{% static "scripts/profiles/ajax.js" %}" async></script>
 <link rel="stylesheet" href="{% static "styles/profiles/sign_up.css" %}">
 
 <div class="container">
@@ -22,7 +21,7 @@
         {% csrf_token %}
         <div class="tab-content">
             <div id="part1" class="tab-pane fade in active">
-                <a role='button' class='btn btn-primary' lead-to="2">next</a>
+                <a role='button' class='btn btn-primary disabled' lead-to="2" id='first_button'>next</a>
                 <p>Name:{{ form.name_first }}</p>
                 <p id="char_count"></p>
                 <p>Email:{{ form.email_first }}</p>
@@ -45,7 +44,7 @@
             </div>
             <div id="part4" class="tab-pane fade">
                 <a role='button' class='btn btn-primary' lead-to="3">prev</a>
-                <a role='button' class='btn btn-primary' lead-to="5">next</a>
+                <a role='button' class='btn btn-primary' lead-to="5" disabled>next</a>
                 <p>Code:{{ form.code }}</p>
                 <p class="error-message" id="error_code"></p>
             </div>
@@ -53,7 +52,7 @@
                 <a role='button' class='btn btn-primary' lead-to="4">prev</a>
                 <p>Password:{{ form.password }}</p>
                 <p class="error-message" id="error_password"></p>
-                <input type="submit" class="btn btn-primary" value='Publish!'>
+                <input type="submit" class="btn btn-primary" value='Register' disabled id='register_button'>
             </div>
         </div>
     </form>
