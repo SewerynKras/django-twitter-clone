@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from twitter_project.logging import logger
 
 
 class Profile(models.Model):
@@ -23,6 +24,7 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.username)
+        logger.info("New user created: " + self.slug)
         return super().save(*args, **kwargs)
 
     def __str__(self):

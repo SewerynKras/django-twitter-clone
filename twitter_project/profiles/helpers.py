@@ -1,6 +1,7 @@
 import re
 from profiles.models import Profile, User
 from django.db.models.functions import Lower
+from twitter_project.logging import logger
 
 
 def get_username(name):
@@ -23,23 +24,31 @@ def get_username(name):
 
     # in case the name is unique
     if len(usernames) == 0:
+        logger.debug(name + " is unique in the db")
         return name
 
     # get the number
     number = usernames.last().username[len(name):]
 
     if number == "":
-        return name + "1"
+        number = 1
     else:
         number = int(number)
         number += 1
-        return name + str(number)
+    new_name = name + str(number)
+
+    logger.debug(name + " is not unique so the new username is " + new_name)
+    return new_name
 
 
 def is_email_valid(email):
     pattern = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
-    return re.match(pattern, email)
+    matches = bool(re.match(pattern, email))
+    logger.debug(f"Validating email: {email} verdict: {matches}")
+    return matches
 
 
 def is_email_unique(email):
-    return not User.objects.filter(email__iexact=email).exists()
+    unique = not User.objects.filter(email__iexact=email).exists()
+    logger.debug(f"Checking if email: {email} is unique, verdict: {unique}")
+    return unique

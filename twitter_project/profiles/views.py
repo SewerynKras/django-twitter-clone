@@ -3,6 +3,7 @@ from profiles import models, forms, helpers
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from twitter_project.logging import logger
 
 
 class ProfileView(DetailView):
@@ -40,4 +41,7 @@ def check_email_AJAX(request):
     else:
         error = ""
     response = {"error": error}
+
+    logger.debug("Email checked: " + email + " error found: " + error)
+
     return JsonResponse(response)

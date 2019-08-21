@@ -133,3 +133,7 @@ FORM_CHECKBOX_TEXT = {
     "news": "TEXT PLACEHOLDER TEXT PLACEHOLDER",
     "ads": "TEXT PLACEHOLDER TEXT PLACEHOLDER",
 }
+
+
+# importing this at the very end to avoid circular imports
+from .logging import LOGGING
