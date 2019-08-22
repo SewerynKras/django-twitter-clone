@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Twitter{% endblock title %}
+
+{% block body %}
+<div class="container">
+    <div class="new-tweet">
+        {{ new_tweet_form }}
+    </div>
+    <div class="tweet-list">
+        <ul>
+            {% for tweet in tweet_list %}
+            <li>{{tweet.text}} by {{tweet.author.username}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock body %}
