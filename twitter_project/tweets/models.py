@@ -40,7 +40,7 @@ class Like(models.Model):
 
 
 class Retweet(models.Model):
-    text = models.CharField(max_length=256)
+    text = models.CharField(max_length=256, null=True, blank=True)
     tweet = models.ForeignKey("tweets.Tweet", on_delete=models.CASCADE)
     author = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
@@ -73,10 +73,9 @@ class Poll(models.Model):
     tweet = models.OneToOneField("tweets.Tweet", on_delete=models.CASCADE)
     choice1_text = models.CharField(max_length=25,)
     choice2_text = models.CharField(max_length=25,)
-    choice3_text = models.CharField(max_length=25, null=True)
-    choice4_text = models.CharField(max_length=25, null=True)
+    choice3_text = models.CharField(max_length=25, null=True, blank=True)
+    choice4_text = models.CharField(max_length=25, null=True, blank=True)
     end_date = models.DateTimeField(auto_now=False)
-    date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"POLL FOR {self.tweet}"

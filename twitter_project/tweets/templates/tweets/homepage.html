@@ -9,7 +9,9 @@
     <div class="tweet-list">
         <ul>
             {% for tweet in tweet_list %}
-            <li>{{tweet.text}} by {{tweet.author.username}}</li>
+            <li>{{tweet.text}} by {{tweet.author.username}} likes: {{tweet.likes}} liked by user: {{tweet.is_liked}}
+                rts: {{tweet.rts}} rtd by user: {{tweet.is_rt}} comments: {{tweet.comments}}
+            </li>
             {% endfor %}
         </ul>
     </div>
