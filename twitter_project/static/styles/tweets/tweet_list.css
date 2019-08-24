@@ -1,0 +1,12 @@
+.is-liked {
+    color: red;
+}
+
+.is-rt {
+    color: green;
+}
+
+.action-btn,
+.clickable-name {
+    display: inline;
+}

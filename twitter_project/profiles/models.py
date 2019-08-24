@@ -21,6 +21,13 @@ class Profile(models.Model):
     personalize_ads = models.BooleanField(default=False)
     username = models.CharField(max_length=20, unique=True)
     slug = models.SlugField(unique=True)
+    display_name = models.CharField(max_length=50, null=True, blank=True)
+    bio = models.TextField(max_length=160, null=True, blank=True)
+    location = models.CharField(max_length=30, null=True, blank=True)
+    website = models.CharField(max_length=100, null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    joined = models.DateField(auto_now=True)
+    verified = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.username)
@@ -28,4 +35,4 @@ class Profile(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.username
+        return f"@{self.username}"

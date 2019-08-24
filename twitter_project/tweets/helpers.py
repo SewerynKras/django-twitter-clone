@@ -43,4 +43,5 @@ def get_tweet_list(profile, before=None, after=None):
     # Twitter doesn't indicate whether the user has commented on
     # a tweet or not (probably because you can comment multiple times?)
 
+    tweets = tweets.order_by("-date")
     return tweets

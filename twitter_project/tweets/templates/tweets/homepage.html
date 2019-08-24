@@ -1,19 +1,44 @@
 {% extends 'base.html' %}
 {% block title %}Twitter{% endblock title %}
+{% load static %}
 
 {% block body %}
+<script src="{% static "scripts/tweets/tweet_list.js" %}"></script>
+<link rel="stylesheet" href="{% static "styles/tweets/tweet_list.css" %}">
+
+
 <div class="container">
     <div class="new-tweet">
         {{ new_tweet_form }}
     </div>
-    <div class="tweet-list">
-        <ul>
-            {% for tweet in tweet_list %}
-            <li>{{tweet.text}} by {{tweet.author.username}} likes: {{tweet.likes}} liked by user: {{tweet.is_liked}}
-                rts: {{tweet.rts}} rtd by user: {{tweet.is_rt}} comments: {{tweet.comments}}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+    <ul class="tweet-list">
+        {% for tweet in tweet_list %}
+        <li class='tweet-preview' tweet-id={{tweet.id}}>
+            <img src={{ tweet.author.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
+            <div class="clickable-name">
+                <a href="{% url 'profiles:profile' slug=tweet.author.slug%}">
+                    {{tweet.author.display_name}}</a>
+                <span class="tweet-username">@{{tweet.author.username}}</span>
+            </div>
+            <span class="tweet-date" utc={{tweet.date|date:"U" }}></span>
+
+            <span class="tweet-text">{{tweet.text|linebreaks}}</span>
+
+            {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
+            <div class="action-btn comment-btn">
+                <span class="tweet-comments-icon">C:</span>
+                <span class="tweet-comments-num">{{tweet.comments}}</span>
+            </div>
+            <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
+                <span class="tweet-rts-icon">R:</span>
+                <span class="tweet-rts-num">{{tweet.rts}}</span>
+            </div>
+            <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
+                <span class="tweet-likes-icon">L:</span>
+                <span class="tweet-likes-num">{{tweet.likes}}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock body %}
