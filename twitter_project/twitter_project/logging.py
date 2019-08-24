@@ -1,3 +1,5 @@
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
 from .settings import BASE_DIR
 import os
 import logging
@@ -40,3 +42,17 @@ LOGGING = {
         },
     }
 }
+
+
+# since receivers are used for logging purposes only
+# it makes sense to define them here
+
+@receiver(post_save)
+def LogCreated(sender, instance, created, **kwargs):
+    if created:
+        logger.info(f"CREATED: {instance}")
+
+
+@receiver(pre_delete)
+def LogDeleted(sender, instance, **kwargs):
+    logger.info(f"DELETED: {instance}")
