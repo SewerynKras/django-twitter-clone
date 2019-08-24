@@ -5,6 +5,9 @@ $(document).ready(function () {
     setInterval(function () {
         $(".tweet-date").each(fix_timestamp)
     }, 5000);
+
+    // make like button clickable
+    $(".like-btn").click(like_tweet)
 });
 
 function fix_timestamp() {
@@ -41,4 +44,31 @@ function fix_timestamp() {
         display = month + " " + day + ", " + year;
     }
     $(this).text(display);
+}
+
+function like_tweet(e) {
+    e.preventDefault();
+
+    var $btn = $(this);
+    var tweet_id = $(this).closest("li").attr("tweet-id");
+    var $num_counter = $(this).children('.tweet-likes-num').eq(0);
+    var num_likes = $num_counter.text()
+
+    $.ajax({
+        url: "ajax/like_tweet/",
+        data: {
+            "tweet_id": tweet_id
+        },
+        dataType: "json",
+        success: function (response) {
+            if (response.liked == true) {
+                num_likes = 1 + +num_likes
+                $btn.addClass("is-liked")
+            } else {
+                num_likes = -1 + +num_likes
+                $btn.removeClass("is-liked")
+            }
+            $num_counter.text(num_likes)
+        }
+    });
 }
