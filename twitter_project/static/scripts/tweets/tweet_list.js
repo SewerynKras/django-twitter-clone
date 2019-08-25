@@ -7,7 +7,11 @@ $(document).ready(function () {
     }, 5000);
 
     // make like button clickable
-    $(".like-btn").click(like_tweet)
+    // NOTE: I'm using one() instead of click() to
+    // prevent the user from sending multiple requests in
+    // a very short time, the like_tweet function will rebind
+    // itself to the button once the request finishes
+    $(".like-btn").one("click", like_tweet)
 });
 
 function fix_timestamp() {
@@ -34,7 +38,7 @@ function fix_timestamp() {
         }); // this way month is represented with a short str ("Mar", "Oct" etc)
         display = month + " " + day;
     } else {
-        // show the day and month if less than a year has passed
+        // show the day, month and year
         var date = new Date(tweet_time * 1000);
         var day = date.getDate();
         var month = date.toLocaleString('default', {
@@ -69,6 +73,7 @@ function like_tweet(e) {
                 $btn.removeClass("is-liked")
             }
             $num_counter.text(num_likes)
+            $btn.one("click", like_tweet)
         }
     });
 }
