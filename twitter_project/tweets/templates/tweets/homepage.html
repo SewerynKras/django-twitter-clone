@@ -3,13 +3,39 @@
 {% load static %}
 
 {% block body %}
+<script src="{% static "scripts/tweets/new_tweet.js" %}"></script>
 <script src="{% static "scripts/tweets/tweet_list.js" %}"></script>
 <link rel="stylesheet" href="{% static "styles/tweets/tweet_list.css" %}">
+<link rel="stylesheet" href="{% static "styles/tweets/new_tweet.css" %}">
 
 
 <div class="container">
     <div class="new-tweet">
-        {{ new_tweet_form }}
+        <img src={{ user.profile.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
+        <div class='new-tweet-input'>
+            <span id='new-tweet-textarea' contenteditable="true"></span>
+            <span id='new-tweet-placeholder' placeholder="What's happening?"></span>
+        </div>
+        <p></p>
+        <div class="new-tweet-media">
+            <span class='new-tweet-media-image'>IMG</span>
+            <span class='new-tweet-media-gif'>GIF</span>
+            <span class='new-tweet-media-poll'>POLL</span>
+            <span class='new-tweet-media-emoji'>EMOJI</span>
+        </div>
+        <div class="new-tweet-extra">
+            <div class="progress">
+                <span class="progress-left">
+                    <span class="progress-bar border-primary" id='new-tweet-bar-l'></span>
+                </span>
+                <span class="progress-right">
+                    <span class="progress-bar border-primar" id="new-tweet-bar-r"></span>
+                </span>
+            </div>
+            <span class='new-tweet-separator'>|</span>
+            <input type="submit" class='btn btn-primary' value="+" , id='new-tweet-add'>
+        </div>
+        <input type='submit' class='btn btn-primary' value='Tweet' id='new-tweet-submit'>
     </div>
     <ul class="tweet-list">
         {% for tweet in tweet_list %}
