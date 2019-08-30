@@ -2,8 +2,15 @@
     display: inline;
 }
 
-#new-tweet-textarea {
+.new-tweet-textarea {
     display: inline-block;
+    position: relative;
+    min-width: 1%;
+    max-height: 150px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    outline: 0px solid transparent;
+    margin-left: 10px;
 }
 
 .new-tweet-media {
@@ -14,14 +21,35 @@
     display: inline-block;
 }
 
+.new-tweet-separator {
+    margin-left: 20px;
+    margin-right: 5px;
+    display: inline;
+}
+
+.new-tweet-add {
+    margin-left: 0%;
+}
+
+.new-tweet-placeholder {
+    vertical-align: top;
+    /* This makes the placeholder text "touch" the blinking cursor */
+    margin-left: -9px;
+}
+
+.new-tweet-profile-pic {
+    float: left;
+}
 
 /* Progress bar css */
 
 .progress {
-    width: 1.6em;
-    height: 1.6em;
+    width: 1em;
+    height: 1em;
     background: none;
     position: relative;
+    top: 25px;
+    display: block-inline;
 }
 
 .progress::after {

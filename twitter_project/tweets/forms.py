@@ -3,6 +3,9 @@ from tweets import models
 
 
 class NewTweetForm(forms.ModelForm):
+    text = forms.CharField(required=True, label="",
+                           widget=forms.HiddenInput(attrs={'id': 'new-tweet-text-form'}))
+
     class Meta:
         model = models.Tweet
         fields = ['text']

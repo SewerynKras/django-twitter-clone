@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Tweet(models.Model):
-    text = models.CharField(max_length=256)
+    text = models.TextField(max_length=256)
     author = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
 

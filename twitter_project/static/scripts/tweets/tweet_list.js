@@ -6,6 +6,10 @@ $(document).ready(function () {
         $(".tweet-date").each(fix_timestamp)
     }, 5000);
 
+    // since tweets support whitespace characters they
+    // need to be updated
+    $(".tweet-text").each(fix_text)
+
     // make like button clickable
     // NOTE: I'm using one() instead of click() to
     // prevent the user from sending multiple requests in
@@ -13,6 +17,11 @@ $(document).ready(function () {
     // itself to the button once the request finishes
     $(".like-btn").one("click", like_tweet)
 });
+
+function fix_text() {
+    $(this).html($(this).text())
+}
+
 
 function fix_timestamp() {
     var tweet_time = $(this).attr("utc"); // in seconds

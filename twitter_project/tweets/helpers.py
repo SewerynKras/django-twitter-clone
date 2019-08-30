@@ -1,11 +1,11 @@
 from tweets import models
 from twitter_project.logging import logger
-from django.db.models import Count, OuterRef, Exists
+from django.db.models import Count, OuterRef, Exists, Q
 
 
 def get_tweet_list(profile, before=None, after=None):
     following = models.Follow.objects.filter(follower=profile).values("following")
-    tweets = models.Tweet.objects.filter(author__in=following)
+    tweets = models.Tweet.objects.filter(Q(author__in=following) | Q(author=profile))
 
     if before:
         # lt == less than == before

@@ -11,31 +11,35 @@
 
 <div class="container">
     <div class="new-tweet">
-        <img src={{ user.profile.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
-        <div class='new-tweet-input'>
-            <span id='new-tweet-textarea' contenteditable="true"></span>
-            <span id='new-tweet-placeholder' placeholder="What's happening?"></span>
-        </div>
-        <p></p>
-        <div class="new-tweet-media">
-            <span class='new-tweet-media-image'>IMG</span>
-            <span class='new-tweet-media-gif'>GIF</span>
-            <span class='new-tweet-media-poll'>POLL</span>
-            <span class='new-tweet-media-emoji'>EMOJI</span>
-        </div>
-        <div class="new-tweet-extra">
-            <div class="progress">
-                <span class="progress-left">
-                    <span class="progress-bar border-primary" id='new-tweet-bar-l'></span>
-                </span>
-                <span class="progress-right">
-                    <span class="progress-bar border-primar" id="new-tweet-bar-r"></span>
-                </span>
+        <form method="post">
+            {% csrf_token %}
+            <img src={{ user.profile.profile_pic.url }} class="img-fluid profile-pic new-tweet-profile-pic">
+            <div class='new-tweet-input'>
+                <span class='new-tweet-textarea' contenteditable="true"><br></span>
+                <span class='new-tweet-placeholder' placeholder="What's happening?"></span>
+                {{ new_tweet_form.text }}
             </div>
-            <span class='new-tweet-separator'>|</span>
-            <input type="submit" class='btn btn-primary' value="+" , id='new-tweet-add'>
-        </div>
-        <input type='submit' class='btn btn-primary' value='Tweet' id='new-tweet-submit'>
+            <p></p>
+            <div class="new-tweet-media">
+                <span class='new-tweet-media-image'>IMG</span>
+                <span class='new-tweet-media-gif'>GIF</span>
+                <span class='new-tweet-media-poll'>POLL</span>
+                <span class='new-tweet-media-emoji'>EMOJI</span>
+            </div>
+            <div class="new-tweet-extra">
+                <div class="progress">
+                    <span class="progress-left">
+                        <span class="progress-bar border-primary new-tweet-bar-l"></span>
+                    </span>
+                    <span class="progress-right">
+                        <span class="progress-bar border-primar new-tweet-bar-r"></span>
+                    </span>
+                </div>
+                <div class='new-tweet-separator'>|</div>
+                <input type="submit" class='btn btn-primary' value="+" , class='new-tweet-add'>
+            </div>
+            <input type='submit' class='btn btn-primary' value='Tweet' class='new-tweet-submit'>
+        </form>
     </div>
     <ul class="tweet-list">
         {% for tweet in tweet_list %}
@@ -48,7 +52,7 @@
             </div>
             <span class="tweet-date" utc={{tweet.date|date:"U" }}></span>
 
-            <span class="tweet-text">{{tweet.text|linebreaks}}</span>
+            <div class="tweet-text">{{tweet.text|linebreaks}}</div>
 
             {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
             <div class="action-btn comment-btn">
