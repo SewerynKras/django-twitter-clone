@@ -36,7 +36,7 @@ $(document).ready(function () {
 
     $("form").submit(function () {
         // take care of all the hidden input fields
-        $("#new-tweet-text-form").val($textfield.html())
+        $("#new-tweet-text-form").val($textfield.text())
         return true
     })
 });

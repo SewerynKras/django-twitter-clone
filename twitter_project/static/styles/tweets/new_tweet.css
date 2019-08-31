@@ -11,6 +11,7 @@
     overflow-x: hidden;
     outline: 0px solid transparent;
     margin-left: 10px;
+    white-space: pre-line
 }
 
 .new-tweet-media {
