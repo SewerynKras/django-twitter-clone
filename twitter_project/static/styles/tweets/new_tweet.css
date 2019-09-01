@@ -42,6 +42,20 @@
     float: left;
 }
 
+.new-tweet-image-hidden {
+    display: none;
+}
+
+.new-tweet-image-cont {
+    width: 100px;
+    height: 100px;
+}
+
+.new-tweet-image {
+    width: inherit;
+    height: inherit;
+}
+
 /* Progress bar css */
 
 .progress {
