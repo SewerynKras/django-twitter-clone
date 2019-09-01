@@ -7,7 +7,8 @@
 <script src="{% static "scripts/tweets/tweet_list.js" %}"></script>
 <link rel="stylesheet" href="{% static "styles/tweets/tweet_list.css" %}">
 <link rel="stylesheet" href="{% static "styles/tweets/new_tweet.css" %}">
-
+<link href="{% static "lib/emoji-picker/jquery.lsxemojipicker.css" %}" rel="stylesheet">
+<script src="{% static "lib/emoji-picker/jquery.lsxemojipicker.js" %}"></script>
 
 <div class="container">
     <div class="new-tweet">
@@ -15,7 +16,7 @@
             {% csrf_token %}
             <img src={{ user.profile.profile_pic.url }} class="img-fluid profile-pic new-tweet-profile-pic">
             <div class='new-tweet-input'>
-                <span class='new-tweet-textarea' contenteditable="true"><br></span>
+                <span class='new-tweet-textarea' contenteditable="true"></span>
                 <span class='new-tweet-placeholder' placeholder="What's happening?"></span>
                 {{ new_tweet_form.text }}
             </div>
@@ -24,7 +25,7 @@
                 <span class='new-tweet-media-image'>IMG</span>
                 <span class='new-tweet-media-gif'>GIF</span>
                 <span class='new-tweet-media-poll'>POLL</span>
-                <span class='new-tweet-media-emoji'>EMOJI</span>
+                <button class='new-tweet-media-emoji'>EMOJI</button>
             </div>
             <div class="new-tweet-extra">
                 <div class="progress">

@@ -12,11 +12,10 @@ $(document).ready(function () {
     // a very short time, the like_tweet function will rebind
     // itself to the button once the request finishes
     $(".like-btn").one("click", like_tweet)
-});
 
-function fix_text() {
-    $(this).html($(this).text())
-}
+    // parse all emojis in the document
+    twemoji.parse(document.body)
+});
 
 
 function fix_timestamp() {

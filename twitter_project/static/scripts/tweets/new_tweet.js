@@ -8,19 +8,7 @@ $(document).ready(function () {
     $placeholder.click(function () {
         $textfield.focus()
     })
-    $textfield.on('input', function () {
-        var text_len = $(this).text().length
-        var newlines_len = $(this).find("br").length - 1 //not counting the initial br
-        text_len += newlines_len
-        if (text_len > 0) {
-            $placeholder.text("")
-            $(this).css("width", "50%")
-        } else {
-            $placeholder.text($placeholder.attr("placeholder"))
-            $(this).css("width", "1%")
-        }
-        updateBar(Math.floor(text_len * 100 / 256))
-    })
+    $textfield.on('input', check_tweet_len)
 
     function updateBar(val) {
         if (val <= 50) {
@@ -39,4 +27,28 @@ $(document).ready(function () {
         $("#new-tweet-text-form").val($textfield.text())
         return true
     })
+
+    // attach the emoji picker to the corresponding button
+    $('.new-tweet-media-emoji').lsxEmojiPicker({
+        twemoji: true,
+        height: 200,
+        width: 240,
+        onSelect: function (emoji) {
+            $textfield.append("<span>" + emoji.value + "<span>")
+            check_tweet_len()
+        }
+    });
+
+    function check_tweet_len() {
+        var text_len = $textfield.text().length
+        if (text_len > 0) {
+            $placeholder.text("")
+            $textfield.css("width", "50%")
+        } else {
+            $placeholder.text($placeholder.attr("placeholder"))
+            $textfield.css("width", "1%")
+        }
+        updateBar(Math.floor(text_len * 100 / 256))
+        twemoji.parse($textfield[0])
+    }
 });

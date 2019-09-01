@@ -11,7 +11,7 @@
     overflow-x: hidden;
     outline: 0px solid transparent;
     margin-left: 10px;
-    white-space: pre-line
+    white-space: pre-wrap
 }
 
 .new-tweet-media {
@@ -113,4 +113,13 @@
 
     -webkit-transform-origin: center right;
     transform-origin: center right;
+}
+
+/* Twemoji css */
+
+img.emoji {
+    height: 1em;
+    width: 1em;
+    margin: 0 .05em 0 .1em;
+    vertical-align: -0.1em;
 }
