@@ -4,10 +4,15 @@ $(document).ready(function () {
     var $textfield = $(".new-tweet-textarea")
     var $placeholder = $(".new-tweet-placeholder")
 
+    var $images = $(".new-tweet-images")
+
     var $image1 = $("#new-tweet-image-1")
     var $image2 = $("#new-tweet-image-2")
     var $image3 = $("#new-tweet-image-3")
     var $image4 = $("#new-tweet-image-4")
+
+    var $image_cont_left = $(".new-tweet-image-cont-left")
+    var $image_cont_right = $(".new-tweet-image-cont-right")
 
     var $image1_cont = $("#new-tweet-image-cont-1")
     var $image2_cont = $("#new-tweet-image-cont-2")
@@ -63,7 +68,8 @@ $(document).ready(function () {
     }
 
     $("#new-tweet-image-button").change(function () {
-        if (this.files) {
+        if (this.files && this.files[0]) {
+            $images.show()
             if (this.files[0])
                 slot_image(this.files[0])
             if (this.files[1])
@@ -75,7 +81,8 @@ $(document).ready(function () {
         }
     });
 
-    $(".new-tweet-media-image").click(function () {
+    $(".new-tweet-media-image").click(function (e) {
+        e.preventDefault();
         $("#new-tweet-image-button").click()
     })
 
@@ -86,48 +93,125 @@ $(document).ready(function () {
             // find the first empty img tag and fill it with the given image
             if (!$image1.attr("src")) {
                 $image1.attr("src", e.target.result);
-                $image1_cont.removeClass("new-tweet-image-hidden");
+                $image1_cont.removeAttr("hidden");
             } else if (!$image2.attr("src")) {
                 $image2.attr("src", e.target.result);
-                $image2_cont.removeClass("new-tweet-image-hidden");
+                $image2_cont.removeAttr("hidden");
             } else if (!$image3.attr("src")) {
                 $image3.attr("src", e.target.result);
-                $image3_cont.removeClass("new-tweet-image-hidden");
+                $image3_cont.removeAttr("hidden");
             } else if (!$image4.attr("src")) {
                 $image4.attr("src", e.target.result);
-                $image4_cont.removeClass("new-tweet-image-hidden");
+                $image4_cont.removeAttr("hidden");
             }
+            rearrange_images()
         }
         reader.readAsDataURL(file)
+
     }
     $(".new-tweet-image-cont").click(function () {
         var image = $(this).find(".new-tweet-image")
         image.removeAttr("src")
-        $(this).addClass("new-tweet-image-hidden")
+        $(this).attr("hidden", "true")
 
         // Cascade all other images down
 
         if (!($image1.attr("src")) && ($image2.attr("src"))) {
             $image1.attr("src", $image2.attr("src"))
-            $image1_cont.removeClass("new-tweet-image-hidden")
+            $image1_cont.removeAttr("hidden")
 
             $image2.removeAttr("src")
-            $image2_cont.addClass("new-tweet-image-hidden")
+            $image2_cont.attr("hidden", "true")
         }
         if (!$image2.attr("src") && $image3.attr("src")) {
             $image2.attr("src", $image3.attr("src"))
-            $image2_cont.removeClass("new-tweet-image-hidden")
+            $image2_cont.removeAttr("hidden")
 
             $image3.removeAttr("src")
-            $image3_cont.addClass("new-tweet-image-hidden")
+            $image3_cont.attr("hidden", "true")
         }
         if (!$image3.attr("src") && $image4.attr("src")) {
             $image3.attr("src", $image4.attr("src"))
-            $image3_cont.removeClass("new-tweet-image-hidden")
+            $image3_cont.removeAttr("hidden")
 
             $image4.removeAttr("src")
-            $image4_cont.addClass("new-tweet-image-hidden")
+            $image4_cont.attr("hidden", "true")
         }
+
+        // hide the images container if there are no images left
+        if (!$image1.attr("src"))
+            $images.hide()
+
+        rearrange_images()
     })
 
+    function rearrange_images() {
+        // images should be cascaded down before
+        // calling this function
+
+        // by default all images will have
+        // 50% height and width like so:
+
+        // ------------------
+        // |       |        |
+        // |   1   |   2    |
+        // |       |        |
+        // --------|---------
+        // |       |        |
+        // |   3   |   4    |
+        // |       |        |
+        // ------------------
+        $image1_cont.removeClass("tall")
+        $image2_cont.removeClass("tall")
+        $image3_cont.removeClass("tall")
+        $image4_cont.removeClass("tall")
+
+        $image_cont_left.removeClass("wide")
+        $image_cont_right.removeClass("narrow")
+
+        // if there is no fourth image the second one
+        // should have its height changed to 100% like so:
+        // ------------------
+        // |       |        |
+        // |   1   |        |
+        // |       |        |
+        // --------|   2    |
+        // |       |        |
+        // |   3   |        |
+        // |       |        |
+        // ------------------
+        if (!$image4.attr("src"))
+            $image2_cont.addClass("tall")
+
+        // if there is no third image the first one
+        // should have its height changed to 100% like so:
+        // ------------------
+        // |       |        |
+        // |       |        |
+        // |       |        |
+        // |   1   |   2    |
+        // |       |        |
+        // |       |        |
+        // |       |        |
+        // ------------------
+        if (!$image3.attr("src"))
+            $image1_cont.addClass("tall")
+
+        // if there is no second image the first one
+        // should have its width changed to 100% like so:
+        // ------------------
+        // |                |
+        // |                |
+        // |                |
+        // |       1        |
+        // |                |
+        // |                |
+        // |                |
+        // ------------------
+        if (!$image2.attr("src")) {
+            $image_cont_left.addClass("wide")
+            $image1_cont.addClass("tall")
+        }
+
+    }
 });

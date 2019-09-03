@@ -21,22 +21,30 @@
                 {{ new_tweet_form.text }}
             </div>
             <p></p>
-            <input type='file' id="new-tweet-image-button" multiple="multiple" style="display: none">
-            <div id='new-tweet-image-cont-1' class='new-tweet-image-cont new-tweet-image-hidden'>
-                <img id="new-tweet-image-1" class='new-tweet-image'>
-            </div>
-            <div id='new-tweet-image-cont-2' class='new-tweet-image-cont new-tweet-image-hidden'>
-                <img id="new-tweet-image-2" class='new-tweet-image'>
-            </div>
-            <div id='new-tweet-image-cont-3' class='new-tweet-image-cont new-tweet-image-hidden'>
-                <img id="new-tweet-image-3" class='new-tweet-image'>
-            </div>
-            <div id='new-tweet-image-cont-4' class='new-tweet-image-cont new-tweet-image-hidden'>
-                <img id="new-tweet-image-4" class='new-tweet-image'>
+            <input type='file' id="new-tweet-image-button" multiple="multiple" style="display: none"
+                accept="image/png, image/jpeg">
+
+            <div class='new-tweet-images' style='display:none;'>
+                <div class="new-tweet-image-cont-left">
+                    <div id='new-tweet-image-cont-1' class='new-tweet-image-cont' hidden>
+                        <img id="new-tweet-image-1" class='new-tweet-image img-thumbnail'>
+                    </div>
+                    <div id='new-tweet-image-cont-3' class='new-tweet-image-cont' hidden>
+                        <img id="new-tweet-image-3" class='new-tweet-image img-thumbnail'>
+                    </div>
+                </div>
+                <div class="new-tweet-image-cont-right">
+                    <div id='new-tweet-image-cont-2' class='new-tweet-image-cont' hidden>
+                        <img id="new-tweet-image-2" class='new-tweet-image img-thumbnail'>
+                    </div>
+                    <div id='new-tweet-image-cont-4' class='new-tweet-image-cont' hidden>
+                        <img id="new-tweet-image-4" class='new-tweet-image img-thumbnail'>
+                    </div>
+                </div>
             </div>
             <p></p>
             <div class="new-tweet-media">
-                <span class='new-tweet-media-image'>IMG</span>
+                <button class='new-tweet-media-image'>IMG</button>
                 <span class='new-tweet-media-gif'>GIF</span>
                 <span class='new-tweet-media-poll'>POLL</span>
                 <button class='new-tweet-media-emoji'>EMOJI</button>
