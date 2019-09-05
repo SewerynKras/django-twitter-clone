@@ -1,6 +1,11 @@
+import base64
+import uuid
+
+from django.core.files.base import ContentFile
+from django.db.models import Count, Exists, OuterRef, Q
+
 from tweets import models
 from twitter_project.logging import logger
-from django.db.models import Count, OuterRef, Exists, Q
 
 
 def get_tweet_list(profile, before=None, after=None):
@@ -32,7 +37,7 @@ def get_tweet_list(profile, before=None, after=None):
 
     # give each tweet a bool value whether the user has retweeted the
     # tweet before or not
-    is_rt_by_user = models.Retweet.objects.filter(tweet=OuterRef("id"), author=profile)
+    is_rt_by_user = models.Tweet.objects.filter(retweet=OuterRef("id"), author=profile)
     tweets = tweets.annotate(is_rt=Exists(is_rt_by_user))
 
     # now the same thing for comments
@@ -45,3 +50,32 @@ def get_tweet_list(profile, before=None, after=None):
 
     tweets = tweets.order_by("-date")
     return tweets
+
+
+def base64_to_image(string):
+    """
+    Converts a base64-encoded image into a ContentFile
+    ready to be inserted into a FileField
+
+    Example input:
+        data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAA...
+    """
+    format, image = string.split(";base64,")
+    name, ext = format.split("/")
+
+    file = ContentFile(base64.b64decode(image), name=f"{uuid.uuid4()}.{ext}")
+    return file
+
+
+def convert_images(request):
+    """
+    Converts all base64-encoded images from a request to image files
+
+    Returns:
+        images {dict}
+    """
+    images = {}
+    for img in ['image_1', 'image_2', 'image_3', 'image_4']:
+        if request.get(img):
+            images[img] = base64_to_image(request.get(img))
+    return images

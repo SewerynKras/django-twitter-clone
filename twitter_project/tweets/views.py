@@ -9,20 +9,29 @@ class MainPage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["new_tweet_form"] = forms.NewTweetForm
-        context['pool_form'] = forms.PoolForm
-        context['sometext'] = "AAAAA"
+        context["tweet_form"] = forms.TweetForm
+        context['images_form'] = forms.ImagesForm
 
         user = self.request.user
         context['tweet_list'] = helpers.get_tweet_list(user.profile)
         return context
 
     def post(self, request):
-        form = forms.NewTweetForm(request.POST)
-        if form.is_valid():
-            text = form.cleaned_data['text']
+        tweet_form = forms.TweetForm(request.POST)
+
+        # TODO: Add error handling when form is incorrect
+        if tweet_form.is_valid():
+            tweet = tweet_form.save(commit=False)
             profile = request.user.profile
-            tweet = models.Tweet(text=text, author=profile)
+            tweet.author = profile
+
+            # check if there are any pictures attached
+            if request.POST.get("image_1"):
+                images_dict = helpers.convert_images(request.POST)
+                images = models.Images(**images_dict)
+                images.save()
+                tweet.images = images
+
             tweet.save()
             return redirect("/")
 

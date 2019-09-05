@@ -135,6 +135,8 @@ FORM_CHECKBOX_TEXT = {
     "ads": "TEXT PLACEHOLDER TEXT PLACEHOLDER",
 }
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
+
 
 # importing this at the very end to avoid circular imports
 from .logging import LOGGING

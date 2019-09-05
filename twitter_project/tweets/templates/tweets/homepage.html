@@ -5,6 +5,7 @@
 {% block body %}
 <script src="{% static "scripts/tweets/new_tweet.js" %}"></script>
 <script src="{% static "scripts/tweets/tweet_list.js" %}"></script>
+<script src="{% static "scripts/tweets/images.js" %}"></script>
 <link rel="stylesheet" href="{% static "styles/tweets/tweet_list.css" %}">
 <link rel="stylesheet" href="{% static "styles/tweets/new_tweet.css" %}">
 <link href="{% static "lib/emoji-picker/jquery.lsxemojipicker.css" %}" rel="stylesheet">
@@ -12,36 +13,41 @@
 
 <div class="container">
     <div class="new-tweet">
-        <form method="post">
+        <form method="post" enctype='multipart/form-data'>
             {% csrf_token %}
             <img src={{ user.profile.profile_pic.url }} class="img-fluid profile-pic new-tweet-profile-pic">
             <div class='new-tweet-input'>
                 <span class='new-tweet-textarea' contenteditable="true"></span>
                 <span class='new-tweet-placeholder' placeholder="What's happening?"></span>
-                {{ new_tweet_form.text }}
+                {{ tweet_form.text }}
             </div>
             <p></p>
             <input type='file' id="new-tweet-image-button" multiple="multiple" style="display: none"
                 accept="image/png, image/jpeg">
 
-            <div class='new-tweet-images' style='display:none;'>
-                <div class="new-tweet-image-cont-left">
-                    <div id='new-tweet-image-cont-1' class='new-tweet-image-cont' hidden>
-                        <img id="new-tweet-image-1" class='new-tweet-image img-thumbnail'>
+            <div id='new-tweet-images' class='tweet-images' style='display:none;'>
+                <div class="tweet-image-cont-left" id="new-tweet-image-cont-left">
+                    <div class='tweet-image-cont' id='new-tweet-image-cont-1' image-num='1' style="display: none">
+                        <img class='tweet-image img-thumbnail' id='new-tweet-image-1'>
                     </div>
-                    <div id='new-tweet-image-cont-3' class='new-tweet-image-cont' hidden>
-                        <img id="new-tweet-image-3" class='new-tweet-image img-thumbnail'>
+                    <div class='tweet-image-cont' id='new-tweet-image-cont-3' image-num='3' style="display: none">
+                        <img class='tweet-image img-thumbnail' id='new-tweet-image-3'>
                     </div>
                 </div>
-                <div class="new-tweet-image-cont-right">
-                    <div id='new-tweet-image-cont-2' class='new-tweet-image-cont' hidden>
-                        <img id="new-tweet-image-2" class='new-tweet-image img-thumbnail'>
+                <div class="tweet-image-cont-right" id="new-tweet-image-cont-right">
+                    <div class='tweet-image-cont' id='new-tweet-image-cont-2' image-num='2' style="display: none">
+                        <img class='tweet-image img-thumbnail' id='new-tweet-image-2'>
                     </div>
-                    <div id='new-tweet-image-cont-4' class='new-tweet-image-cont' hidden>
-                        <img id="new-tweet-image-4" class='new-tweet-image img-thumbnail'>
+                    <div class='tweet-image-cont' id='new-tweet-image-cont-4' image-num='4' style="display: none">
+                        <img class='tweet-image img-thumbnail' id='new-tweet-image-4'>
                     </div>
                 </div>
             </div>
+            {% comment %} hidden forms {% endcomment %}
+            {{ images_form.image_1 }}
+            {{ images_form.image_2 }}
+            {{ images_form.image_3 }}
+            {{ images_form.image_4 }}
             <p></p>
             <div class="new-tweet-media">
                 <button class='new-tweet-media-image'>IMG</button>
@@ -76,6 +82,35 @@
             <span class="tweet-date" utc={{tweet.date|date:"U" }}></span>
 
             <div class="tweet-text">{{tweet.text|linebreaks}}</div>
+
+            {% if tweet.images %}
+            <div class='tweet-images'>
+                <div class="tweet-image-cont-left">
+                    {% if tweet.images.image_1 %}
+                    <div class='tweet-image-cont' image-num='1'>
+                        <img class='tweet-image img-thumbnail' src={{ tweet.images.image_1.url }}>
+                    </div>
+                    {% endif %}
+                    {% if tweet.images.image_3 %}
+                    <div class='tweet-image-cont' image-num='3'>
+                        <img class='tweet-image img-thumbnail' src={{ tweet.images.image_3.url }}>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="tweet-image-cont-right">
+                    {% if tweet.images.image_2 %}
+                    <div class='tweet-image-cont' image-num='2'>
+                        <img class='tweet-image img-thumbnail' src={{ tweet.images.image_2.url }}>
+                    </div>
+                    {% endif %}
+                    {% if tweet.images.image_4 %}
+                    <div class='tweet-image-cont' image-num='4'>
+                        <img class='tweet-image img-thumbnail' src={{ tweet.images.image_4.url }}>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
 
             {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
             <div class="action-btn comment-btn">

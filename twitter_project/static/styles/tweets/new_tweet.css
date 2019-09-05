@@ -49,17 +49,13 @@
 
 /* images */
 
-.new-tweet-images {
+.tweet-images {
     width: 400px;
     height: 200px;
 }
 
 
-.new-tweet-image-hidden {
-    display: none;
-}
-
-.new-tweet-image-cont {
+.tweet-image-cont {
     height: 50%;
     width: 100%;
     /* width: inherit; */
@@ -78,31 +74,23 @@
     width: 1%;
 }
 
-.new-tweet-image {
+.tweet-image {
     width: 100%;
     height: 100%;
-    /* width: inherit;
-    height: inherit; */
     object-fit: cover;
 }
 
-.new-tweet-image-cont-left {
+.tweet-image-cont-left {
     width: 50%;
     height: 100%;
     float: left;
 }
 
-.new-tweet-image-cont-right {
+.tweet-image-cont-right {
     width: 50%;
     height: 100%;
     float: right;
 }
-
-/* .image-preview-right-half {
-    width: 100%;
-    height: 100px;
-} */
-
 
 
 /* Progress bar css */

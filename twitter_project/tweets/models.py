@@ -76,28 +76,28 @@ class PollVote(models.Model):
 
 
 class Images(models.Model):
-    photo_1 = models.ImageField(upload_to="tweet_images",
+    image_1 = models.ImageField(upload_to="tweet_images",
                                 height_field=None,
                                 width_field=None,
                                 max_length=None,
                                 default=None,
                                 blank=True,
                                 null=True)
-    photo_2 = models.ImageField(upload_to="tweet_images",
+    image_2 = models.ImageField(upload_to="tweet_images",
                                 height_field=None,
                                 width_field=None,
                                 max_length=None,
                                 default=None,
                                 blank=True,
                                 null=True)
-    photo_3 = models.ImageField(upload_to="tweet_images",
+    image_3 = models.ImageField(upload_to="tweet_images",
                                 height_field=None,
                                 width_field=None,
                                 max_length=None,
                                 default=None,
                                 blank=True,
                                 null=True)
-    photo_4 = models.ImageField(upload_to="tweet_images",
+    image_4 = models.ImageField(upload_to="tweet_images",
                                 height_field=None,
                                 width_field=None,
                                 max_length=None,

@@ -15,6 +15,11 @@ $(document).ready(function () {
 
     // parse all emojis in the document
     twemoji.parse(document.body)
+
+    //rearrange all images
+    $(".tweet-images").each(function () {
+        rearrange_images($(this))
+    })
 });
 
 
