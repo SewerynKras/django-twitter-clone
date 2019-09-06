@@ -137,6 +137,15 @@ FORM_CHECKBOX_TEXT = {
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
 
+from .giphy_api import GIPHY_API_KEY
+DEFAULT_GIFS = [
+    'Agree', 'Applause', 'Awww', 'Dance', 'Deal with it',
+    'Do not want', 'Eww', 'Eye roll',  'Facepalm', 'Fist bump',
+    'Good luck', 'Happy dance', 'Hearts', 'High five', 'Hug',
+    'IDK', 'Kiss', 'Mic drop', 'No', 'OMG', 'Oh snap', 'Ok', 'Oops',
+    'Please', 'Popcorn', 'SMH', 'Scared', 'Seriously', 'Shocked', 'Shrug',
+    'Sigh', 'Slow clap', 'Sorry', 'Thank you', 'Thumbs down', 'Thumbs up',
+    'Want', 'Win', 'Wink', 'YOLO', 'Yawn', 'Yes']
 
 # importing this at the very end to avoid circular imports
 from .logging import LOGGING

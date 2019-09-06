@@ -2,6 +2,7 @@ from django.views.generic import TemplateView
 from tweets import forms, models, helpers
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.conf import settings
 
 
 class MainPage(TemplateView):
@@ -11,6 +12,7 @@ class MainPage(TemplateView):
         context = super().get_context_data(**kwargs)
         context["tweet_form"] = forms.TweetForm
         context['images_form'] = forms.ImagesForm
+        context['gif_list'] = settings.DEFAULT_GIFS
 
         user = self.request.user
         context['tweet_list'] = helpers.get_tweet_list(user.profile)
