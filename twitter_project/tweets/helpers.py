@@ -3,6 +3,7 @@ import uuid
 
 from django.core.files.base import ContentFile
 from django.db.models import Count, Exists, OuterRef, Q
+from django.conf import settings
 
 from tweets import models
 from twitter_project.logging import logger
@@ -79,3 +80,18 @@ def convert_images(request):
         if request.get(img):
             images[img] = base64_to_image(request.get(img))
     return images
+
+
+def download_gif(data):
+    """
+    Downloads and saves a new Gif object
+
+    Arguments:
+        data {dict} -- part of the json response provided by
+            the Giphy api
+    """
+    thumb_url = data['images']['original_still']['url']
+    gif_url = data['images']['original']['url']
+    gif = models.Gif(thumb_url=thumb_url,
+                     gif_url=gif_url)
+    return gif
