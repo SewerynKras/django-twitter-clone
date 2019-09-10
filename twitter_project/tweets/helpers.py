@@ -1,5 +1,8 @@
 import base64
 import uuid
+import urllib.request
+import urllib.parse
+import json
 
 from django.core.files.base import ContentFile
 from django.db.models import Count, Exists, OuterRef, Q
@@ -80,6 +83,28 @@ def convert_images(request):
         if request.get(img):
             images[img] = base64_to_image(request.get(img))
     return images
+
+
+def get_giphy(query, limit=1, offset=0):
+
+    # Escape special characters
+    query = urllib.parse.quote(query)
+    gifs = []
+
+    KEY = settings.GIPHY_API_KEY
+    url = ("https://api.giphy.com/v1/gifs/search?"
+           f"api_key={KEY}&"
+           f"q={query}&"
+           f"limit={limit}&"
+           f"offset={offset}&"
+           "rating=PG-13&lang=en")
+    data = urllib.request.urlopen(url).read()
+    data = json.loads(data)
+    if data['meta']['msg'] == "OK":
+        for gif_info in data['data']:
+            gif = download_gif(gif_info)
+            gifs.append(gif)
+    return gifs
 
 
 def download_gif(data):

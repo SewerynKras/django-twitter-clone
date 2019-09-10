@@ -1,0 +1,5 @@
+    <div id='gif-list'>
+        {% for gif in gif_list %}
+        <div class="gif-preview" style="background-image: url({{ gif.gif_url }})"></div>
+        {% endfor %}
+    </div>

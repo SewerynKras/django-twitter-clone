@@ -1,8 +1,8 @@
 from django.views.generic import TemplateView
 from tweets import forms, models, helpers
 from django.http import JsonResponse
-from django.shortcuts import redirect
-from django.conf import settings
+from django.shortcuts import redirect, render
+from django.http import HttpResponse
 
 
 class MainPage(TemplateView):
@@ -12,7 +12,7 @@ class MainPage(TemplateView):
         context = super().get_context_data(**kwargs)
         context["tweet_form"] = forms.TweetForm
         context['images_form'] = forms.ImagesForm
-        context['gif_list'] = settings.DEFAULT_GIFS
+        context['gif_list'] = models.Gif_Category.objects.all()
 
         user = self.request.user
         context['tweet_list'] = helpers.get_tweet_list(user.profile)
@@ -53,3 +53,15 @@ def like_tweet_AJAX(request):
         new_like.save()
         liked = True
     return JsonResponse({"liked": liked})
+
+
+def get_gifs_AJAX(request):
+    query = request.GET.get("query")
+    offset = request.GET.get("offser")
+    limit = request.GET.get("limit")
+
+    gifs = helpers.get_giphy(query=query,
+                             offset=offset,
+                             limit=limit)
+    return HttpResponse(render(request, "tweets/gif_list.html",
+                               context={"gif_list": gifs}))

@@ -174,3 +174,58 @@ img.emoji {
     margin: 0 .05em 0 .1em;
     vertical-align: -0.1em;
 }
+
+/* Gifs */
+
+#gif-container {
+    position: fixed;
+    height: 70%;
+    width: 40%;
+    top: 15%;
+    left: 30%;
+    background-color: darkgray;
+    z-index: 501;
+}
+
+#gf-search-form {
+    height: 20%;
+}
+
+#gif-preview-list {
+    height: 90%;
+    display: block;
+    overflow-y: scroll;
+}
+
+.gif-preview {
+    /* height: 100px; */
+    width: 49%;
+    padding-top: 25%;
+    background-color: black;
+    display: inline-block;
+    background-size: 100% 100%;
+}
+
+.gif-preview-text {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to bottom, transparent, 70%, black);
+    color: white;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+#gif-search-close-btn {
+    display: inline-block;
+    width: 10%;
+}
+
+#gif-search-bar {
+    display: inline-block;
+    width: 70%;
+}
+
+#gif-search-submit {
+    display: inline-block;
+    width: 20%;
+}
