@@ -22,7 +22,9 @@ $(document).ready(function () {
     })
 });
 
-
+/**
+ * Converts the UTC timestamp to time elapsed
+ */
 function fix_timestamp() {
     var tweet_time = $(this).attr("utc"); // in seconds
     var curr_time = Math.floor(new Date().getTime() / 1000); // in seconds
@@ -58,10 +60,11 @@ function fix_timestamp() {
     }
     $(this).text(display);
 }
-
-function like_tweet(e) {
-    e.preventDefault();
-
+/**
+ * Sends an AJAX request to create a new Like object, updates
+ * the amount of like a tweet has by 1
+ */
+function like_tweet() {
     var $btn = $(this);
     var tweet_id = $(this).closest("li").attr("tweet-id");
     var $num_counter = $(this).children('.tweet-likes-num').eq(0);

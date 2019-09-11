@@ -1,3 +1,8 @@
+/**
+ * Rearranges all images inside the given container so the overall
+ * height and width doesn't change.
+ * @param {Jquery selector} $images 
+ */
 function rearrange_images($images) {
     // images should be cascaded down before
     // calling this function

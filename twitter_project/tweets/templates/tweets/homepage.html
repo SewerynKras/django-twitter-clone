@@ -130,17 +130,17 @@
     </ul>
 </div>
 
-<div id='gif-container' style='display:none'>
+<div id='gif-selector' style='display:none'>
     <form class="form-inline" id="gif-search-form">
-        <button class="close" id="gif-search-close-btn" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+        <button class="close" id="gif-icon-btn" aria-label="Close">
+            <span aria-hidden="true" id='gif-icon-btn-text'>&times;</span>
         </button>
         <input class="form-control" id="gif-search-bar" type="search" placeholder="Search for GIFs">
         <button class="btn" id="gif-search-submit" type="submit">Search</button>
     </form>
-    <div id='gif-preview-list'>
+    <div id='gif-list'>
         {% for gif_cat in gif_list %}
-        <div class="gif-preview" style="background-image: url({{ gif_cat.gif.thumb_url }})">
+        <div class="gif-preview" gif-thumb="{{gif_cat.gif.thumb_url}}" gif-url="{{gif_cat.gif.gif_url}}">
             <div class="gif-preview-text">
                 {{gif_cat.category_name}}
             </div>

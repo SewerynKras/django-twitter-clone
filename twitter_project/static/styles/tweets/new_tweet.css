@@ -15,7 +15,12 @@
     overflow-x: hidden;
     outline: 0px solid transparent;
     margin-left: 10px;
-    white-space: pre-wrap
+    white-space: pre-wrap;
+    width: 1%;
+}
+
+.new-tweet-textarea[expanded] {
+    width: 50%;
 }
 
 .new-tweet-media {
@@ -177,7 +182,7 @@ img.emoji {
 
 /* Gifs */
 
-#gif-container {
+#gif-selector {
     position: fixed;
     height: 70%;
     width: 40%;
@@ -191,14 +196,13 @@ img.emoji {
     height: 20%;
 }
 
-#gif-preview-list {
+#gif-list {
     height: 90%;
     display: block;
     overflow-y: scroll;
 }
 
 .gif-preview {
-    /* height: 100px; */
     width: 49%;
     padding-top: 25%;
     background-color: black;
