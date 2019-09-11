@@ -19,7 +19,7 @@
     width: 1%;
 }
 
-.new-tweet-textarea[expanded] {
+.expanded {
     width: 50%;
 }
 
