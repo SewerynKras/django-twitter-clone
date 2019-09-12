@@ -1,27 +1,3 @@
-$(document).ready(function () {
-    // Change all dates from UNIX timestamps to user-readable timestamps
-    $(".tweet-date").each(fix_timestamp)
-    // update the timestamps every couple seconds
-    setInterval(function () {
-        $(".tweet-date").each(fix_timestamp)
-    }, 5000);
-
-    // make like button clickable
-    // NOTE: I'm using one() instead of click() to
-    // prevent the user from sending multiple requests in
-    // a very short time, the like_tweet function will rebind
-    // itself to the button once the request finishes
-    $(".like-btn").one("click", like_tweet)
-
-    // parse all emojis in the document
-    twemoji.parse(document.body)
-
-    //rearrange all images
-    $(".tweet-images").each(function () {
-        rearrange_images($(this))
-    })
-});
-
 /**
  * Converts the UTC timestamp to time elapsed
  */
@@ -78,14 +54,73 @@ function like_tweet() {
         dataType: "json",
         success: function (response) {
             if (response.liked == true) {
-                num_likes = 1 + +num_likes
-                $btn.addClass("is-liked")
+                num_likes = 1 + +num_likes;
+                $btn.addClass("is-liked");
             } else {
-                num_likes = -1 + +num_likes
-                $btn.removeClass("is-liked")
+                num_likes = -1 + +num_likes;
+                $btn.removeClass("is-liked");
             }
-            $num_counter.text(num_likes)
-            $btn.one("click", like_tweet)
+            $num_counter.text(num_likes);
+            $btn.one("click", like_tweet);
         }
     });
 }
+
+/**
+ * Sends an AJAX GET request and appends the tweet list with received elements
+ */
+function get_tweets() {
+    var $tweet_list = $("#tweet-list");
+    $.ajax({
+        url: "ajax/get_tweets/",
+        dataType: "html",
+        success: function (response) {
+            new_tweet_list = $($.parseHTML(response)).find("li");
+            $tweet_list.prepend(new_tweet_list);
+            setup_tweet_list(new_tweet_list);
+        }
+    });
+}
+/**
+ * Parses the .tweet-text with twemoji
+ */
+function parse_twemoji() {
+    let text = $(this).children(".tweet-text");
+    twemoji.parse(text[0])
+}
+
+function setup_tweet_list($tweets) {
+
+    let $media = $tweets.children(".tweet-media");
+    $media.each(function () {
+        rearrange_images($(this));
+    })
+
+    // Convert each tweets emoji into twemojis
+    $tweets.each(parse_twemoji);
+
+    // make like button clickable
+    // NOTE: I'm using one() instead of click() to
+    // prevent the user from sending multiple requests in
+    // a very short time, the like_tweet function will rebind
+    // itself to the button once the request finishes
+    let $like_btn = $tweets.children(".like-btn");
+    $like_btn.one("click", like_tweet);
+
+    // Convert dates to time elapsed
+    let dates = $tweets.children(".tweet-date");
+    dates.each(fix_timestamp);
+}
+
+$(document).ready(function () {
+    get_tweets();
+
+    // Change all dates from UNIX timestamps to user-readable timestamps
+    $(".tweet-date").each(fix_timestamp)
+
+    // update the timestamps every couple seconds
+    setInterval(function () {
+        $(".tweet-date").each(fix_timestamp)
+    }, 5000);
+
+});

@@ -1,0 +1,56 @@
+<ul class="tweet-list">
+    {% for tweet in tweet_list %}
+    <li class='tweet-preview' tweet-id={{tweet.id}}>
+        <img src={{ tweet.author.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
+        <div class="clickable-name">
+            <a href="{% url 'profiles:profile' slug=tweet.author.slug%}">
+                {{tweet.author.display_name}}</a>
+            <span class="tweet-username">@{{tweet.author.username}}</span>
+        </div>
+        <span class="tweet-date" utc={{tweet.date|date:"U" }}></span>
+
+        <div class="tweet-text">{{tweet.text|linebreaks}}</div>
+
+        <div class="tweet-media" style='display:none;'>
+            <div class="tweet-image-cont-left">
+                {% if tweet.images.image_1 %}
+                <div class='tweet-image-cont' image-num='1'>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.images.image_1.url }}>
+                </div>
+                {% endif %}
+                {% if tweet.images.image_3 %}
+                <div class='tweet-image-cont' image-num='3'>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.images.image_3.url }}>
+                </div>
+                {% endif %}
+            </div>
+            <div class="tweet-image-cont-right">
+                {% if tweet.images.image_2 %}
+                <div class='tweet-image-cont' image-num='2'>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.images.image_2.url }}>
+                </div>
+                {% endif %}
+                {% if tweet.images.image_4 %}
+                <div class='tweet-image-cont' image-num='4'>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.images.image_4.url }}>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
+        <div class="action-btn comment-btn">
+            <span class="tweet-comments-icon">C:</span>
+            <span class="tweet-comments-num">{{tweet.comments}}</span>
+        </div>
+        <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
+            <span class="tweet-rts-icon">R:</span>
+            <span class="tweet-rts-num">{{tweet.rts}}</span>
+        </div>
+        <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
+            <span class="tweet-likes-icon">L:</span>
+            <span class="tweet-likes-num">{{tweet.likes}}</span>
+        </div>
+    </li>
+    {% endfor %}
+</ul>

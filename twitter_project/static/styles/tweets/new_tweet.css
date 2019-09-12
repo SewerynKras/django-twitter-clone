@@ -1,12 +1,8 @@
-/* .new-tweet {
-    width: 500px;
-} */
-
 .new-tweet-input {
     display: inline;
 }
 
-.new-tweet-textarea {
+.tweet-textarea {
     display: inline-block;
     position: relative;
     min-width: 1%;
@@ -23,7 +19,7 @@
     width: 50%;
 }
 
-.new-tweet-media {
+.new-tweet-media-buttons {
     display: inline-block;
 }
 
@@ -43,18 +39,17 @@
 
 .new-tweet-placeholder {
     vertical-align: top;
-    /* This makes the placeholder text "touch" the blinking cursor */
-    margin-left: -9px;
 }
 
 .new-tweet-profile-pic {
     float: left;
+    margin-right: 5px;
 }
 
 
-/* images */
+/* media */
 
-.tweet-images {
+.tweet-media {
     width: 400px;
     height: 200px;
 }

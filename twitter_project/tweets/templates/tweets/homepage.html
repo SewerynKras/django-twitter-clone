@@ -12,122 +12,12 @@
 <script src="{% static "lib/emoji-picker/jquery.lsxemojipicker.js" %}"></script>
 
 <div class="container">
-    <div class="new-tweet">
-        <form method="post" enctype='multipart/form-data'>
-            {% csrf_token %}
-            <img src={{ user.profile.profile_pic.url }} class="img-fluid profile-pic new-tweet-profile-pic">
-            <div class='new-tweet-input'>
-                <span class='new-tweet-textarea' contenteditable="true"></span>
-                <span class='new-tweet-placeholder' placeholder="What's happening?"></span>
-                {{ tweet_form.text }}
-            </div>
-            <p></p>
-            <input type='file' id="new-tweet-image-button" multiple="multiple" style="display: none"
-                accept="image/png, image/jpeg">
-
-            <div id='new-tweet-images' class='tweet-images' style='display:none;'>
-                <div class="tweet-image-cont-left" id="new-tweet-image-cont-left">
-                    <div class='tweet-image-cont' id='new-tweet-image-cont-1' image-num='1' style="display: none">
-                        <img class='tweet-image img-thumbnail' id='new-tweet-image-1'>
-                    </div>
-                    <div class='tweet-image-cont' id='new-tweet-image-cont-3' image-num='3' style="display: none">
-                        <img class='tweet-image img-thumbnail' id='new-tweet-image-3'>
-                    </div>
-                </div>
-                <div class="tweet-image-cont-right" id="new-tweet-image-cont-right">
-                    <div class='tweet-image-cont' id='new-tweet-image-cont-2' image-num='2' style="display: none">
-                        <img class='tweet-image img-thumbnail' id='new-tweet-image-2'>
-                    </div>
-                    <div class='tweet-image-cont' id='new-tweet-image-cont-4' image-num='4' style="display: none">
-                        <img class='tweet-image img-thumbnail' id='new-tweet-image-4'>
-                    </div>
-                </div>
-            </div>
-            {% comment %} hidden forms {% endcomment %}
-            {{ images_form.image_1 }}
-            {{ images_form.image_2 }}
-            {{ images_form.image_3 }}
-            {{ images_form.image_4 }}
-            <p></p>
-            <div class="new-tweet-media">
-                <button class='new-tweet-media-image'>IMG</button>
-                <button class='new-tweet-media-gif'>GIF</button>
-                <span class='new-tweet-media-poll'>POLL</span>
-                <button class='new-tweet-media-emoji'>EMOJI</button>
-            </div>
-            <div class="new-tweet-extra">
-                <div class="progress">
-                    <span class="progress-left">
-                        <span class="progress-bar border-primary new-tweet-bar-l"></span>
-                    </span>
-                    <span class="progress-right">
-                        <span class="progress-bar border-primar new-tweet-bar-r"></span>
-                    </span>
-                </div>
-                <div class='new-tweet-separator'>|</div>
-                <input type='button' class='btn btn-primary' value="+" , class='new-tweet-add'>
-            </div>
-            <input type='submit' class='btn btn-primary' value='Tweet' class='new-tweet-submit'>
-        </form>
+    <div id='new-tweet'>
+        {% include "tweets/new_tweet.html" with form=tweet_form images_form=images_form %}
     </div>
-    <ul class="tweet-list">
-        {% for tweet in tweet_list %}
-        <li class='tweet-preview' tweet-id={{tweet.id}}>
-            <img src={{ tweet.author.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
-            <div class="clickable-name">
-                <a href="{% url 'profiles:profile' slug=tweet.author.slug%}">
-                    {{tweet.author.display_name}}</a>
-                <span class="tweet-username">@{{tweet.author.username}}</span>
-            </div>
-            <span class="tweet-date" utc={{tweet.date|date:"U" }}></span>
 
-            <div class="tweet-text">{{tweet.text|linebreaks}}</div>
-
-            {% if tweet.images %}
-            <div class='tweet-images'>
-                <div class="tweet-image-cont-left">
-                    {% if tweet.images.image_1 %}
-                    <div class='tweet-image-cont' image-num='1'>
-                        <img class='tweet-image img-thumbnail' src={{ tweet.images.image_1.url }}>
-                    </div>
-                    {% endif %}
-                    {% if tweet.images.image_3 %}
-                    <div class='tweet-image-cont' image-num='3'>
-                        <img class='tweet-image img-thumbnail' src={{ tweet.images.image_3.url }}>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="tweet-image-cont-right">
-                    {% if tweet.images.image_2 %}
-                    <div class='tweet-image-cont' image-num='2'>
-                        <img class='tweet-image img-thumbnail' src={{ tweet.images.image_2.url }}>
-                    </div>
-                    {% endif %}
-                    {% if tweet.images.image_4 %}
-                    <div class='tweet-image-cont' image-num='4'>
-                        <img class='tweet-image img-thumbnail' src={{ tweet.images.image_4.url }}>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            {% endif %}
-
-            {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
-            <div class="action-btn comment-btn">
-                <span class="tweet-comments-icon">C:</span>
-                <span class="tweet-comments-num">{{tweet.comments}}</span>
-            </div>
-            <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
-                <span class="tweet-rts-icon">R:</span>
-                <span class="tweet-rts-num">{{tweet.rts}}</span>
-            </div>
-            <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
-                <span class="tweet-likes-icon">L:</span>
-                <span class="tweet-likes-num">{{tweet.likes}}</span>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
+    <div id='tweet-list'>
+    </div>
 </div>
 
 <div id='gif-selector' style='display:none'>

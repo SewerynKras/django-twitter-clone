@@ -60,8 +60,19 @@ def get_gifs_AJAX(request):
     offset = request.GET.get("offser")
     limit = request.GET.get("limit")
 
-    gifs = helpers.get_giphy(query=query,
-                             offset=offset,
-                             limit=limit)
-    return HttpResponse(render(request, "tweets/gif_list.html",
-                               context={"gif_list": gifs}))
+    context = {"gif_list": helpers.get_giphy(query=query,
+                                             offset=offset,
+                                             limit=limit)}
+    rendered_template = render(request=request,
+                               template_name="tweets/gif_list.html",
+                               context=context)
+    return HttpResponse(rendered_template)
+
+
+def get_tweets_AJAX(request):
+    profile = request.user.profile
+    context = {'tweet_list': helpers.get_tweet_list(profile)}
+    rendered_template = render(request=request,
+                               template_name="tweets/tweet_list.html",
+                               context=context)
+    return HttpResponse(rendered_template)

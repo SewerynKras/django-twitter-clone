@@ -194,7 +194,7 @@ function query_gifs(query, offset) {
         dataType: "html",
         success: function (response) {
             new_gif_list = $($.parseHTML(response))
-            $gif_list.html(new_gif_list.filter("#gif-list"))
+            $gif_list.html(new_gif_list.filter("#gif-list").children())
         },
     });
 }
@@ -299,7 +299,7 @@ $(document).ready(function () {
     $($image1_cont,
         $image2_cont,
         $image3_cont,
-        $image4_cont).click(delete_image)
+        $image4_cont).click(delete_image);
 
     $(".new-tweet-media-gif").click(function (e) {
         e.preventDefault();
