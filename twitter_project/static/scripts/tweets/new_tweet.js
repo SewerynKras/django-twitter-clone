@@ -234,6 +234,35 @@ function fill_hidden_forms() {
     $hidden_image4_form.val($image4.attr("src"));
 }
 
+function new_tweet_AJAX() {
+    let data = {
+        "text": $textfield.text(),
+        "media": {
+            "type": "img",
+            "values": [
+                $image1.attr("src"),
+                $image2.attr("src"),
+                $image3.attr("src"),
+                $image4.attr("src")
+            ]
+        },
+    }
+    console.log(data)
+    $.ajax({
+        url: "ajax/new_tweet/",
+        headers: {
+            'X-CSRFToken': Cookies.get('csrftoken')
+        },
+        data: data,
+        type: "post",
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+        },
+    });
+
+}
+
 $(document).ready(function () {
 
     // Fill jquery selectors
@@ -243,28 +272,23 @@ $(document).ready(function () {
     $placeholder = $(".new-tweet-placeholder");
 
     $cover = $("#cover");
-    $media = $("#new-tweet-images");
+    $media = $(".tweet-media");
 
-    $image_button = $("#new-tweet-image-button");
-    $image1 = $("#new-tweet-image-1");
-    $image2 = $("#new-tweet-image-2");
-    $image3 = $("#new-tweet-image-3");
-    $image4 = $("#new-tweet-image-4");
-    $image1_cont = $("#new-tweet-image-cont-1");
-    $image2_cont = $("#new-tweet-image-cont-2");
-    $image3_cont = $("#new-tweet-image-cont-3");
-    $image4_cont = $("#new-tweet-image-cont-4");
+    $image_button = $(".new-tweet-image-button");
+    $image1_cont = $media.find("[image-num='1']");
+    $image2_cont = $media.find("[image-num='2']");
+    $image3_cont = $media.find("[image-num='3']");
+    $image4_cont = $media.find("[image-num='4']");
+    $image1 = $image1_cont.find(".tweet-image");
+    $image2 = $image2_cont.find(".tweet-image");
+    $image3 = $image3_cont.find(".tweet-image");
+    $image4 = $image4_cont.find(".tweet-image");
 
     $gif_selector = $("#gif-selector");
     $gif_search_bar = $("#gif-search-bar");
     $gif_list = $("#gif-list");
     $gif_icon_btn = $("#gif-icon-btn");
     $gif_icon_btn_text = $("#gif-icon-btn-text");
-
-    $hidden_image1_form = $("#new-tweet-image1-form")
-    $hidden_image2_form = $("#new-tweet-image2-form")
-    $hidden_image3_form = $("#new-tweet-image3-form")
-    $hidden_image4_form = $("#new-tweet-image4-form")
 
     $placeholder.text($placeholder.attr("placeholder"));
 
@@ -277,6 +301,11 @@ $(document).ready(function () {
     $("form").submit(function () {
         fill_hidden_forms();
         return true;
+    })
+
+    $(".new-tweet-submit").click(function (e) {
+        e.preventDefault();
+        new_tweet_AJAX();
     })
 
     $('.new-tweet-media-emoji').lsxEmojiPicker({
@@ -296,10 +325,10 @@ $(document).ready(function () {
 
     $image_button.change(order_images);
 
-    $($image1_cont,
-        $image2_cont,
-        $image3_cont,
-        $image4_cont).click(delete_image);
+    $($image1_cont).click(delete_image);
+    $($image2_cont).click(delete_image);
+    $($image3_cont).click(delete_image);
+    $($image4_cont).click(delete_image);
 
     $(".new-tweet-media-gif").click(function (e) {
         e.preventDefault();

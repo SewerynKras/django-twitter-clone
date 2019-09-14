@@ -12,7 +12,7 @@ class MainPage(TemplateView):
         context = super().get_context_data(**kwargs)
         context["tweet_form"] = forms.TweetForm
         context['images_form'] = forms.ImagesForm
-        context['gif_list'] = models.Gif_Category.objects.all()
+        context['gif_list'] = models.GifCategory.objects.all()
 
         user = self.request.user
         context['tweet_list'] = helpers.get_tweet_list(user.profile)
@@ -28,13 +28,15 @@ class MainPage(TemplateView):
             tweet.author = profile
 
             # check if there are any pictures attached
-            if request.POST.get("image_1"):
-                images_dict = helpers.convert_images(request.POST)
-                images = models.Images(**images_dict)
-                images.save()
-                tweet.images = images
+            # if request.POST.get("image_1"):
+            # media = models.Media(type="img", images=images)
+            #     images_dict = helpers.convert_images(request.POST)
+            #     images = models.Images(**images_dict)
+            #     images.save()
+            #     media.tweet = tweet
+            #     media.save()
 
-            tweet.save()
+            # tweet.save()
             return redirect("/")
 
 
@@ -76,3 +78,8 @@ def get_tweets_AJAX(request):
                                template_name="tweets/tweet_list.html",
                                context=context)
     return HttpResponse(rendered_template)
+
+
+def new_tweet_AJAX(request):
+    pass
+    # VIP

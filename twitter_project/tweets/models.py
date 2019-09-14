@@ -5,12 +5,6 @@ class Tweet(models.Model):
     text = models.TextField(max_length=256)
     author = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
-    images = models.OneToOneField("tweets.Images", on_delete=models.SET_NULL,
-                                  null=True, blank=True)
-    gif = models.OneToOneField("tweets.Gif", on_delete=models.SET_NULL,
-                               null=True, blank=True)
-    poll = models.OneToOneField("tweets.Poll", on_delete=models.SET_NULL,
-                                null=True, blank=True)
     # When the retweeted tweet gets deleted this also deletes itself,
     # this could change in the future
     retweet = models.ForeignKey("tweets.Tweet", on_delete=models.CASCADE,
@@ -19,12 +13,30 @@ class Tweet(models.Model):
     def __str__(self):
         return f"TWEET BY {self.author} (ID: {self.id})"
 
+
+class Media(models.Model):
+    choices = [
+        ("gif", "Gif"),
+        ("img", "Images"),
+        ("poll", "Poll")
+    ]
+    type = models.CharField(max_length=10, choices=choices)
+    gif = models.OneToOneField("tweets.Gif", on_delete=models.CASCADE,
+                               null=True)
+    img = models.OneToOneField("tweets.Images", on_delete=models.CASCADE,
+                               null=True)
+    poll = models.OneToOneField("tweets.Poll", on_delete=models.CASCADE,
+                                null=True)
+
+    tweet = models.OneToOneField("tweets.Tweet", on_delete=models.CASCADE)
+
     def delete(self, *args, **kwargs):
-        # delete all media connected to this tweet
-        self.images.delete()
-        self.gif.delete()
-        self.poll.delete()
+        item = getattr(self, self.type)
+        item.delete()
         return super().delete(*args, **kwargs)
+
+    def __str__(self):
+        return f"MEDIA OF TYPE {self.type} FOR {self.tweet}"
 
 
 class Follow(models.Model):
@@ -35,7 +47,7 @@ class Follow(models.Model):
     date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.follower} follows {self.following}"
+        return f"{self.follower} FOLLOWS {self.following}"
 
 
 class Like(models.Model):
@@ -71,8 +83,8 @@ class Poll(models.Model):
     end_date = models.DateTimeField(auto_now=False)
 
     def __str__(self):
-        if hasattr(self, 'tweet'):
-            parent = str(self.tweet)
+        if hasattr(self, 'media'):
+            parent = str(self.media)
         else:
             parent = "<unknown>"
         return f"POLL FOR {parent}"
@@ -122,11 +134,11 @@ class Images(models.Model):
                                 null=True)
 
     def __str__(self):
-        if hasattr(self, 'tweet'):
-            tweet = str(self.tweet)
+        if hasattr(self, 'media'):
+            parent = str(self.media)
         else:
-            tweet = "<unknown>"
-        return f"IMAGES FOR {tweet}"
+            parent = "<unknown>"
+        return f"IMAGES FOR {parent}"
 
 
 class Gif(models.Model):
@@ -134,22 +146,22 @@ class Gif(models.Model):
     thumb_url = models.URLField(max_length=300)
 
     def __str__(self):
-        if hasattr(self, 'tweet'):
-            parent = str(self.tweet)
-        elif hasattr(self, 'gif_category'):
-            parent = str(self.gif_category)
+        if hasattr(self, 'media'):
+            parent = str(self.media)
+        elif hasattr(self, 'gifcategory'):
+            parent = str(self.gifcategory)
         else:
             parent = "<unknown>"
         return f"GIF FOR {parent}"
 
 
-class Gif_Category(models.Model):
+class GifCategory(models.Model):
     category_name = models.CharField(max_length=16)
     gif = models.OneToOneField("tweets.Gif", on_delete=models.SET_NULL,
                                null=True)
 
     def __str__(self):
-        return f"GIF_CATEGORY ({self.category_name})"
+        return f"GIFCATEGORY ({self.category_name})"
 
     def delete(self, *args, **kwargs):
         self.gif.delete()
