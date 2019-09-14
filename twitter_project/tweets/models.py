@@ -22,11 +22,11 @@ class Media(models.Model):
     ]
     type = models.CharField(max_length=10, choices=choices)
     gif = models.OneToOneField("tweets.Gif", on_delete=models.CASCADE,
-                               null=True)
+                               null=True, blank=True)
     img = models.OneToOneField("tweets.Images", on_delete=models.CASCADE,
-                               null=True)
+                               null=True, blank=True)
     poll = models.OneToOneField("tweets.Poll", on_delete=models.CASCADE,
-                                null=True)
+                                null=True, blank=True)
 
     tweet = models.OneToOneField("tweets.Tweet", on_delete=models.CASCADE)
 

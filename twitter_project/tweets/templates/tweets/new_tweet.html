@@ -3,7 +3,6 @@
 
     {% comment %} Invisible form {% endcomment %}
     {{ tweet_form }}
-    {{ media_form }}
 
     <img src={{ user.profile.profile_pic.url }} class="img-fluid profile-pic new-tweet-profile-pic">
 
@@ -57,7 +56,7 @@
             </span>
         </div>
         <div class='new-tweet-separator'>|</div>
-        <input type='button' class='btn btn-primary' value="+" , class='new-tweet-add'>
+        <input type='button' class='btn btn-primary new-tweet-add' value="+">
     </div>
-    <input type='submit' class='btn btn-primary' value='Tweet' class='new-tweet-submit'>
+    <input type='submit' class='btn btn-primary new-tweet-submit' value='Tweet'>
 </form>

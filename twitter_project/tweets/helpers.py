@@ -3,10 +3,12 @@ import uuid
 import urllib.request
 import urllib.parse
 import json
+import re
 
 from django.core.files.base import ContentFile
 from django.db.models import Count, Exists, OuterRef, Q
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from tweets import models
 from twitter_project.logging import logger
@@ -120,3 +122,91 @@ def download_gif(data):
     gif = models.Gif(thumb_url=thumb_url,
                      gif_url=gif_url)
     return gif
+
+
+def parse_new_tweet(request):
+    """
+    {
+        "text": ...,
+        "retweet": ...,
+        "media": {
+            "type": ...,
+            "values": [
+                "value1": ...,
+                "value2": ...,
+                ...
+                ]
+            }
+    }
+    """
+    errors = {}
+
+    if not request.user.is_authenticated:
+        errors['user'] = "User not logged in"
+        return errors
+
+    data = json.loads(request.body)
+
+    tweet = models.Tweet()
+    media = None
+
+    tweet.author = request.user.profile
+
+    retweet_id = data.get("retweet")
+    if retweet_id:
+        if type(retweet_id) == str:
+            try:
+                retweet = models.Tweet.objects.get(id=retweet_id)
+                tweet.retweet = retweet
+            except ObjectDoesNotExist:
+                retweet = None
+                errors.update({"retweet": "Incorrect retweet id"})
+        else:
+            errors.update({"retweet": "Incorrect retweet id"})
+
+    text = data.get("text")
+    tweet.text = text
+
+    try:
+        tweet.full_clean()
+    except ValidationError as e:
+        errors.update(e.message_dict)
+
+    request_media = data.get("media")
+    if request_media and type(request_media) == dict:
+
+        values = request_media.get("values")
+        if values and type(values) == dict:
+
+            media = models.Media()
+            media_type = request_media.get("type")
+
+            if media_type == "img":
+                media.type = "img"
+                pattern = re.compile(r'data:image/([a-zA-Z]+);base64,([^":]+)')
+
+                images = models.Images()
+                for name in ['image_1', 'image_2', 'image_3', 'image_4']:
+                    img = values.get(name)
+
+                    if img and type(img) == str:
+                        if re.match(pattern, img):
+                            img_file = base64_to_image(img)
+                            setattr(images, name, img_file)
+                        else:
+                            errors.update({name: "Incorrect data"})
+                images.save()
+                media.img = images
+            else:
+                errors.update({"media": "Incorrect/missing media type"})
+
+        else:
+            errors.update({"values": "Incorrect/missing media values"})
+
+    if errors == {}:
+        tweet.save()
+        if media:
+            media.tweet = tweet
+            media.save()
+
+    return errors

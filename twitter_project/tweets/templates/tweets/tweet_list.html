@@ -11,32 +11,36 @@
 
         <div class="tweet-text">{{tweet.text|linebreaks}}</div>
 
+        {% if tweet.media %}
         <div class="tweet-media" style='display:none;'>
+            {% if tweet.media.type == "img" %}
             <div class="tweet-image-cont-left">
-                {% if tweet.images.image_1 %}
+                {% if tweet.media.img.image_1 %}
                 <div class='tweet-image-cont' image-num='1'>
-                    <img class='tweet-image img-thumbnail' src={{ tweet.images.image_1.url }}>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_1.url }}>
                 </div>
                 {% endif %}
-                {% if tweet.images.image_3 %}
+                {% if tweet.media.img.image_3 %}
                 <div class='tweet-image-cont' image-num='3'>
-                    <img class='tweet-image img-thumbnail' src={{ tweet.images.image_3.url }}>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_3.url }}>
                 </div>
                 {% endif %}
             </div>
             <div class="tweet-image-cont-right">
-                {% if tweet.images.image_2 %}
+                {% if tweet.media.img.image_2 %}
                 <div class='tweet-image-cont' image-num='2'>
-                    <img class='tweet-image img-thumbnail' src={{ tweet.images.image_2.url }}>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_2.url }}>
                 </div>
                 {% endif %}
-                {% if tweet.images.image_4 %}
+                {% if tweet.media.img.image_4 %}
                 <div class='tweet-image-cont' image-num='4'>
-                    <img class='tweet-image img-thumbnail' src={{ tweet.images.image_4.url }}>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_4.url }}>
                 </div>
                 {% endif %}
             </div>
+            {% endif %}
         </div>
+        {% endif %}
 
         {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
         <div class="action-btn comment-btn">

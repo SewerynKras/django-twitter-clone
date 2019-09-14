@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
-from tweets import forms, models, helpers
+from tweets import models, helpers
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.http import HttpResponse
 
 
@@ -10,34 +10,11 @@ class MainPage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["tweet_form"] = forms.TweetForm
-        context['images_form'] = forms.ImagesForm
         context['gif_list'] = models.GifCategory.objects.all()
 
         user = self.request.user
         context['tweet_list'] = helpers.get_tweet_list(user.profile)
         return context
-
-    def post(self, request):
-        tweet_form = forms.TweetForm(request.POST)
-
-        # TODO: Add error handling when form is incorrect
-        if tweet_form.is_valid():
-            tweet = tweet_form.save(commit=False)
-            profile = request.user.profile
-            tweet.author = profile
-
-            # check if there are any pictures attached
-            # if request.POST.get("image_1"):
-            # media = models.Media(type="img", images=images)
-            #     images_dict = helpers.convert_images(request.POST)
-            #     images = models.Images(**images_dict)
-            #     images.save()
-            #     media.tweet = tweet
-            #     media.save()
-
-            # tweet.save()
-            return redirect("/")
 
 
 def like_tweet_AJAX(request):
@@ -81,5 +58,5 @@ def get_tweets_AJAX(request):
 
 
 def new_tweet_AJAX(request):
-    pass
-    # VIP
+    errors = helpers.parse_new_tweet(request)
+    return JsonResponse(errors)

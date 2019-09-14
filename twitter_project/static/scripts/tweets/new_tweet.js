@@ -239,12 +239,12 @@ function new_tweet_AJAX() {
         "text": $textfield.text(),
         "media": {
             "type": "img",
-            "values": [
-                $image1.attr("src"),
-                $image2.attr("src"),
-                $image3.attr("src"),
-                $image4.attr("src")
-            ]
+            "values": {
+                "image_1": $image1.attr("src"),
+                "image_2": $image2.attr("src"),
+                "image_3": $image3.attr("src"),
+                "image_4": $image4.attr("src")
+            }
         },
     }
     console.log(data)
@@ -253,7 +253,7 @@ function new_tweet_AJAX() {
         headers: {
             'X-CSRFToken': Cookies.get('csrftoken')
         },
-        data: data,
+        data: JSON.stringify(data),
         type: "post",
         dataType: "json",
         success: function (response) {
@@ -335,7 +335,11 @@ $(document).ready(function () {
         show_gif_selector();
     })
 
-    $($cover, $gif_icon_btn).click(function (e) {
+    $cover.click(function (e) {
+        e.preventDefault();
+        hide_gif_selector();
+    })
+    $gif_icon_btn.click(function (e) {
         e.preventDefault();
         hide_gif_selector();
     })
