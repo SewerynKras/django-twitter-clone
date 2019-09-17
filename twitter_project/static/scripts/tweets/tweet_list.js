@@ -86,7 +86,16 @@ function get_tweets() {
  */
 function parse_twemoji() {
     let text = $(this).children(".tweet-text");
-    twemoji.parse(text[0])
+    twemoji.parse(text[0]);
+}
+
+/**
+ * Shows the media element and 
+ */
+function setup_gif() {
+    $(this).show();
+    let img = $(this).find("img");
+    img.attr("src", img.attr("gif-url"));
 }
 
 function setup_tweet_list($tweets) {
@@ -95,6 +104,7 @@ function setup_tweet_list($tweets) {
     $media.each(function () {
         rearrange_images($(this));
     })
+    $media.each(setup_gif);
 
     // Convert each tweets emoji into twemojis
     $tweets.each(parse_twemoji);

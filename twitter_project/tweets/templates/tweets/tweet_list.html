@@ -12,7 +12,7 @@
         <div class="tweet-text">{{tweet.text|linebreaks}}</div>
 
         {% if tweet.media %}
-        <div class="tweet-media" style='display:none;'>
+        <div class="tweet-media">
             {% if tweet.media.type == "img" %}
             <div class="tweet-image-cont-left">
                 {% if tweet.media.img.image_1 %}
@@ -37,6 +37,10 @@
                     <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_4.url }}>
                 </div>
                 {% endif %}
+            </div>
+            {% elif tweet.media.type == 'gif' %}
+            <div class='tweet-media-gif'>
+                <img src="" gif-url="{{tweet.media.gif.gif_url}}" thumb-url="{{tweet.media.gif.thumb_url}}">
             </div>
             {% endif %}
         </div>

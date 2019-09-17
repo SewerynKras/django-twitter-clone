@@ -181,24 +181,44 @@ def parse_new_tweet(request):
             media = models.Media()
             media_type = request_media.get("type")
 
-            if media_type == "img":
-                media.type = "img"
-                pattern = re.compile(r'data:image/([a-zA-Z]+);base64,([^":]+)')
+            if type(media_type) == str:
+                if media_type == "img":
+                    media.type = "img"
+                    pattern = re.compile(r'data:image/([a-zA-Z]+);base64,([^":]+)')
 
-                images = models.Images()
-                for name in ['image_1', 'image_2', 'image_3', 'image_4']:
-                    img = values.get(name)
+                    images = models.Images()
+                    for name in ['image_1', 'image_2', 'image_3', 'image_4']:
+                        img = values.get(name)
 
-                    if img and type(img) == str:
-                        if re.match(pattern, img):
-                            img_file = base64_to_image(img)
-                            setattr(images, name, img_file)
-                        else:
-                            errors.update({name: "Incorrect data"})
-                images.save()
-                media.img = images
-            else:
-                errors.update({"media": "Incorrect/missing media type"})
+                        if img and type(img) == str:
+                            if re.match(pattern, img):
+                                img_file = base64_to_image(img)
+                                setattr(images, name, img_file)
+                            else:
+                                errors.update({name: "Incorrect data"})
+                    images.save()
+                    media.img = images
+                elif media_type == 'gif':
+                    media.type = 'gif'
+                    pattern = re.compile(
+                        r'https://media[0-9]*\.giphy\.com/media/[\w#!:.?+=&%@!\-/]+')
+
+                    gif = models.Gif()
+                    gif_url = values.get("gif_url")
+                    thumb_url = values.get("thumb_url")
+                    if (type(gif_url) == str and
+                            type(thumb_url) == str and
+                            re.match(pattern, gif_url) and
+                            re.match(pattern, thumb_url)):
+                        gif.gif_url = gif_url
+                        gif.thumb_url = thumb_url
+                        gif.save()
+                        media.gif = gif
+                    else:
+                        errors.update({"values": "Incorrect data"})
+
+                else:
+                    errors.update({"media": "Incorrect/missing media type"})
 
         else:
             errors.update({"values": "Incorrect/missing media values"})

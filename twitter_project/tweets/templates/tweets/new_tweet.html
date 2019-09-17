@@ -7,33 +7,42 @@
     <img src={{ user.profile.profile_pic.url }} class="img-fluid profile-pic new-tweet-profile-pic">
 
     <div class='new-tweet-input'>
+        {% spaceless %}
         <span class='new-tweet-textarea' contenteditable="true"></span>
         <span class='new-tweet-placeholder' placeholder="What's happening?"></span>
+        {% endspaceless %}
     </div>
 
     <p></p>
 
-    <div class='tweet-media' style='display:none;'>
+    <div class='tweet-media' style="display: none;">
 
         {% comment %} Images {% endcomment %}
         <input type='file' class="new-tweet-image-button" multiple="multiple" style="display: none"
             accept="image/png, image/jpeg">
-
-        <div class="tweet-image-cont-left">
-            <div class='tweet-image-cont' image-num='1' style="display: none">
-                <img class='tweet-image img-thumbnail'>
+        {% spaceless %}
+        <div class='new-tweet-media-images' style="display: none;">
+            <div class="tweet-image-cont-left">
+                <div class='tweet-image-cont' image-num='1' style="display: none">
+                    <img class='tweet-image img-thumbnail'>
+                </div>
+                <div class='tweet-image-cont' image-num='3' style="display: none">
+                    <img class='tweet-image img-thumbnail'>
+                </div>
             </div>
-            <div class='tweet-image-cont' image-num='3' style="display: none">
-                <img class='tweet-image img-thumbnail'>
+            <div class="tweet-image-cont-right">
+                <div class='tweet-image-cont' image-num='2' style="display: none">
+                    <img class='tweet-image img-thumbnail'>
+                </div>
+                <div class='tweet-image-cont' image-num='4' style="display: none">
+                    <img class='tweet-image img-thumbnail'>
+                </div>
             </div>
         </div>
-        <div class="tweet-image-cont-right">
-            <div class='tweet-image-cont' image-num='2' style="display: none">
-                <img class='tweet-image img-thumbnail'>
-            </div>
-            <div class='tweet-image-cont' image-num='4' style="display: none">
-                <img class='tweet-image img-thumbnail'>
-            </div>
+        {% endspaceless %}
+
+        <div class='tweet-media-gif' style="display: none;">
+            <img>
         </div>
     </div>
 

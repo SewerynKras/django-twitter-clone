@@ -81,6 +81,7 @@ function rearrange_images($images) {
     // ------------------
     if (!$image2_cont.is(":visible")) {
         $image_cont_left.addClass("wide");
+        $image_cont_right.addClass("narrow");
         $image1_cont.addClass("tall");
     }
 

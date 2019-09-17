@@ -1,5 +1,3 @@
-    <div id='gif-list'>
-        {% for gif in gif_list %}
-        <div class="gif-preview" gif-url="{{gif.gif_url}}" thumb-url="{{gif.thumb_url}}"></div>
-        {% endfor %}
-    </div>
+{% for gif in gif_list %}
+<div class="gif-preview gif-select" gif-url="{{gif.gif_url}}" thumb-url="{{gif.thumb_url}}"></div>
+{% endfor %}

@@ -13,7 +13,7 @@
 
 <div class="container">
     <div id='new-tweet'>
-        {% include "tweets/new_tweet.html" with form=tweet_form images_form=images_form %}
+        {% include "tweets/new_tweet.html" %}
     </div>
 
     <div id='tweet-list'>
@@ -28,14 +28,15 @@
         <input class="form-control" id="gif-search-bar" type="search" placeholder="Search for GIFs">
         <button class="btn" id="gif-search-submit" type="submit">Search</button>
     </form>
-    <div id='gif-list'>
+    <div id='gif-preview-list'>
         {% for gif_cat in gif_list %}
-        <div class="gif-preview" gif-thumb="{{gif_cat.gif.thumb_url}}" gif-url="{{gif_cat.gif.gif_url}}">
+        <div class="gif-preview" thumb-url="{{gif_cat.gif.thumb_url}}" gif-url="{{gif_cat.gif.gif_url}}">
             <div class="gif-preview-text">
                 {{gif_cat.category_name}}
             </div>
         </div>
         {% endfor %}
     </div>
+    <div id='gif-list'></div>
 </div>
 {% endblock body %}

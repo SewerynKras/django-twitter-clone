@@ -2,6 +2,9 @@ const HTML_X = "&times;";
 const HTML_ARROW = "&larr;";
 const AJAX_GIF_LIMIT = 12;
 
+var GIF_SEARCHED = false;
+
+
 var $cover;
 
 var $barLeft;
@@ -11,7 +14,13 @@ var $textfield;
 
 var $media
 
+var $img_media_button;
+var $gif_media_button;
+var $poll_media_button;
+var $emoji_media_button;
+
 var $image_button;
+var $images;
 var $image1;
 var $image2;
 var $image3;
@@ -20,18 +29,16 @@ var $image1_cont;
 var $image2_cont;
 var $image3_cont;
 var $image4_cont;
+var $gif_media;
+
+var $gif_prev_list;
 
 var $gif_selector;
 var $gif_search_bar;
-var $gif_list
+var $gif_list;
 var $gif_icon_btn;
 var $gif_icon_btn_text;
 
-var $hidden_image1_form;
-var $hidden_image2_form;
-var $hidden_image3_form;
-var $hidden_image4_form;
-var $hidden_text_input_form;
 
 /**
  * - removes the placeholder if the textfield isn't empty
@@ -66,12 +73,15 @@ function updateBar(val) {
         $barLeft.css('transform', 'rotate(' + deg + 'deg)');
     }
 }
+
 /**
  * Slots each image from $image_button to a free image container
  */
 function order_images() {
     if (this.files && this.files[0]) {
         $media.show();
+        $images.show();
+        $gif_media_button.prop('disabled', true);
         if (this.files[0])
             slot_image(this.files[0]);
         if (this.files[1])
@@ -105,11 +115,12 @@ function slot_image(file) {
             $image4.attr("src", e.target.result);
             $image4_cont.show();
         }
-        rearrange_images($media);
+        rearrange_images($images);
     }
     reader.readAsDataURL(file);
 
 }
+
 /**
  * Frees-up the image container by removing the stored image.
  * This also cascades all images.
@@ -147,10 +158,13 @@ function cascade_images() {
         $image4.removeAttr("src")
         $image4_cont.hide();
     }
-    if (!$image1.attr("src"))
+    if (!$image1.attr("src")) {
         $media.hide();
+        $images.hide();
+        $gif_media_button.prop('disabled', false);
+    }
 
-    rearrange_images($media);
+    rearrange_images($images);
 }
 
 /**
@@ -164,9 +178,14 @@ function show_gif_selector() {
 /**
  * Hides the gif selector.
  */
-function hide_gif_selector() {
-    $cover.hide();
-    $gif_selector.hide();
+function hide_gif_selector(force) {
+    if (GIF_SEARCHED) {
+        $gif_icon_btn_text.html(HTML_X);
+        reset_gif_list();
+    } else {
+        $cover.hide();
+        $gif_selector.hide();
+    }
 }
 
 /**
@@ -174,9 +193,15 @@ function hide_gif_selector() {
  */
 function search_gifs() {
     let query = $gif_search_bar.val();
-    if (query != "")
+    if (query != "") {
+        $gif_icon_btn_text.html(HTML_ARROW);
+        $gif_prev_list.hide();
+        $gif_list.show();
+        GIF_SEARCHED = true;
         query_gifs(query, 0);
+    }
 }
+
 /**
  * Sends an AJAX request to the giphy api and appends
  * received gifs to the gif list
@@ -184,6 +209,7 @@ function search_gifs() {
  * @param {Number} offset
  */
 function query_gifs(query, offset) {
+    $gif_list.empty();
     $.ajax({
         url: "ajax/get_gifs/",
         data: {
@@ -193,17 +219,21 @@ function query_gifs(query, offset) {
         },
         dataType: "html",
         success: function (response) {
-            new_gif_list = $($.parseHTML(response))
-            $gif_list.html(new_gif_list.filter("#gif-list").children())
+            new_gif_list = $($.parseHTML(response));
+            new_gif_list.each(set_gif_url);
+            new_gif_list.click(select_gif);
+            $gif_list.append(new_gif_list);
+
         },
     });
 }
+
 /**
  * Changes the background-image css property to the url in
- * the 'gif-thumb' attribute
+ * the 'thumb_url' attribute
  */
 function set_gif_thumb() {
-    $(this).css("background-image", `url(${$(this).attr("gif-thumb")})`)
+    $(this).css("background-image", `url(${$(this).attr("thumb-url")})`);
 }
 
 /**
@@ -211,43 +241,97 @@ function set_gif_thumb() {
  * the 'gif-url' attribute
  */
 function set_gif_url() {
-    $(this).css("background-image", `url(${$(this).attr("gif-thumb")})`)
+    $(this).css("background-image", `url(${$(this).attr("gif-url")})`);
 }
 
 /**
  * Changes the search bars text to that of the given gif-preview
  * @param {Jquery selector} $preview 
  */
-function select_preview($preview) {
+function select_gif_prev_list($preview) {
     $gif_search_bar.val($.trim($preview.find(".gif-preview-text").text()));
 }
 
 /**
- * Takes care of all hidden forms.
- * This should be called just before submitting.
+ * Resets the gif-list to its original state
  */
-function fill_hidden_forms() {
-    $hidden_text_input_form.val($textfield.text());
-    $hidden_image1_form.val($image1.attr("src"));
-    $hidden_image2_form.val($image2.attr("src"));
-    $hidden_image3_form.val($image3.attr("src"));
-    $hidden_image4_form.val($image4.attr("src"));
+function reset_gif_list() {
+    $gif_list.empty();
+    $gif_prev_list.show();
+    GIF_SEARCHED = false;
+    $gif_search_bar.val("");
 }
 
+/**
+ * Changes the gif media fields attributes to
+ * reflect the selected gif.
+ * @param {Jquery selector} $gif 
+ */
+function slot_gif($gif) {
+    $media.show();
+    $gif_media.show();
+    $img_media_button.prop('disabled', true);
+    $gif_img.attr("gif-url", $gif.attr("gif-url"))
+    $gif_img.attr("thumb-url", $gif.attr("thumb-url"))
+    $gif_img.attr("src", $gif_img.attr("gif-url"));
+}
+
+
+/**
+ * Slots the selected gif to the gif media field,
+ * hides and resets the gif selector.
+ */
+function select_gif() {
+    slot_gif($(this));
+    reset_gif_list();
+    hide_gif_selector();
+}
+
+
+/**
+ * Clears the gif media field.
+ */
+function delete_gif() {
+    $gif_img.attr("gif-url", "");
+    $gif_img.attr("thumb-url", "");
+    $gif_img.attr("src", "");
+    $gif_media.hide();
+    $media.hide();
+    $img_media_button.prop('disabled', false);
+}
+
+/**
+ * Sends an AJAX POST request to create a new tweet
+ */
 function new_tweet_AJAX() {
+
+    if ($image1.attr("src")) {
+        var type = 'img';
+        var values = {
+            "image_1": $image1.attr("src"),
+            "image_2": $image2.attr("src"),
+            "image_3": $image3.attr("src"),
+            "image_4": $image4.attr("src")
+        };
+    } else if ($gif_img.attr("src")) {
+        var type = 'gif';
+        var values = {
+            'thumb_url': $gif_img.attr("thumb-url"),
+            'gif_url': $gif_img.attr("gif-url")
+        };
+    } else {
+        var type = null;
+        var values = null;
+    };
+
     let data = {
         "text": $textfield.text(),
         "media": {
-            "type": "img",
-            "values": {
-                "image_1": $image1.attr("src"),
-                "image_2": $image2.attr("src"),
-                "image_3": $image3.attr("src"),
-                "image_4": $image4.attr("src")
-            }
+            "type": type,
+            "values": values
         },
-    }
-    console.log(data)
+    };
+    console.log(data);
     $.ajax({
         url: "ajax/new_tweet/",
         headers: {
@@ -274,19 +358,29 @@ $(document).ready(function () {
     $cover = $("#cover");
     $media = $(".tweet-media");
 
+    $images = $media.find(".new-tweet-media-images");
+
+    $img_media_button = $(".new-tweet-media-image");
+    $gif_media_button = $(".new-tweet-media-gif");
+    $poll_media_button = $(".new-tweet-media-poll");
+    $emoji_media_button = $(".new-tweet-media-emoji");
+
     $image_button = $(".new-tweet-image-button");
-    $image1_cont = $media.find("[image-num='1']");
-    $image2_cont = $media.find("[image-num='2']");
-    $image3_cont = $media.find("[image-num='3']");
-    $image4_cont = $media.find("[image-num='4']");
+    $image1_cont = $images.find("[image-num='1']");
+    $image2_cont = $images.find("[image-num='2']");
+    $image3_cont = $images.find("[image-num='3']");
+    $image4_cont = $images.find("[image-num='4']");
     $image1 = $image1_cont.find(".tweet-image");
     $image2 = $image2_cont.find(".tweet-image");
     $image3 = $image3_cont.find(".tweet-image");
     $image4 = $image4_cont.find(".tweet-image");
+    $gif_media = $media.find(".tweet-media-gif");
+    $gif_img = $gif_media.find("img");
 
     $gif_selector = $("#gif-selector");
     $gif_search_bar = $("#gif-search-bar");
     $gif_list = $("#gif-list");
+    $gif_prev_list = $("#gif-preview-list");
     $gif_icon_btn = $("#gif-icon-btn");
     $gif_icon_btn_text = $("#gif-icon-btn-text");
 
@@ -308,7 +402,7 @@ $(document).ready(function () {
         new_tweet_AJAX();
     })
 
-    $('.new-tweet-media-emoji').lsxEmojiPicker({
+    $emoji_media_button.lsxEmojiPicker({
         twemoji: true,
         height: 200,
         width: 240,
@@ -318,7 +412,7 @@ $(document).ready(function () {
         }
     });
 
-    $(".new-tweet-media-image").click(function (e) {
+    $img_media_button.click(function (e) {
         e.preventDefault();
         $image_button.click();
     })
@@ -330,7 +424,7 @@ $(document).ready(function () {
     $($image3_cont).click(delete_image);
     $($image4_cont).click(delete_image);
 
-    $(".new-tweet-media-gif").click(function (e) {
+    $gif_media_button.click(function (e) {
         e.preventDefault();
         show_gif_selector();
     })
@@ -349,10 +443,12 @@ $(document).ready(function () {
         search_gifs();
     })
 
-    $(".gif-preview").each(set_gif_thumb)
+    $(".gif-preview").each(set_gif_thumb);
 
     $(".gif-preview").click(function (e) {
         e.preventDefault();
-        select_preview($(this));
+        select_gif_prev_list($(this));
     })
+
+    $gif_img.click(delete_gif);
 });
