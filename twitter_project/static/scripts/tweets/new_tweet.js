@@ -20,7 +20,7 @@ var $poll_media_button;
 var $emoji_media_button;
 
 var $image_button;
-var $images;
+var $images_media;
 var $image1;
 var $image2;
 var $image3;
@@ -30,6 +30,16 @@ var $image2_cont;
 var $image3_cont;
 var $image4_cont;
 var $gif_media;
+
+var $poll_media;
+var $poll_exit_btn;
+var $poll_opt1;
+var $poll_opt2;
+var $poll_opt3;
+var $poll_opt4;
+
+var $poll_opt2_btn;
+var $poll_opt3_btn;
 
 var $gif_prev_list;
 
@@ -73,15 +83,53 @@ function updateBar(val) {
         $barLeft.css('transform', 'rotate(' + deg + 'deg)');
     }
 }
+/**
+ * Resets and hides all media elements, enables media buttons.
+ */
+function hide_all_media() {
+    $media.hide();
+    $images_media.hide();
+    $gif_media.hide();
+    $poll_media.hide();
+
+    $img_media_button.prop('disabled', false)
+    $gif_media_button.prop('disabled', false)
+    $poll_media_button.prop('disabled', false)
+}
+
+function show_gif_media() {
+    hide_all_media();
+    $img_media_button.prop('disabled', true)
+    $poll_media_button.prop('disabled', true)
+
+    $media.show();
+    $gif_media.show();
+}
+
+function show_img_media() {
+    hide_all_media();
+    $gif_media_button.prop('disabled', true)
+    $poll_media_button.prop('disabled', true)
+
+    $media.show();
+    $images_media.show();
+}
+
+function show_poll_media() {
+    hide_all_media();
+    $gif_media_button.prop('disabled', true)
+    $img_media_button.prop('disabled', true)
+
+    $media.show();
+    $poll_media.show();
+}
 
 /**
  * Slots each image from $image_button to a free image container
  */
 function order_images() {
     if (this.files && this.files[0]) {
-        $media.show();
-        $images.show();
-        $gif_media_button.prop('disabled', true);
+        show_img_media();
         if (this.files[0])
             slot_image(this.files[0]);
         if (this.files[1])
@@ -115,7 +163,7 @@ function slot_image(file) {
             $image4.attr("src", e.target.result);
             $image4_cont.show();
         }
-        rearrange_images($images);
+        rearrange_images($images_media);
     }
     reader.readAsDataURL(file);
 
@@ -159,12 +207,10 @@ function cascade_images() {
         $image4_cont.hide();
     }
     if (!$image1.attr("src")) {
-        $media.hide();
-        $images.hide();
-        $gif_media_button.prop('disabled', false);
+        hide_all_media();
     }
 
-    rearrange_images($images);
+    rearrange_images($images_media);
 }
 
 /**
@@ -268,9 +314,7 @@ function reset_gif_list() {
  * @param {Jquery selector} $gif 
  */
 function slot_gif($gif) {
-    $media.show();
-    $gif_media.show();
-    $img_media_button.prop('disabled', true);
+    show_gif_media();
     $gif_img.attr("gif-url", $gif.attr("gif-url"))
     $gif_img.attr("thumb-url", $gif.attr("thumb-url"))
     $gif_img.attr("src", $gif_img.attr("gif-url"));
@@ -295,9 +339,7 @@ function delete_gif() {
     $gif_img.attr("gif-url", "");
     $gif_img.attr("thumb-url", "");
     $gif_img.attr("src", "");
-    $gif_media.hide();
-    $media.hide();
-    $img_media_button.prop('disabled', false);
+    hide_all_media();
 }
 
 /**
@@ -358,24 +400,32 @@ $(document).ready(function () {
     $cover = $("#cover");
     $media = $(".tweet-media");
 
-    $images = $media.find(".new-tweet-media-images");
-
     $img_media_button = $(".new-tweet-media-image");
     $gif_media_button = $(".new-tweet-media-gif");
     $poll_media_button = $(".new-tweet-media-poll");
     $emoji_media_button = $(".new-tweet-media-emoji");
 
     $image_button = $(".new-tweet-image-button");
-    $image1_cont = $images.find("[image-num='1']");
-    $image2_cont = $images.find("[image-num='2']");
-    $image3_cont = $images.find("[image-num='3']");
-    $image4_cont = $images.find("[image-num='4']");
+    $images_media = $media.find(".tweet-media-images");
+    $image1_cont = $images_media.find("[image-num='1']");
+    $image2_cont = $images_media.find("[image-num='2']");
+    $image3_cont = $images_media.find("[image-num='3']");
+    $image4_cont = $images_media.find("[image-num='4']");
     $image1 = $image1_cont.find(".tweet-image");
     $image2 = $image2_cont.find(".tweet-image");
     $image3 = $image3_cont.find(".tweet-image");
     $image4 = $image4_cont.find(".tweet-image");
     $gif_media = $media.find(".tweet-media-gif");
     $gif_img = $gif_media.find("img");
+
+    $poll_media = $(".tweet-media-poll");
+    $poll_exit_btn = $poll_media.find(".exit-btn");
+    $poll_opt1 = $poll_media.find("[option-num='1']");
+    $poll_opt2 = $poll_media.find("[option-num='2']");
+    $poll_opt3 = $poll_media.find("[option-num='3']");
+    $poll_opt4 = $poll_media.find("[option-num='4']");
+    $poll_opt2_btn = $poll_opt2.find("[type='button']")
+    $poll_opt3_btn = $poll_opt3.find("[type='button']")
 
     $gif_selector = $("#gif-selector");
     $gif_search_bar = $("#gif-search-bar");
@@ -451,4 +501,25 @@ $(document).ready(function () {
     })
 
     $gif_img.click(delete_gif);
+
+    $poll_media_button.click(function (e) {
+        e.preventDefault();
+        show_poll_media();
+    })
+
+    $poll_opt2_btn.click(function (e) {
+        e.preventDefault();
+        $(this).hide();
+        $poll_opt3.show();
+    })
+    $poll_opt3_btn.click(function (e) {
+        e.preventDefault();
+        $(this).hide();
+        $poll_opt4.show();
+    })
+
+    $poll_exit_btn.click(function (e) {
+        e.preventDefault();
+        hide_all_media();
+    })
 });

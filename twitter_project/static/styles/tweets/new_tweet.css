@@ -50,18 +50,18 @@
 /* media */
 
 .tweet-media {
+    max-width: 400px;
+    max-height: 200px;
+}
+
+.tweet-media-images {
     width: 400px;
     height: 200px;
 }
 
-.new-tweet-media-images {
-    width: 100%;
-    height: 100%;
-}
-
 .tweet-media-gif {
-    height: 100%;
-    width: 100%;
+    width: 400px;
+    height: 200px;
 }
 
 .tweet-media-gif img {
@@ -107,6 +107,9 @@
     float: right;
 }
 
+.exit-btn {
+    float: right;
+}
 
 /* Progress bar css */
 

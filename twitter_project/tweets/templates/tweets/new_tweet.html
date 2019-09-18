@@ -21,7 +21,7 @@
         <input type='file' class="new-tweet-image-button" multiple="multiple" style="display: none"
             accept="image/png, image/jpeg">
         {% spaceless %}
-        <div class='new-tweet-media-images' style="display: none;">
+        <div class='tweet-media-images' style="display: none;">
             <div class="tweet-image-cont-left">
                 <div class='tweet-image-cont' image-num='1' style="display: none">
                     <img class='tweet-image img-thumbnail'>
@@ -44,6 +44,28 @@
         <div class='tweet-media-gif' style="display: none;">
             <img>
         </div>
+
+        <div class='tweet-media-poll' style='display: none;'>
+            <a name="" id="" class="btn btn-danger exit-btn" role="button">&times;</a>
+            <div class='new-tweet-poll-input' option-num='1'>
+                <span class='poll-option-text'>Option 1:</span>
+                <input type="text">
+            </div>
+            <div class='new-tweet-poll-input' option-num='2'>
+                <span class='poll-option-text'>Option 2:</span>
+                <input type="text">
+                <input class="btn btn-primary" type="button" value="+">
+            </div>
+            <div class='new-tweet-poll-input' option-num='3' style='display: none'>
+                <span class='poll-option-text'>Option 3:</span>
+                <input type="text">
+                <input class="btn btn-primary" type="button" value="+">
+            </div>
+            <div class='new-tweet-poll-input' option-num='4' style='display: none'>
+                <span class='poll-option-text'>Option 4:</span>
+                <input type="text">
+            </div>
+        </div>
     </div>
 
     <p></p>
@@ -51,7 +73,7 @@
     <div class="new-tweet-media-buttons">
         <button class='new-tweet-media-image'>IMG</button>
         <button class='new-tweet-media-gif'>GIF</button>
-        <span class='new-tweet-media-poll'>POLL</span>
+        <button class='new-tweet-media-poll'>POLL</button>
         <button class='new-tweet-media-emoji'>EMOJI</button>
     </div>
 
