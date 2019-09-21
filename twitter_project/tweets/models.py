@@ -107,10 +107,7 @@ class Images(models.Model):
     image_1 = models.ImageField(upload_to="tweet_images",
                                 height_field=None,
                                 width_field=None,
-                                max_length=None,
-                                default=None,
-                                blank=True,
-                                null=True)
+                                max_length=None)
     image_2 = models.ImageField(upload_to="tweet_images",
                                 height_field=None,
                                 width_field=None,

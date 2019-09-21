@@ -15,3 +15,13 @@
     height: 40px;
     width: 40px;
 }
+
+.tweet-media-poll-btn {
+    display: block;
+    background-color: gray;
+    color: white !important;
+}
+
+.chosen {
+    background-color: darkblue;
+}

@@ -14,51 +14,87 @@
         {% if tweet.media %}
         <div class="tweet-media">
             {% if tweet.media.type == "img" %}
-            <div class="tweet-image-cont-left">
-                {% if tweet.media.img.image_1 %}
-                <div class='tweet-image-cont' image-num='1'>
-                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_1.url }}>
+            <div class='tweet-media-images'>
+                <div class="tweet-image-cont-left">
+                    {% if tweet.media.img.image_1 %}
+                    <div class='tweet-image-cont' image-num='1'>
+                        <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_1.url }}>
+                    </div>
+                    {% endif %}
+                    {% if tweet.media.img.image_3 %}
+                    <div class='tweet-image-cont' image-num='3'>
+                        <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_3.url }}>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
-                {% if tweet.media.img.image_3 %}
-                <div class='tweet-image-cont' image-num='3'>
-                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_3.url }}>
+                <div class="tweet-image-cont-right">
+                    {% if tweet.media.img.image_2 %}
+                    <div class='tweet-image-cont' image-num='2'>
+                        <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_2.url }}>
+                    </div>
+                    {% endif %}
+                    {% if tweet.media.img.image_4 %}
+                    <div class='tweet-image-cont' image-num='4'>
+                        <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_4.url }}>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
-            </div>
-            <div class="tweet-image-cont-right">
-                {% if tweet.media.img.image_2 %}
-                <div class='tweet-image-cont' image-num='2'>
-                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_2.url }}>
-                </div>
-                {% endif %}
-                {% if tweet.media.img.image_4 %}
-                <div class='tweet-image-cont' image-num='4'>
-                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_4.url }}>
-                </div>
-                {% endif %}
             </div>
             {% elif tweet.media.type == 'gif' %}
             <div class='tweet-media-gif'>
                 <img src="" gif-url="{{tweet.media.gif.gif_url}}" thumb-url="{{tweet.media.gif.thumb_url}}">
             </div>
-            {% endif %}
-        </div>
-        {% endif %}
+            {% elif tweet.media.type == 'poll' %}
+            {% spaceless %}
+            <div class='tweet-media-poll'>
+                {% if tweet.media.poll.choice1_text %}
+                <a class="btn tweet-media-poll-btn" role="button" option-num='1' votes="{{ tweet.media.poll.votes1 }}"
+                    {% if tweet.poll_chosen == 1 %}chosen{% endif %}>
+                    {{ tweet.media.poll.choice1_text }}
+                </a>
+                {% endif %}
+                {% if tweet.media.poll.choice2_text %}
+                <a class="btn tweet-media-poll-btn" role="button" option-num='2' votes="{{ tweet.media.poll.votes2 }}"
+                    {% if tweet.poll_chosen == 2 %}chosen{% endif %}>
 
-        {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
-        <div class="action-btn comment-btn">
-            <span class="tweet-comments-icon">C:</span>
-            <span class="tweet-comments-num">{{tweet.comments}}</span>
-        </div>
-        <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
-            <span class="tweet-rts-icon">R:</span>
-            <span class="tweet-rts-num">{{tweet.rts}}</span>
-        </div>
-        <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
-            <span class="tweet-likes-icon">L:</span>
-            <span class="tweet-likes-num">{{tweet.likes}}</span>
-        </div>
+                    {{ tweet.media.poll.choice2_text }}
+                </a>
+                {% endif %}
+                {% if tweet.media.poll.choice3_text %}
+                <a class="btn tweet-media-poll-btn" role="button" option-num='3' votes="{{ tweet.media.poll.votes3 }}"
+                    {% if tweet.poll_chosen == 3 %}chosen{% endif %}>
+
+                    {{ tweet.media.poll.choice3_text }}
+                </a>
+                {% endif %}
+                {% if tweet.media.poll.choice4_text %}
+                <a class="btn tweet-media-poll-btn" role="button" option-num='4' votes="{{ tweet.media.poll.votes4 }}"
+                    {% if tweet.poll_chosen == 4 %}chosen{% endif %}>
+
+                    {{ tweet.media.poll.choice4_text }}
+                </a>
+                {% endif %}
+                <div class='poll-totalvotes'>
+                    TOTAL VOTES: {{ tweet.total_votes}}
+                </div>
+                {% endspaceless %}
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
+            <div class="action-btn comment-btn">
+                <span class="tweet-comments-icon">C:</span>
+                <span class="tweet-comments-num">{{tweet.comments}}</span>
+            </div>
+            <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
+                <span class="tweet-rts-icon">R:</span>
+                <span class="tweet-rts-num">{{tweet.rts}}</span>
+            </div>
+            <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
+                <span class="tweet-likes-icon">L:</span>
+                <span class="tweet-likes-num">{{tweet.likes}}</span>
+            </div>
     </li>
     {% endfor %}
 </ul>

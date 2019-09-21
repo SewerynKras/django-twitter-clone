@@ -5,8 +5,9 @@ import urllib.parse
 import json
 import re
 
+from django.utils import timezone
 from django.core.files.base import ContentFile
-from django.db.models import Count, Exists, OuterRef, Q
+from django.db.models import Count, Exists, OuterRef, Q, Subquery, F
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
@@ -48,11 +49,25 @@ def get_tweet_list(profile, before=None, after=None):
 
     # now the same thing for comments
 
-    # give each tweet number of retweets
+    # give each tweet number of comments
     tweets = tweets.annotate(comments=Count("comment", distinct=True))
 
     # Twitter doesn't indicate whether the user has commented on
     # a tweet or not (probably because you can comment multiple times?)
+
+    # Give each tweet an int value indicating which option the user has selected
+    selected = models.PollVote.objects.filter(author=profile, poll__media__tweet=OuterRef("pk"))
+    tweets = tweets.annotate(poll_chosen=Subquery(selected.values("choice")))
+
+    # Count votes of each poll
+    tweets = tweets.annotate(poll_votes_1=Count("pk", filter=Q(media__poll__pollvote__choice=1)))
+    tweets = tweets.annotate(poll_votes_2=Count("pk", filter=Q(media__poll__pollvote__choice=2)))
+    tweets = tweets.annotate(poll_votes_3=Count("pk", filter=Q(media__poll__pollvote__choice=3)))
+    tweets = tweets.annotate(poll_votes_4=Count("pk", filter=Q(media__poll__pollvote__choice=4)))
+    tweets = tweets.annotate(total_votes=(F("poll_votes_1") +
+                                          F("poll_votes_2") +
+                                          F("poll_votes_3") +
+                                          F("poll_votes_4")))
 
     tweets = tweets.order_by("-date")
     return tweets
@@ -131,11 +146,11 @@ def parse_new_tweet(request):
         "retweet": ...,
         "media": {
             "type": ...,
-            "values": [
+            "values": {
                 "value1": ...,
                 "value2": ...,
                 ...
-                ]
+                }
             }
     }
     """
@@ -186,37 +201,47 @@ def parse_new_tweet(request):
                     media.type = "img"
                     pattern = re.compile(r'data:image/([a-zA-Z]+);base64,([^":]+)')
 
-                    images = models.Images()
+                    media_item = models.Images()
                     for name in ['image_1', 'image_2', 'image_3', 'image_4']:
                         img = values.get(name)
 
                         if img and type(img) == str:
                             if re.match(pattern, img):
                                 img_file = base64_to_image(img)
-                                setattr(images, name, img_file)
+                                setattr(media_item, name, img_file)
                             else:
                                 errors.update({name: "Incorrect data"})
-                    images.save()
-                    media.img = images
                 elif media_type == 'gif':
                     media.type = 'gif'
                     pattern = re.compile(
                         r'https://media[0-9]*\.giphy\.com/media/[\w#!:.?+=&%@!\-/]+')
 
-                    gif = models.Gif()
+                    media_item = models.Gif()
                     gif_url = values.get("gif_url")
                     thumb_url = values.get("thumb_url")
                     if (type(gif_url) == str and
                             type(thumb_url) == str and
                             re.match(pattern, gif_url) and
                             re.match(pattern, thumb_url)):
-                        gif.gif_url = gif_url
-                        gif.thumb_url = thumb_url
-                        gif.save()
-                        media.gif = gif
+                        media_item.gif_url = gif_url
+                        media_item.thumb_url = thumb_url
                     else:
                         errors.update({"values": "Incorrect data"})
 
+                elif media_type == 'poll':
+                    media.type = 'poll'
+                    media_item = models.Poll()
+                    media_item.end_date = timezone.now()
+                    for name in ['choice1_text',
+                                 'choice2_text',
+                                 'choice3_text',
+                                 'choice4_text']:
+                        option = values.get(name)
+                        if option:
+                            if type(option) == str:
+                                setattr(media_item, name, option)
+                            else:
+                                errors.update({name: "Incorrect data"})
                 else:
                     errors.update({"media": "Incorrect/missing media type"})
 
@@ -227,6 +252,8 @@ def parse_new_tweet(request):
         tweet.save()
         if media:
             media.tweet = tweet
+            media_item.save()
+            setattr(media, media.type, media_item)
             media.save()
 
     return errors
