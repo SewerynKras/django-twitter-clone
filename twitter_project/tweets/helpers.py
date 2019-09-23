@@ -7,7 +7,7 @@ import re
 
 from django.utils import timezone
 from django.core.files.base import ContentFile
-from django.db.models import Count, Exists, OuterRef, Q, Subquery, F
+from django.db.models import Count, Exists, OuterRef, Q, Subquery
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
@@ -58,16 +58,6 @@ def get_tweet_list(profile, before=None, after=None):
     # Give each tweet an int value indicating which option the user has selected
     selected = models.PollVote.objects.filter(author=profile, poll__media__tweet=OuterRef("pk"))
     tweets = tweets.annotate(poll_chosen=Subquery(selected.values("choice")))
-
-    # Count votes of each poll
-    tweets = tweets.annotate(poll_votes_1=Count("pk", filter=Q(media__poll__pollvote__choice=1)))
-    tweets = tweets.annotate(poll_votes_2=Count("pk", filter=Q(media__poll__pollvote__choice=2)))
-    tweets = tweets.annotate(poll_votes_3=Count("pk", filter=Q(media__poll__pollvote__choice=3)))
-    tweets = tweets.annotate(poll_votes_4=Count("pk", filter=Q(media__poll__pollvote__choice=4)))
-    tweets = tweets.annotate(total_votes=(F("poll_votes_1") +
-                                          F("poll_votes_2") +
-                                          F("poll_votes_3") +
-                                          F("poll_votes_4")))
 
     tweets = tweets.order_by("-date")
     return tweets

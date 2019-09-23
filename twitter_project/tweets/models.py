@@ -82,6 +82,31 @@ class Poll(models.Model):
     choice4_text = models.CharField(max_length=25, null=True, blank=True)
     end_date = models.DateTimeField(auto_now=False)
 
+    @property
+    def total_votes(self):
+        votes = PollVote.objects.filter(poll=self.pk)
+        return len(votes)
+
+    @property
+    def votes1(self):
+        votes = PollVote.objects.filter(poll=self.pk, choice=1)
+        return len(votes)
+
+    @property
+    def votes2(self):
+        votes = PollVote.objects.filter(poll=self.pk, choice=2)
+        return len(votes)
+
+    @property
+    def votes3(self):
+        votes = PollVote.objects.filter(poll=self.pk, choice=3)
+        return len(votes)
+
+    @property
+    def votes4(self):
+        votes = PollVote.objects.filter(poll=self.pk, choice=4)
+        return len(votes)
+
     def __str__(self):
         if hasattr(self, 'media'):
             parent = str(self.media)
