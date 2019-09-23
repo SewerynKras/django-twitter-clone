@@ -12,7 +12,7 @@ var $barRight;
 var $placeholder;
 var $textfield;
 
-var $media
+var $media;
 
 var $img_media_button;
 var $gif_media_button;
@@ -33,13 +33,13 @@ var $gif_media;
 
 var $poll_media;
 var $poll_exit_btn;
-var $poll_opt1;
-var $poll_opt2;
-var $poll_opt3;
-var $poll_opt4;
+var $poll_ch1;
+var $poll_ch2;
+var $poll_ch3;
+var $poll_ch4;
 
-var $poll_opt2_btn;
-var $poll_opt3_btn;
+var $poll_ch2_btn;
+var $poll_ch3_btn;
 
 var $gif_prev_list;
 
@@ -83,6 +83,7 @@ function updateBar(val) {
         $barLeft.css('transform', 'rotate(' + deg + 'deg)');
     }
 }
+
 /**
  * Resets and hides all media elements, enables media buttons.
  */
@@ -96,7 +97,11 @@ function hide_all_media() {
     $gif_media_button.prop('disabled', false)
     $poll_media_button.prop('disabled', false)
 }
-
+/**
+ * Hides all media,
+ * Disables the img and poll buttons,
+ * Shows gif media.
+ */
 function show_gif_media() {
     hide_all_media();
     $img_media_button.prop('disabled', true)
@@ -106,6 +111,11 @@ function show_gif_media() {
     $gif_media.show();
 }
 
+/**
+ * Hides all media,
+ * Disables the gif and poll buttons,
+ * Shows img media.
+ */
 function show_img_media() {
     hide_all_media();
     $gif_media_button.prop('disabled', true)
@@ -115,6 +125,11 @@ function show_img_media() {
     $images_media.show();
 }
 
+/**
+ * Hides all media,
+ * Disables the img and gif buttons,
+ * Shows poll media.
+ */
 function show_poll_media() {
     hide_all_media();
     $gif_media_button.prop('disabled', true)
@@ -320,7 +335,6 @@ function slot_gif($gif) {
     $gif_img.attr("src", $gif_img.attr("gif-url"));
 }
 
-
 /**
  * Slots the selected gif to the gif media field,
  * hides and resets the gif selector.
@@ -330,7 +344,6 @@ function select_gif() {
     reset_gif_list();
     hide_gif_selector();
 }
-
 
 /**
  * Clears the gif media field.
@@ -360,6 +373,14 @@ function new_tweet_AJAX() {
         var values = {
             'thumb_url': $gif_img.attr("thumb-url"),
             'gif_url': $gif_img.attr("gif-url")
+        };
+    } else if ($poll_ch1.find("input").val()) {
+        var type = 'poll';
+        var values = {
+            "choice1_text": $poll_ch1.find("input").val(),
+            "choice2_text": $poll_ch2.find("input").val(),
+            "choice3_text": $poll_ch3.find("input").val(),
+            "choice4_text": $poll_ch4.find("input").val()
         };
     } else {
         var type = null;
@@ -420,12 +441,12 @@ $(document).ready(function () {
 
     $poll_media = $(".tweet-media-poll");
     $poll_exit_btn = $poll_media.find(".exit-btn");
-    $poll_opt1 = $poll_media.find("[option-num='1']");
-    $poll_opt2 = $poll_media.find("[option-num='2']");
-    $poll_opt3 = $poll_media.find("[option-num='3']");
-    $poll_opt4 = $poll_media.find("[option-num='4']");
-    $poll_opt2_btn = $poll_opt2.find("[type='button']")
-    $poll_opt3_btn = $poll_opt3.find("[type='button']")
+    $poll_ch1 = $poll_media.find("[choice-num='1']");
+    $poll_ch2 = $poll_media.find("[choice-num='2']");
+    $poll_ch3 = $poll_media.find("[choice-num='3']");
+    $poll_ch4 = $poll_media.find("[choice-num='4']");
+    $poll_ch2_btn = $poll_ch2.find("[type='button']");
+    $poll_ch3_btn = $poll_ch3.find("[type='button']");
 
     $gif_selector = $("#gif-selector");
     $gif_search_bar = $("#gif-search-bar");
@@ -441,11 +462,6 @@ $(document).ready(function () {
     })
 
     $textfield.on('input', check_tweet_len);
-
-    $("form").submit(function () {
-        fill_hidden_forms();
-        return true;
-    })
 
     $(".new-tweet-submit").click(function (e) {
         e.preventDefault();
@@ -507,15 +523,15 @@ $(document).ready(function () {
         show_poll_media();
     })
 
-    $poll_opt2_btn.click(function (e) {
+    $poll_ch2_btn.click(function (e) {
         e.preventDefault();
         $(this).hide();
-        $poll_opt3.show();
+        $poll_ch3.show();
     })
-    $poll_opt3_btn.click(function (e) {
+    $poll_ch3_btn.click(function (e) {
         e.preventDefault();
         $(this).hide();
-        $poll_opt4.show();
+        $poll_ch4.show();
     })
 
     $poll_exit_btn.click(function (e) {

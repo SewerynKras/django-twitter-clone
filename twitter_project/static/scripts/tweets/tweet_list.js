@@ -40,18 +40,22 @@ function fix_timestamp() {
  * Sends an AJAX request to create a new Like object, updates
  * the amount of like a tweet has by 1
  */
-function like_tweet() {
+function like_tweet_AJAX() {
     var $btn = $(this);
     var tweet_id = $(this).closest("li").attr("tweet-id");
     var $num_counter = $(this).children('.tweet-likes-num').eq(0);
-    var num_likes = $num_counter.text()
+    var num_likes = $num_counter.text();
 
     $.ajax({
         url: "ajax/like_tweet/",
         data: {
             "tweet_id": tweet_id
         },
+        type: "post",
         dataType: "json",
+        headers: {
+            'X-CSRFToken': Cookies.get('csrftoken')
+        },
         success: function (response) {
             if (response.liked == true) {
                 num_likes = 1 + +num_likes;
@@ -61,7 +65,7 @@ function like_tweet() {
                 $btn.removeClass("is-liked");
             }
             $num_counter.text(num_likes);
-            $btn.one("click", like_tweet);
+            $btn.one("click", like_tweet_AJAX);
         }
     });
 }
@@ -74,6 +78,7 @@ function get_tweets() {
     $.ajax({
         url: "ajax/get_tweets/",
         dataType: "html",
+        type: "get",
         success: function (response) {
             new_tweet_list = $($.parseHTML(response)).find("li");
             $tweet_list.prepend(new_tweet_list);
@@ -100,7 +105,7 @@ function setup_gif() {
 
 function setup_tweet_list($tweets) {
 
-    let $media = $tweets.children(".tweet-media");
+    let $media = $tweets.find(".tweet-media");
     $media.each(function () {
         rearrange_images($(this));
     })
@@ -109,28 +114,162 @@ function setup_tweet_list($tweets) {
     // Convert each tweets emoji into twemojis
     $tweets.each(parse_twemoji);
 
+    // Convert dates to time elapsed
+    let dates = $tweets.find(".tweet-date");
+    dates.each(fix_timestamp);
+
     // make like button clickable
     // NOTE: I'm using one() instead of click() to
     // prevent the user from sending multiple requests in
-    // a very short time, the like_tweet function will rebind
+    // a very short time, the like_tweet_AJAX function will rebind
     // itself to the button once the request finishes
-    let $like_btn = $tweets.children(".like-btn");
-    $like_btn.one("click", like_tweet);
+    let $like_btn = $tweets.find(".like-btn");
+    $like_btn.one("click", like_tweet_AJAX);
 
-    // Convert dates to time elapsed
-    let dates = $tweets.children(".tweet-date");
-    dates.each(fix_timestamp);
+    // Make each poll choice clickable
+    // NOTE: I'm using one() here for the same reason as above 
+    let poll_btns = $tweets.find(".poll-choice-wrapper");
+    poll_btns.one("click", choose_poll_option_AJAX);
+
+    // Make each poll reflect whether or not the user has voted in it
+    let polls = $tweets.find(".tweet-media-poll");
+    polls.each(setup_poll_choice);
+
 }
+
+/**
+ * Adds the 'chosen' and 'not-chosen' classes where necessary
+ */
+function setup_poll_choice() {
+    let num = $(this).attr("user-choice");
+    if (num != "None") {
+
+        var $choices = $(this).find(".poll-choice-wrapper");
+
+        var $chosen = $(this).find(`[choice-num="${num}"]`);
+
+        $choices.addClass("not-chosen");
+        $chosen.addClass("chosen");
+        $chosen.removeClass("not-chosen");
+    }
+    $(this).each(calc_poll_perc);
+}
+
+/**
+ * Updates the percentage values of the given poll
+ */
+function calc_poll_perc() {
+    var $choice1 = $(this).find("[choice-num='1']");
+    var $choice2 = $(this).find("[choice-num='2']");
+    var $choice3 = $(this).find("[choice-num='3']");
+    var $choice4 = $(this).find("[choice-num='4']");
+
+    var total_votes = $(this).find(".poll-totalvotes .num").text();
+
+    let choices = [$choice1, $choice2, $choice3, $choice4];
+    for (let i = 0; i < 4; i++) {
+        $ch = choices[i]
+        if ($ch) {
+            if (total_votes > 0) {
+                var perc = Math.round($ch.attr("votes") / total_votes * 100);
+                $ch.find(".poll-choice-perc").text(perc + "%")
+            } else {
+                var perc = 100
+                $ch.find(".poll-choice-perc").text("")
+            }
+            $ch.find(".poll-choice-bar").css("width", perc + "%")
+        }
+    }
+
+}
+
+/**
+ * Updates the poll by adding/removing the amount of votes.
+ * Note: This also calls calc_poll_perc on the given poll.
+ * @param {Jquery selector} $poll 
+ * @param {Number} prev the choice-num of the previous selection
+ * @param {Number} updated the choice-num of the new selection
+ */
+function change_users_vote($poll, prev, updated) {
+    var $total_votes = $poll.find(".poll-totalvotes .num");
+    var $all_choices = $poll.find("[choice-num]");
+
+    if (prev && prev != "None") {
+        // reduce the number of votes by 1
+        let $prev_vote = $poll.find(`[choice-num="${prev}"`);
+        $prev_vote.attr("votes", -1 + +$prev_vote.attr("votes"));
+        $total_votes.text(-1 + +$total_votes.text());
+
+        // reset the poll to its 'unvoted' state
+        $poll.attr("user-choice", "None");
+        $all_choices.removeClass("not-chosen");
+        $all_choices.removeClass("chosen");
+    }
+
+    if (updated && updated != "None") {
+        // increase the number of votes by 1
+        let $new_vote = $poll.find(`[choice-num="${updated}"]`);
+        $new_vote.attr("votes", 1 + +$new_vote.attr("votes"));
+        $total_votes.text(1 + +$total_votes.text());
+
+        // reset the poll to its 'unvoted' state
+        $all_choices.addClass("not-chosen");
+        $all_choices.removeClass("chosen");
+
+        // mark the update choice as selected        
+        $poll.attr("user-choice", updated);
+        $new_vote.addClass("chosen");
+        $new_vote.removeClass("not-chosen");
+    }
+
+    $poll.each(calc_poll_perc);
+
+}
+
+/**
+ * Sends an AJAX POST request that adds/removes the PollVote based on
+ * this elements "chosen" class
+ */
+function choose_poll_option_AJAX() {
+    var $btn = $(this);
+    var $poll = $(this).closest(".tweet-media-poll");
+    var tweet_id = $(this).closest("li").attr("tweet-id");
+
+    if ($(this).hasClass("chosen"))
+        var num = null;
+    else
+        var num = $(this).attr("choice-num");
+
+    var voted_before = $poll.attr("user-choice");
+
+    $.ajax({
+        url: "ajax/choose_poll_option/",
+        data: {
+            "tweet_id": tweet_id,
+            "choice": num
+        },
+        type: "post",
+        dataType: "json",
+        headers: {
+            'X-CSRFToken': Cookies.get('csrftoken')
+        },
+        success: function (response) {
+            change_users_vote($poll, voted_before, response.voted);
+            $btn.one("click", choose_poll_option_AJAX);
+        }
+    });
+}
+
 
 $(document).ready(function () {
     get_tweets();
 
     // Change all dates from UNIX timestamps to user-readable timestamps
-    $(".tweet-date").each(fix_timestamp)
+    $(".tweet-date").each(fix_timestamp);
 
     // update the timestamps every couple seconds
     setInterval(function () {
-        $(".tweet-date").each(fix_timestamp)
+        $(".tweet-date").each(fix_timestamp);
     }, 5000);
 
 });

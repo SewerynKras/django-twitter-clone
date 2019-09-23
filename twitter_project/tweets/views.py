@@ -18,20 +18,21 @@ class MainPage(TemplateView):
 
 
 def like_tweet_AJAX(request):
-    profile = request.user.profile
-    tweet_id = request.GET.get("tweet_id")
-    tweet = models.Tweet.objects.get(pk=tweet_id)
+    if request.method == 'POST':
+        profile = request.user.profile
+        tweet_id = request.POST.get("tweet_id")
+        tweet = models.Tweet.objects.get(pk=tweet_id)
 
-    # check if the user has already liked this tweet
-    like = models.Like.objects.filter(tweet=tweet, author=profile)
-    if like:
-        like.delete()
-        liked = False
-    else:
-        new_like = models.Like(author=profile, tweet=tweet)
-        new_like.save()
-        liked = True
-    return JsonResponse({"liked": liked})
+        # check if the user has already liked this tweet
+        like = models.Like.objects.filter(tweet=tweet, author=profile)
+        if like:
+            like.delete()
+            liked = False
+        else:
+            new_like = models.Like(author=profile, tweet=tweet)
+            new_like.save()
+            liked = True
+        return JsonResponse({"liked": liked})
 
 
 def get_gifs_AJAX(request):
@@ -60,3 +61,28 @@ def get_tweets_AJAX(request):
 def new_tweet_AJAX(request):
     errors = helpers.parse_new_tweet(request)
     return JsonResponse(errors)
+
+
+def choose_poll_option_AJAX(request):
+    if request.method == "POST":
+        profile = request.user.profile
+        tweet_id = request.POST.get("tweet_id")
+        choice = request.POST.get("choice")
+        tweet = models.Tweet.objects.get(pk=tweet_id)
+
+        poll = models.Poll.objects.filter(media__tweet=tweet).first()
+
+        # check if the user has already voted on this poll
+        vote = models.PollVote.objects.filter(poll=poll,
+                                              author=profile).first()
+        voted = None
+
+        if vote:
+            vote.delete()
+
+        if choice:
+            new_vote = models.PollVote(author=profile, poll=poll, choice=choice)
+            new_vote.save()
+            voted = choice
+
+        return JsonResponse({"voted": voted})

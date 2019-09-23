@@ -46,36 +46,37 @@
             </div>
             {% elif tweet.media.type == 'poll' %}
             {% spaceless %}
-            <div class='tweet-media-poll'>
+            <div class='tweet-media-poll' user-choice="{{ tweet.poll_chosen }}">
                 {% if tweet.media.poll.choice1_text %}
-                <a class="btn tweet-media-poll-btn" role="button" option-num='1' votes="{{ tweet.media.poll.votes1 }}"
-                    {% if tweet.poll_chosen == 1 %}chosen{% endif %}>
-                    {{ tweet.media.poll.choice1_text }}
-                </a>
+                <div class='poll-choice-wrapper' choice-num='1' votes="{{ tweet.media.poll.votes1 }}">
+                    <div class='poll-choice-bar'></div>
+                    <span class='poll-choice-text'>{{ tweet.media.poll.choice1_text }}</span>
+                    <span class='poll-choice-perc'></span>
+                </div>
                 {% endif %}
                 {% if tweet.media.poll.choice2_text %}
-                <a class="btn tweet-media-poll-btn" role="button" option-num='2' votes="{{ tweet.media.poll.votes2 }}"
-                    {% if tweet.poll_chosen == 2 %}chosen{% endif %}>
-
-                    {{ tweet.media.poll.choice2_text }}
-                </a>
+                <div class='poll-choice-wrapper' choice-num='2' votes="{{ tweet.media.poll.votes2 }}">
+                    <div class='poll-choice-bar'></div>
+                    <span class='poll-choice-text'>{{ tweet.media.poll.choice2_text }}</span>
+                    <span class='poll-choice-perc'></span>
+                </div>
                 {% endif %}
                 {% if tweet.media.poll.choice3_text %}
-                <a class="btn tweet-media-poll-btn" role="button" option-num='3' votes="{{ tweet.media.poll.votes3 }}"
-                    {% if tweet.poll_chosen == 3 %}chosen{% endif %}>
-
-                    {{ tweet.media.poll.choice3_text }}
-                </a>
+                <div class='poll-choice-wrapper' choice-num='3' votes="{{ tweet.media.poll.votes3 }}">
+                    <div class='poll-choice-bar'></div>
+                    <span class='poll-choice-text'>{{ tweet.media.poll.choice3_text }}</span>
+                    <span class='poll-choice-perc'></span>
+                </div>
                 {% endif %}
                 {% if tweet.media.poll.choice4_text %}
-                <a class="btn tweet-media-poll-btn" role="button" option-num='4' votes="{{ tweet.media.poll.votes4 }}"
-                    {% if tweet.poll_chosen == 4 %}chosen{% endif %}>
-
-                    {{ tweet.media.poll.choice4_text }}
-                </a>
+                <div class='poll-choice-wrapper' choice-num='4' votes="{{ tweet.media.poll.votes4 }}">
+                    <div class='poll-choice-bar'></div>
+                    <span class='poll-choice-text'>{{ tweet.media.poll.choice4_text }}</span>
+                    <span class='poll-choice-perc'></span>
+                </div>
                 {% endif %}
-                <div class='poll-totalvotes'>
-                    TOTAL VOTES: {{ tweet.total_votes}}
+                <div class=' poll-totalvotes'>
+                    TOTAL VOTES: <span class='num'>{{ tweet.media.poll.total_votes}}</span>
                 </div>
                 {% endspaceless %}
                 {% endif %}
