@@ -36,17 +36,30 @@ def like_tweet_AJAX(request):
 
 
 def get_gifs_AJAX(request):
-    query = request.GET.get("query")
-    offset = request.GET.get("offser")
-    limit = request.GET.get("limit")
+    if request.method == "GET":
+        query = request.GET.get("query")
+        offset = request.GET.get("offset")
+        limit = request.GET.get("limit")
 
-    context = {"gif_list": helpers.get_giphy(query=query,
-                                             offset=offset,
-                                             limit=limit)}
-    rendered_template = render(request=request,
-                               template_name="tweets/gif_list.html",
-                               context=context)
-    return HttpResponse(rendered_template)
+        if query and limit and offset:
+
+            try:
+                offset = int(offset)
+                limit = int(limit)
+            except ValueError:
+                return HttpResponse(status=400)
+
+            if (0 <= offset <= 20) and (0 < limit <= 20):
+
+                context = {"gif_list": helpers.get_giphy(query=query,
+                                                         offset=offset,
+                                                         limit=limit)}
+                rendered_template = render(request=request,
+                                           template_name="tweets/gif_list.html",
+                                           context=context)
+                return HttpResponse(rendered_template)
+
+    return HttpResponse(status=400)
 
 
 def get_tweets_AJAX(request):
