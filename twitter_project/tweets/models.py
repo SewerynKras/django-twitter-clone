@@ -1,7 +1,9 @@
 from django.db import models
+import uuid
 
 
 class Tweet(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     text = models.TextField(max_length=256)
     author = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
@@ -60,6 +62,7 @@ class Like(models.Model):
 
 
 class Comment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     text = models.CharField(max_length=256)
     # When the original tweet gets deleted this also deletes itself,
     # this could change in the future
@@ -132,7 +135,9 @@ class Images(models.Model):
     image_1 = models.ImageField(upload_to="tweet_images",
                                 height_field=None,
                                 width_field=None,
-                                max_length=None)
+                                max_length=None,
+                                null=True,
+                                blank=True)
     image_2 = models.ImageField(upload_to="tweet_images",
                                 height_field=None,
                                 width_field=None,
