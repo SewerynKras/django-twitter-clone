@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 from tweets import models, helpers
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import HttpResponse
 import json
 import re
@@ -22,13 +22,17 @@ class MainPage(TemplateView):
 
 def like_tweet_AJAX(request):
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return JsonResponse({"user": "User not logged in."}, status=401)
         profile = request.user.profile
         tweet_id = request.POST.get("tweet_id")
-        tweet = models.Tweet.objects.get(pk=tweet_id)
-
+        try:
+            tweet = models.Tweet.objects.get(pk=tweet_id)
+        except (ObjectDoesNotExist, ValidationError):
+            return JsonResponse({"tweet_id": "This tweet doesn't exists."}, status=403)
         # check if the user has already liked this tweet
         like = models.Like.objects.filter(tweet=tweet, author=profile)
-        if like:
+        if like.exists():
             like.delete()
             liked = False
         else:
@@ -36,6 +40,8 @@ def like_tweet_AJAX(request):
             new_like.save()
             liked = True
         return JsonResponse({"liked": liked})
+    else:
+        return JsonResponse({}, status=405)
 
 
 def get_gifs_AJAX(request):
