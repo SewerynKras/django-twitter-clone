@@ -19,7 +19,7 @@
 .poll-choice-wrapper {
     display: block;
     background-color: gray;
-    height: 50px;
+    height: 45px;
     position: relative;
 }
 
@@ -52,4 +52,8 @@
 
 .not-chosen .poll-choice-bar {
     background-color: #9ca2cf;
+}
+
+.poll-totalvotes {
+    height: 20px;
 }

@@ -45,7 +45,6 @@
                 <img src="" gif-url="{{tweet.media.gif.gif_url}}" thumb-url="{{tweet.media.gif.thumb_url}}">
             </div>
             {% elif tweet.media.type == 'poll' %}
-            {% spaceless %}
             <div class='tweet-media-poll' user-choice="{{ tweet.poll_chosen }}">
                 {% if tweet.media.poll.choice1_text %}
                 <div class='poll-choice-wrapper' choice-num='1' votes="{{ tweet.media.poll.votes1 }}">
@@ -75,27 +74,26 @@
                     <span class='poll-choice-perc'></span>
                 </div>
                 {% endif %}
-                <div class=' poll-totalvotes'>
+                <div class='poll-totalvotes'>
                     TOTAL VOTES: <span class='num'>{{ tweet.media.poll.total_votes}}</span>
                 </div>
-                {% endspaceless %}
                 {% endif %}
             </div>
-            {% endif %}
-
-            {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
-            <div class="action-btn comment-btn">
-                <span class="tweet-comments-icon">C:</span>
-                <span class="tweet-comments-num">{{tweet.comments}}</span>
-            </div>
-            <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
-                <span class="tweet-rts-icon">R:</span>
-                <span class="tweet-rts-num">{{tweet.rts}}</span>
-            </div>
-            <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
-                <span class="tweet-likes-icon">L:</span>
-                <span class="tweet-likes-num">{{tweet.likes}}</span>
-            </div>
+        </div>
+        {% endif %}
+        {% comment %} Using "C", "R", "L" as placeholders for now {% endcomment %}
+        <div class="action-btn comment-btn">
+            <span class="tweet-comments-icon">C:</span>
+            <span class="tweet-comments-num">{{tweet.comments}}</span>
+        </div>
+        <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
+            <span class="tweet-rts-icon">R:</span>
+            <span class="tweet-rts-num">{{tweet.rts}}</span>
+        </div>
+        <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
+            <span class="tweet-likes-icon">L:</span>
+            <span class="tweet-likes-num">{{tweet.likes}}</span>
+        </div>
     </li>
     {% endfor %}
 </ul>

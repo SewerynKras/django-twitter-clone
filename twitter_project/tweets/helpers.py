@@ -3,13 +3,11 @@ import uuid
 import urllib.request
 import urllib.parse
 import json
-import re
 
 from django.utils import timezone
 from django.core.files.base import ContentFile
 from django.db.models import Count, Exists, OuterRef, Q, Subquery
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from tweets import models
 from twitter_project.logging import logger
@@ -129,7 +127,7 @@ def download_gif(data):
     return gif
 
 
-def parse_new_tweet(request):
+def parse_new_tweet(data, profile):
     """
     {
         "text": ...,
@@ -144,106 +142,62 @@ def parse_new_tweet(request):
             }
     }
     """
-    errors = {}
-
-    if not request.user.is_authenticated:
-        errors['user'] = "User not logged in"
-        return errors
-
-    data = json.loads(request.body)
-
     tweet = models.Tweet()
     media = None
 
-    tweet.author = request.user.profile
+    tweet.author = profile
 
     retweet_id = data.get("retweet")
     if retweet_id:
-        if type(retweet_id) == str:
-            try:
-                retweet = models.Tweet.objects.get(id=retweet_id)
-                tweet.retweet = retweet
-            except ObjectDoesNotExist:
-                retweet = None
-                errors.update({"retweet": "Incorrect retweet id"})
-        else:
-            errors.update({"retweet": "Incorrect retweet id"})
+        retweet = models.Tweet.objects.get(id=retweet_id)
+        tweet.retweet = retweet
 
     text = data.get("text")
     tweet.text = text
 
-    try:
-        tweet.full_clean()
-    except ValidationError as e:
-        errors.update(e.message_dict)
-
     request_media = data.get("media")
-    if request_media and type(request_media) == dict:
+    if request_media:
 
         values = request_media.get("values")
-        if values and type(values) == dict:
+        media = models.Media()
+        media_type = request_media.get("type")
+        if media_type == "img":
+            media.type = "img"
+            media_item = models.Images()
+            for name in ['image_1', 'image_2', 'image_3', 'image_4']:
+                img = values.get(name)
+                if img:
+                    img_file = base64_to_image(img)
+                    setattr(media_item, name, img_file)
 
-            media = models.Media()
-            media_type = request_media.get("type")
+        elif media_type == 'gif':
+            media.type = 'gif'
 
-            if type(media_type) == str:
-                if media_type == "img":
-                    media.type = "img"
-                    pattern = re.compile(r'data:image/([a-zA-Z]+);base64,([^":]+)')
+            media_item = models.Gif()
+            gif_url = values.get("gif_url")
+            thumb_url = values.get("thumb_url")
 
-                    media_item = models.Images()
-                    for name in ['image_1', 'image_2', 'image_3', 'image_4']:
-                        img = values.get(name)
+            media_item.gif_url = gif_url
+            media_item.thumb_url = thumb_url
 
-                        if img and type(img) == str:
-                            if re.match(pattern, img):
-                                img_file = base64_to_image(img)
-                                setattr(media_item, name, img_file)
-                            else:
-                                errors.update({name: "Incorrect data"})
-                elif media_type == 'gif':
-                    media.type = 'gif'
-                    pattern = re.compile(
-                        r'https://media[0-9]*\.giphy\.com/media/[\w#!:.?+=&%@!\-/]+')
+        elif media_type == 'poll':
+            media.type = 'poll'
+            media_item = models.Poll()
+            # placeholder for now
+            media_item.end_date = timezone.now()
+            for name in ['choice1_text',
+                         'choice2_text',
+                         'choice3_text',
+                         'choice4_text']:
+                option = values.get(name)
+                if option:
+                    setattr(media_item, name, option)
 
-                    media_item = models.Gif()
-                    gif_url = values.get("gif_url")
-                    thumb_url = values.get("thumb_url")
-                    if (type(gif_url) == str and
-                            type(thumb_url) == str and
-                            re.match(pattern, gif_url) and
-                            re.match(pattern, thumb_url)):
-                        media_item.gif_url = gif_url
-                        media_item.thumb_url = thumb_url
-                    else:
-                        errors.update({"values": "Incorrect data"})
+    tweet.save()
+    if media:
+        media.tweet = tweet
+        media_item.save()
+        setattr(media, media.type, media_item)
+        media.save()
 
-                elif media_type == 'poll':
-                    media.type = 'poll'
-                    media_item = models.Poll()
-                    media_item.end_date = timezone.now()
-                    for name in ['choice1_text',
-                                 'choice2_text',
-                                 'choice3_text',
-                                 'choice4_text']:
-                        option = values.get(name)
-                        if option:
-                            if type(option) == str:
-                                setattr(media_item, name, option)
-                            else:
-                                errors.update({name: "Incorrect data"})
-                else:
-                    errors.update({"media": "Incorrect/missing media type"})
-
-        else:
-            errors.update({"values": "Incorrect/missing media values"})
-
-    if errors == {}:
-        tweet.save()
-        if media:
-            media.tweet = tweet
-            media_item.save()
-            setattr(media, media.type, media_item)
-            media.save()
-
-    return errors
+    return tweet
