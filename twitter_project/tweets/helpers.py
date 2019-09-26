@@ -27,18 +27,12 @@ def get_tweet_list(profile, before=None, after=None):
 
     logger.debug(f"Getting tweet list for {profile}")
 
-    # give each tweet number of likes
-    tweets = tweets.annotate(likes=Count("like", distinct=True))
-
     # give each tweet a bool value whether the user has liked the
     # tweet before or not
     is_liked_by_user = models.Like.objects.filter(tweet=OuterRef("id"), author=profile)
     tweets = tweets.annotate(is_liked=Exists(is_liked_by_user))
 
     # now the same thing for retweets
-
-    # give each tweet number of retweets
-    tweets = tweets.annotate(rts=Count("retweet", distinct=True))
 
     # give each tweet a bool value whether the user has retweeted the
     # tweet before or not

@@ -12,6 +12,16 @@ class Tweet(models.Model):
     retweet = models.ForeignKey("tweets.Tweet", on_delete=models.CASCADE,
                                 null=True, blank=True)
 
+    @property
+    def likes(self):
+        likes = Like.objects.filter(tweet=self.id)
+        return len(likes)
+
+    @property
+    def retweets(self):
+        retweets = Tweet.objects.filter(retweet=self.id)
+        return len(retweets)
+
     def __str__(self):
         return f"TWEET BY {self.author} (ID: {self.id})"
 
@@ -29,7 +39,6 @@ class Media(models.Model):
                                null=True, blank=True)
     poll = models.OneToOneField("tweets.Poll", on_delete=models.CASCADE,
                                 null=True, blank=True)
-
     tweet = models.OneToOneField("tweets.Tweet", on_delete=models.CASCADE)
 
     def delete(self, *args, **kwargs):
