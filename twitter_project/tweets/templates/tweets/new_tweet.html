@@ -65,6 +65,26 @@
                 <span class='poll-option-text'>Option 4:</span>
                 <input type="text">
             </div>
+            <div class="new-tweet-poll-date">
+                Days:
+                <select name="days">
+                    {% for i in "x"|rjust:"7" %}
+                    <option value="{{ forloop.counter0 }}">{{ forloop.counter0 }}</option>
+                    {% endfor %}
+                </select>
+                Hours:
+                <select name="hours">
+                    {% for i in "x"|rjust:"24" %}
+                    <option value="{{ forloop.counter0 }}">{{ forloop.counter0 }}</option>
+                    {% endfor %}
+                </select>
+                Minutes:
+                <select name="minutes">
+                    {% for i in "x"|rjust:"60" %}
+                    <option value="{{ forloop.counter0 }}">{{ forloop.counter0 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
     </div>
 

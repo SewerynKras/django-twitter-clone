@@ -4,6 +4,7 @@ import urllib.request
 import urllib.parse
 import json
 
+from datetime import timedelta
 from django.utils import timezone
 from django.core.files.base import ContentFile
 from django.db.models import Count, Exists, OuterRef, Q, Subquery
@@ -177,8 +178,7 @@ def parse_new_tweet(data, profile):
         elif media_type == 'poll':
             media.type = 'poll'
             media_item = models.Poll()
-            # placeholder for now
-            media_item.end_date = timezone.now()
+
             for name in ['choice1_text',
                          'choice2_text',
                          'choice3_text',
@@ -186,6 +186,16 @@ def parse_new_tweet(data, profile):
                 option = values.get(name)
                 if option:
                     setattr(media_item, name, option)
+            total_seconds = 0
+            days = values.get("days_left")
+            total_seconds += int(days) * 24 * 60 * 60
+            hours = values.get("hours_left")
+            total_seconds += int(hours) * 60 * 60
+            minutes = values.get("minutes_left")
+            total_seconds += int(minutes) * 60
+            delta = timedelta(seconds=total_seconds)
+            end_date = timezone.now() + delta
+            media_item.end_date = end_date
 
     tweet.save()
     if media:

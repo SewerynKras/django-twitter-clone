@@ -77,6 +77,8 @@
                 <div class='poll-totalvotes'>
                     TOTAL VOTES: <span class='num'>{{ tweet.media.poll.total_votes}}</span>
                 </div>
+                <div class='poll-time-left' end-date="{{ tweet.media.poll.end_date|date:'U' }}">
+                </div>
                 {% endif %}
             </div>
         </div>

@@ -38,6 +38,10 @@ var $poll_ch2;
 var $poll_ch3;
 var $poll_ch4;
 
+var $poll_date_days;
+var $poll_date_hours;
+var $poll_date_minutes;
+
 var $poll_ch2_btn;
 var $poll_ch3_btn;
 
@@ -380,7 +384,10 @@ function new_tweet_AJAX() {
             "choice1_text": $poll_ch1.find("input").val(),
             "choice2_text": $poll_ch2.find("input").val(),
             "choice3_text": $poll_ch3.find("input").val(),
-            "choice4_text": $poll_ch4.find("input").val()
+            "choice4_text": $poll_ch4.find("input").val(),
+            "days_left": $poll_date_days.val(),
+            "hours_left": $poll_date_hours.val(),
+            "minutes_left": $poll_date_minutes.val()
         };
     } else {
         var type = null;
@@ -447,6 +454,10 @@ $(document).ready(function () {
     $poll_ch4 = $poll_media.find("[choice-num='4']");
     $poll_ch2_btn = $poll_ch2.find("[type='button']");
     $poll_ch3_btn = $poll_ch3.find("[type='button']");
+
+    $poll_date_days = $poll_media.find("select[name='days']");
+    $poll_date_hours = $poll_media.find("select[name='hours']");
+    $poll_date_minutes = $poll_media.find("select[name='minutes']");
 
     $gif_selector = $("#gif-selector");
     $gif_search_bar = $("#gif-search-bar");

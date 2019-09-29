@@ -19,7 +19,7 @@
 .poll-choice-wrapper {
     display: block;
     background-color: gray;
-    height: 45px;
+    height: 40px;
     position: relative;
 }
 
@@ -55,5 +55,9 @@
 }
 
 .poll-totalvotes {
+    height: 20px;
+}
+
+.poll-time-left {
     height: 20px;
 }

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 import uuid
 
 
@@ -118,6 +119,10 @@ class Poll(models.Model):
     def votes4(self):
         votes = PollVote.objects.filter(poll=self.pk, choice=4)
         return len(votes)
+
+    @property
+    def has_ended(self):
+        return timezone.now() > self.end_date
 
     def __str__(self):
         if hasattr(self, 'media'):

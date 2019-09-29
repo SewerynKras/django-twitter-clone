@@ -1,11 +1,12 @@
-from django.views.generic import TemplateView
-from tweets import models, helpers
-from django.http import JsonResponse
-from django.shortcuts import render
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.http import HttpResponse
 import json
 import re
+
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
+from django.views.generic import TemplateView
+
+from tweets import helpers, models
 
 
 class MainPage(TemplateView):
@@ -91,9 +92,9 @@ def new_tweet_AJAX(request):
 
         text = data.get("text")
         if not text:
-            errors['text'] = "Incorrect/missing value"
+            errors['text'] = "Incorrect/missing value."
         elif len(text) > 264:
-            errors['text'] = "Maximum length is 264"
+            errors['text'] = "Maximum length is 264."
 
         retweet_id = data.get("retweet_id")
         if retweet_id:
@@ -101,9 +102,9 @@ def new_tweet_AJAX(request):
                 try:
                     models.Tweet.objects.get(id=retweet_id)
                 except ObjectDoesNotExist:
-                    errors["retweet"] = "Incorrect retweet id"
+                    errors["retweet"] = "Incorrect retweet id."
             else:
-                errors["retweet"] = "Incorrect retweet id"
+                errors["retweet"] = "Incorrect retweet id."
 
         media = data.get("media")
         if media:
@@ -121,7 +122,7 @@ def new_tweet_AJAX(request):
 
                             if img:
                                 if not re.match(pattern, img):
-                                    errors[name] = "Incorrect data"
+                                    errors[name] = "Incorrect data."
                     elif media_type == 'gif':
                         pattern = re.compile(
                             r'https://media[0-9]*\.giphy\.com/media/[\w#!:.?+=&%@!\-/]+')
@@ -133,7 +134,7 @@ def new_tweet_AJAX(request):
                             not re.match(pattern, gif_url) or
                             not re.match(pattern, thumb_url)):
 
-                            errors["values"] = "Incorrect data"
+                            errors["values"] = "Incorrect data."
 
                     elif media_type == 'poll':
                         for name in ['choice1_text',
@@ -143,13 +144,39 @@ def new_tweet_AJAX(request):
                             choice = values.get(name)
                             if choice:
                                 if len(choice) > 25:
-                                    errors[name] = "Maximum length is 25"
+                                    errors[name] = "Maximum length is 25."
+
+                        days = values.get("days_left")
+                        try:
+                            days = int(days)
+                            if not 0 <= days <= 7:
+                                raise ValueError
+                        except (ValueError, TypeError):
+                            errors['days_left'] = "Incorrect value."
+
+                        hours = values.get("hours_left")
+                        try:
+                            hours = int(hours)
+                            if not 0 <= hours <= 23:
+                                raise ValueError
+                        except (ValueError, TypeError):
+                            errors['hours_left'] = "Incorrect value."
+
+                        minutes = values.get("minutes_left")
+                        try:
+                            minutes = int(minutes)
+                            if not 0 <= minutes <= 59:
+                                raise ValueError
+                        except (ValueError, TypeError):
+                            errors['minutes_left'] = "Incorrect value."
+                        if minutes + hours + days == 0:
+                            errors['values'] = "Incorrect time values."
                     else:
-                        errors["media"] = "Incorrect/missing media type"
+                        errors["media"] = "Incorrect/missing media type."
                 else:
-                    errors['values'] = "Missing/Incorrect values dictionary"
+                    errors['values'] = "Missing/Incorrect values dictionary."
             else:
-                errors["media"] = "Incorrect media dictionary"
+                errors["media"] = "Incorrect media dictionary."
         if errors == {}:
             tweet = helpers.parse_new_tweet(data, request.user.profile)
             return JsonResponse({"id": tweet.id}, status=200)
@@ -160,12 +187,26 @@ def new_tweet_AJAX(request):
 
 def choose_poll_option_AJAX(request):
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({"user": "User not logged in."}, status=401)
         profile = request.user.profile
-        tweet_id = request.POST.get("tweet_id")
         choice = request.POST.get("choice")
-        tweet = models.Tweet.objects.get(pk=tweet_id)
+        if choice and choice not in ["1", "2", "3", "4"]:
+            return JsonResponse({"choice": "Invalid choice."}, status=403)
+
+        tweet_id = request.POST.get("tweet_id")
+        try:
+            tweet = models.Tweet.objects.get(pk=tweet_id)
+        except (ObjectDoesNotExist, ValidationError):
+            return JsonResponse({"tweet_id": "This tweet doesn't exists."}, status=403)
 
         poll = models.Poll.objects.filter(media__tweet=tweet).first()
+
+        if not poll:
+            return JsonResponse({"tweet_id": "This tweet doesn't have a poll."})
+
+        if poll.has_ended:
+            return JsonResponse({}, status=410)
 
         # check if the user has already voted on this poll
         vote = models.PollVote.objects.filter(poll=poll,
@@ -181,3 +222,5 @@ def choose_poll_option_AJAX(request):
             voted = choice
 
         return JsonResponse({"voted": voted})
+    else:
+        return JsonResponse({}, status=405)

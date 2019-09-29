@@ -1,7 +1,7 @@
 /**
  * Converts the UTC timestamp to time elapsed
  */
-function fix_timestamp() {
+function fix_tweet_timestamp() {
     var tweet_time = $(this).attr("utc"); // in seconds
     var curr_time = Math.floor(new Date().getTime() / 1000); // in seconds
     var diff = curr_time - tweet_time;
@@ -36,6 +36,34 @@ function fix_timestamp() {
     }
     $(this).text(display);
 }
+
+/**
+ * Converts the UTC timestamp to time elapsed
+ */
+function fix_poll_timestamp() {
+    var poll_time = $(this).attr("end-date"); // in seconds
+    var curr_time = Math.floor(new Date().getTime() / 1000); // in seconds
+    var diff = poll_time - curr_time;
+    var display = "Time left: ";
+
+    if (diff < 0)
+        display = "This poll is over";
+    else if (diff < 60)
+        // show seconds if less than a minute is left
+        display += diff + "s"
+    else if (diff < 60 * 60)
+        // show minutes if less than an hour is left
+        display += Math.floor(diff / 60) + "m";
+    else if (diff < 60 * 60 * 24)
+        // show hours if less than a day is left
+        display += Math.floor(diff / 60 / 60) + "h";
+    else
+        // show days
+        display += Math.floor(diff / 60 / 60 / 24) + "d";
+
+    $(this).text(display);
+}
+
 /**
  * Sends an AJAX request to create a new Like object, updates
  * the amount of like a tweet has by 1
@@ -116,7 +144,7 @@ function setup_tweet_list($tweets) {
 
     // Convert dates to time elapsed
     let dates = $tweets.find(".tweet-date");
-    dates.each(fix_timestamp);
+    dates.each(fix_tweet_timestamp);
 
     // make like button clickable
     // NOTE: I'm using one() instead of click() to
@@ -134,6 +162,10 @@ function setup_tweet_list($tweets) {
     // Make each poll reflect whether or not the user has voted in it
     let polls = $tweets.find(".tweet-media-poll");
     polls.each(setup_poll_choice);
+
+    // Convert end dates to time left
+    let poll_dates = $tweets.find(".poll-time-left");
+    poll_dates.each(fix_poll_timestamp);
 
 }
 
@@ -265,11 +297,13 @@ $(document).ready(function () {
     get_tweets();
 
     // Change all dates from UNIX timestamps to user-readable timestamps
-    $(".tweet-date").each(fix_timestamp);
+    $(".tweet-date").each(fix_tweet_timestamp);
+    $(".poll-time-left").each(fix_poll_timestamp);
 
     // update the timestamps every couple seconds
     setInterval(function () {
-        $(".tweet-date").each(fix_timestamp);
+        $(".tweet-date").each(fix_tweet_timestamp);
+        $(".poll-time-left").each(fix_poll_timestamp);
     }, 5000);
 
 });
