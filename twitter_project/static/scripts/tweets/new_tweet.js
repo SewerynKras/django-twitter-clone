@@ -276,7 +276,7 @@ function search_gifs() {
 function query_gifs(query, offset) {
     $gif_list.empty();
     $.ajax({
-        url: "ajax/get_gifs/",
+        url: "/ajax/get_gifs/",
         data: {
             "query": query,
             "limit": AJAX_GIF_LIMIT,
@@ -403,7 +403,7 @@ function new_tweet_AJAX() {
     };
     console.log(data);
     $.ajax({
-        url: "ajax/new_tweet/",
+        url: "/new_tweet/",
         headers: {
             'X-CSRFToken': Cookies.get('csrftoken')
         },

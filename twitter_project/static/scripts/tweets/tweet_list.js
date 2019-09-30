@@ -75,7 +75,7 @@ function like_tweet_AJAX() {
     var num_likes = $num_counter.text();
 
     $.ajax({
-        url: "ajax/like_tweet/",
+        url: "/ajax/like_tweet/",
         data: {
             "tweet_id": tweet_id
         },
@@ -104,7 +104,7 @@ function like_tweet_AJAX() {
 function get_tweets() {
     var $tweet_list = $("#tweet-list");
     $.ajax({
-        url: "ajax/get_tweets/",
+        url: "/ajax/get_tweets/",
         dataType: "html",
         type: "get",
         success: function (response) {
@@ -275,7 +275,7 @@ function choose_poll_option_AJAX() {
     var voted_before = $poll.attr("user-choice");
 
     $.ajax({
-        url: "ajax/choose_poll_option/",
+        url: "/ajax/choose_poll_option/",
         data: {
             "tweet_id": tweet_id,
             "choice": num

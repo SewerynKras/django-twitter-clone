@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'phonenumber_field',
     'profiles',
     'tweets',
 ]
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'twitter_project.middlewares.LoginMiddleware'
 ]
 
 ROOT_URLCONF = 'twitter_project.urls'
@@ -129,11 +131,34 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
+AUTHENTICATION_BACKENDS = (
+    'twitter_project.backends.CustomLoginBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    )
+
+
 FORM_CHECKBOX_TEXT = {
     "contacts": "TEXT PLACEHOLDER TEXT PLACEHOLDER",
     "news": "TEXT PLACEHOLDER TEXT PLACEHOLDER",
     "ads": "TEXT PLACEHOLDER TEXT PLACEHOLDER",
 }
+
+
+INVALID_EMAIL_MESSAGE = """
+                         The email and password you entered
+                         did not match our records.
+                         Please double-check and try again.
+                         """
+INVALID_PHONE_MESSAGE = """
+                        We could not verify your credentials.
+                        Please double-check and try again.
+                        """
+INVALID_USERNAME_MESSAGE = """
+                            The username and password you entered
+                            did not match our records.
+                            Please double-check and try again.
+                           """
+
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
 

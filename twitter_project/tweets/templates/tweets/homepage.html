@@ -2,7 +2,7 @@
 {% block title %}Twitter{% endblock title %}
 {% load static %}
 
-{% block body %}
+{% block body_navbar%}
 <script src="{% static "scripts/tweets/new_tweet.js" %}"></script>
 <script src="{% static "scripts/tweets/tweet_list.js" %}"></script>
 <script src="{% static "scripts/tweets/images.js" %}"></script>
@@ -39,4 +39,4 @@
     </div>
     <div id='gif-list'></div>
 </div>
-{% endblock body %}
+{% endblock body_navbar %}

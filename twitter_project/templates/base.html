@@ -29,7 +29,8 @@
 
     {% comment %} use $("#blur").show() to blur the background {% endcomment %}
     <div id="cover" style='display:none'></div>
-
+    {% block body_base %}
+    
     <nav class="navbar navbar-expand navbar-light bg-light">
         <div class="nav navbar-nav">
             <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
@@ -37,8 +38,10 @@
         </div>
     </nav>
 
-    {% block body %}
-    {% endblock body %}
+    {% block body_navbar %}
+    {% endblock body_navbar %}
+    
+    {% endblock body_base %}
 </body>
 
 </html>

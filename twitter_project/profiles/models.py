@@ -1,4 +1,5 @@
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 
@@ -19,6 +20,7 @@ class Profile(models.Model):
     send_news = models.BooleanField(default=False)
     personalize_ads = models.BooleanField(default=False)
     username = models.CharField(max_length=20, unique=True)
+    phone = PhoneNumberField(unique=True, null=True)
     slug = models.SlugField(unique=True)
     display_name = models.CharField(max_length=50, null=True, blank=True)
     bio = models.TextField(max_length=160, null=True, blank=True)
