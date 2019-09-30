@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Log in to Twitter{% endblock title %}
+
+{% block body_base %}
+
+<script src="{% static "scripts/profiles/landing_page.js" %}" async></script>
+<link rel="stylesheet" href="{% static "styles/profiles/landing_page.css" %}">
+
+<div id='main-body'>
+
+    <div id="lp-left">
+        <div id="bulletpoints">
+
+            <div class="bp-cont">
+                <img id="icon-search" src="" alt=""> Follow your interests.
+            </div>
+            <div class="bp-cont">
+                <img id="icon-ppl" src="" alt=""> Hear what people are talking about.
+            </div>
+            <div class="bp-cont">
+                <img id="icon-talk" src="" alt=""> Join the conversation.
+            </div>
+        </div>
+    </div>
+
+    <div id="lp-right">
+
+        <form method="post">
+            {% csrf_token %}
+            {{ login_form }}
+            <button class='btn btn-info'>Log in</button>
+        </form>
+
+        <div id="r-header">
+            <img id='logo' src="" alt="">
+            See what’s happening in the world right now
+        </div>
+        <div id='r-sub-header'>
+            Join Twitter today.
+        </div>
+
+        <button onclick="location.href={% url 'profiles:signup' %}" class='btn btn-info'>Sign up</button>
+        <button onclick="location.href={% url 'profiles:login' %}" class='btn'>Log in</button>
+    </div>
+</div>
+
+{% endblock body_base %}

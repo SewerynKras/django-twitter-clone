@@ -13,3 +13,10 @@ class SignUpForm(forms.ModelForm):
     class Meta:
         model = models.Profile
         fields = ['sync_email', 'send_news', 'personalize_ads']
+
+
+class LoginForm(forms.Form):
+    identifier = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder': 'Phone, email or username'}), label='')
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'placeholder': 'Password'}),  label='')

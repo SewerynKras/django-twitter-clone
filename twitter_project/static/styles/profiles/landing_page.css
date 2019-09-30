@@ -1,0 +1,35 @@
+#lp-left {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 50%;
+    height: 100%;
+
+    padding-top: 25%;
+    padding-bottom: 25%;
+    padding-left: 10%;
+    padding-right: 10%;
+    color: white;
+
+    background-color: #00abfd;
+}
+
+#lp-right {
+    position: fixed;
+    top: 0;
+    left: 50%;
+
+    width: 50%;
+    height: 100%;
+
+    padding-top: 25%;
+    padding-bottom: 25%;
+    padding-left: 10%;
+    padding-right: 10%
+}
+
+form {
+    position: fixed;
+    top: 0;
+}

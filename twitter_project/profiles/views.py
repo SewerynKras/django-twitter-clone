@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from twitter_project.logging import logger
+from django.contrib.auth import login, logout, authenticate
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.messages import error
 
 
 class ProfileView(DetailView):
@@ -14,6 +17,7 @@ class ProfileView(DetailView):
 
 class SignupView(TemplateView):
     template_name = "profiles/sign_up.html"
+    login_required = False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -30,6 +34,67 @@ class SignupView(TemplateView):
             profile.user = user
             profile.save()
             redirect("/")
+
+
+class LoginView(TemplateView):
+    template_name = "profiles/login.html"
+    login_required = False
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['login_form'] = forms.LoginForm
+        return context
+
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('/home')
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request):
+        identifier = request.POST.get("identifier")
+        password = request.POST.get('password')
+        try:
+            user = authenticate(identifier=identifier, password=password)
+        except ObjectDoesNotExist as e:
+            error(request, str(e))
+            return redirect("/login")
+
+        login(request, user)
+        # go back to the homepage
+        return redirect("/home")
+
+
+class LandingPageView(TemplateView):
+    template_name = "profiles/landing_page.html"
+    login_required = False
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['login_form'] = forms.LoginForm
+        return context
+
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('/home')
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request):
+        identifier = request.POST.get("identifier")
+        password = request.POST.get('password')
+        try:
+            user = authenticate(identifier=identifier, password=password)
+        except ObjectDoesNotExist as e:
+            error(request, str(e))
+            return redirect("/login")
+
+        login(request, user)
+        # go back to the homepage
+        return redirect("/home")
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("/")
 
 
 def check_email_AJAX(request):
