@@ -30,17 +30,32 @@
     {% comment %} use $("#blur").show() to blur the background {% endcomment %}
     <div id="cover" style='display:none'></div>
     {% block body_base %}
-    
-    <nav class="navbar navbar-expand navbar-light bg-light">
-        <div class="nav navbar-nav">
-            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="#">Home</a>
-        </div>
-    </nav>
 
-    {% block body_navbar %}
-    {% endblock body_navbar %}
-    
+    <!--navigation-->
+    <div class="navbar navbar-inverse navbar-fixed-left" id='left-body'>
+        <a class="navbar-brand" href="#">LOGO</a>
+        <ul class="nav navbar-nav">
+            <li><a href="#"><span> Home </span></a></li>
+            <li><a href="#"><span> Explore </span></a></li>
+            <li><a href="#"><span> Notifications </span></a></li>
+            <li><a href="#"><span> Messages </span></a></li>
+            <li><a href="#"><span> Bookmarks </span></a></li>
+            <li><a href="#"><span> Lists </span></a></li>
+            <li><a href="#"><span> Profile </span></a></li>
+            <li><a href="#"><span> More </span></a></li>
+        </ul>
+    </div>
+    <div class="navbar navbar-inverse navbar-fixed-right" id='right-body'>
+        <form class="form-inline">
+            <input class="form-control" type="search" placeholder="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+    <div id='main-body'>
+        {% block body_navbar %}
+        {% endblock body_navbar %}
+    </div>
+
     {% endblock body_base %}
 </body>
 

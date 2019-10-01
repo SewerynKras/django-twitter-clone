@@ -7,3 +7,25 @@
     left: 0;
     z-index: 500;
 }
+
+#left-body {
+    width: 300px;
+    position: fixed;
+    left: 0;
+}
+
+
+#right-body {
+    width: 300px;
+    position: fixed;
+    right: 0;
+}
+
+#main-body {
+    margin-left: 300px;
+    margin-right: 300px;
+}
+
+.navbar-brand {
+    width: 100%;
+}
