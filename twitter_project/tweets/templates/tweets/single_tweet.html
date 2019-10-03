@@ -87,11 +87,11 @@
     <div class='tweet-full-info'>
         <span class='tweet-info-likes-link'>
             LIKES:
-            <span class="tweet-likes-num">{{tweet.likes}}</span>
+            <span class="tweet-likes-num">{{tweet.likes_num}}</span>
         </span>
         <span class='tweet-info-retweets-link'>
             RETWEETS:
-            <span class="tweet-retweets-num">{{tweet.retweets}}</span>
+            <span class="tweet-retweets-num">{{tweet.retweets_num}}</span>
         </span>
     </div>
     {% endif %}
@@ -101,19 +101,19 @@
         <div class="action-btn comment-btn">
             <span class="tweet-comments-icon">C:</span>
             {% if not show_full_info %}
-            <span class="tweet-comments-num">{{tweet.comments}}</span>
+            <span class="tweet-comments-num">{{tweet.comments_num}}</span>
             {% endif %}
         </div>
         <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
             <span class="tweet-rts-icon">R:</span>
             {% if not show_full_info %}
-            <span class="tweet-rts-num">{{tweet.rts}}</span>
+            <span class="tweet-rts-num">{{tweet.retweets_num}}</span>
             {% endif %}
         </div>
         <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
             <span class="tweet-likes-icon">L:</span>
             {% if not show_full_info %}
-            <span class="tweet-likes-num">{{tweet.likes}}</span>
+            <span class="tweet-likes-num">{{tweet.likes_num}}</span>
             {% endif %}
         </div>
     </div>

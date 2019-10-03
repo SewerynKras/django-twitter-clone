@@ -7,7 +7,7 @@ import json
 from datetime import timedelta
 from django.utils import timezone
 from django.core.files.base import ContentFile
-from django.db.models import Count, Exists, OuterRef, Q, Subquery
+from django.db.models import Exists, OuterRef, Q, Subquery
 from django.conf import settings
 
 from tweets import models
@@ -39,11 +39,6 @@ def get_tweet_list(profile, before=None, after=None):
     # tweet before or not
     is_rt_by_user = models.Tweet.objects.filter(retweet=OuterRef("id"), author=profile)
     tweets = tweets.annotate(is_rt=Exists(is_rt_by_user))
-
-    # now the same thing for comments
-
-    # give each tweet number of comments
-    tweets = tweets.annotate(comments=Count("comment", distinct=True))
 
     # Twitter doesn't indicate whether the user has commented on
     # a tweet or not (probably because you can comment multiple times?)

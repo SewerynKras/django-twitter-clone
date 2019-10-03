@@ -10,18 +10,39 @@ class Tweet(models.Model):
     date = models.DateTimeField(auto_now=True)
     # When the retweeted tweet gets deleted this also deletes itself,
     # this could change in the future
-    retweet = models.ForeignKey("tweets.Tweet", on_delete=models.CASCADE,
-                                null=True, blank=True)
+    retweet_to = models.ForeignKey("tweets.Tweet", on_delete=models.CASCADE,
+                                   null=True, blank=True, related_name='retweet')
+    # When the commented on tweet gets deleted this also deletes itself,
+    # this could change in the future
+    comment_to = models.ForeignKey("tweets.Tweet", on_delete=models.CASCADE,
+                                   null=True, blank=True, related_name="comment")
 
     @property
     def likes(self):
         likes = Like.objects.filter(tweet=self.id)
-        return len(likes)
+        return likes
+
+    @property
+    def likes_num(self):
+        return len(self.likes)
 
     @property
     def retweets(self):
-        retweets = Tweet.objects.filter(retweet=self.id)
-        return len(retweets)
+        retweets = Tweet.objects.filter(retweet_to=self.id)
+        return retweets
+
+    @property
+    def retweets_num(self):
+        return len(self.retweets)
+
+    @property
+    def comments(self):
+        comments = Tweet.objects.filter(comment_to=self.id)
+        return comments
+
+    @property
+    def comments_num(self):
+        return len(self.comments)
 
     def __str__(self):
         return f"TWEET BY {self.author} (ID: {self.id})"
@@ -69,23 +90,6 @@ class Like(models.Model):
 
     def __str__(self):
         return f"LIKE BY {self.author} FOR {self.tweet}"
-
-
-class Comment(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    text = models.CharField(max_length=256)
-    # When the original tweet gets deleted this also deletes itself,
-    # this could change in the future
-    tweet = models.ForeignKey("tweets.Tweet", on_delete=models.CASCADE)
-    author = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE)
-    # When the replied to comment gets deleted this also deletes itself,
-    # this could change in the future
-    replies_to = models.ForeignKey("tweets.Comment", on_delete=models.CASCADE,
-                                   null=True, blank=True)
-    date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"COMMENT BY {self.author} FOR {self.tweet}"
 
 
 class Poll(models.Model):
