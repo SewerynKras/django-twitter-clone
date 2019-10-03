@@ -81,6 +81,16 @@ def get_tweets_AJAX(request):
     return HttpResponse(rendered_template)
 
 
+def get_single_tweet_AJAX(request):
+    tweet_id = request.GET.get("tweet_id")
+    context = {'tweet': helpers.get_single_tweet(tweet_id),
+               'show_full_info': True}
+    rendered_template = render(request=request,
+                               template_name="tweets/single_tweet.html",
+                               context=context)
+    return HttpResponse(rendered_template)
+
+
 def new_tweet_AJAX(request):
     errors = {}
     if request.method == "POST":

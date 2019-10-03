@@ -70,7 +70,7 @@ function fix_poll_timestamp() {
  */
 function like_tweet_AJAX() {
     var $btn = $(this);
-    var tweet_id = $(this).closest("li").attr("tweet-id");
+    var tweet_id = $(this).closest(".tweet-preview").attr("tweet-id");
     var $num_counter = $(this).children('.tweet-likes-num').eq(0);
     var num_likes = $num_counter.text();
 
@@ -108,7 +108,7 @@ function get_tweets() {
         dataType: "html",
         type: "get",
         success: function (response) {
-            new_tweet_list = $($.parseHTML(response)).find("li");
+            new_tweet_list = $($.parseHTML(response)).find(".tweet-preview");
             $tweet_list.prepend(new_tweet_list);
             setup_tweet_list(new_tweet_list);
         }
@@ -119,7 +119,8 @@ function get_tweets() {
  */
 function parse_twemoji() {
     let text = $(this).children(".tweet-text");
-    twemoji.parse(text[0]);
+    if (text[0])
+        twemoji.parse(text[0]);
 }
 
 /**
@@ -167,6 +168,7 @@ function setup_tweet_list($tweets) {
     let poll_dates = $tweets.find(".poll-time-left");
     poll_dates.each(fix_poll_timestamp);
 
+    $tweets.click(display_single_tweet_AJAX)
 }
 
 /**
@@ -265,7 +267,7 @@ function change_users_vote($poll, prev, updated) {
 function choose_poll_option_AJAX() {
     var $btn = $(this);
     var $poll = $(this).closest(".tweet-media-poll");
-    var tweet_id = $(this).closest("li").attr("tweet-id");
+    var tweet_id = $(this).closest(".tweet-preview").attr("tweet-id");
 
     if ($(this).hasClass("chosen"))
         var num = null;
@@ -292,8 +294,28 @@ function choose_poll_option_AJAX() {
     });
 }
 
+function display_single_tweet_AJAX() {
+    var tweet_id = $(this).attr("tweet-id");
+    $.ajax({
+        url: "/ajax/get_single_tweet/",
+        data: {
+            "tweet_id": tweet_id,
+        },
+        type: "get",
+        dataType: "html",
+        success: function (response) {
+            tweet = $($.parseHTML(response));
+            setup_tweet_list(tweet)
+            replace_main_body(tweet)
+            hide_right_body()
+            show_left_body()
+        }
+    });
+}
 
 $(document).ready(function () {
+    $main_body = $("#main-body")
+
     get_tweets();
 
     // Change all dates from UNIX timestamps to user-readable timestamps

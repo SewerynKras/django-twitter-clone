@@ -12,4 +12,5 @@ urlpatterns = [
     path("ajax/get_tweets/", views.get_tweets_AJAX, name="get_tweets"),
     path("ajax/new_tweet/", views.new_tweet_AJAX, name="new_tweet"),
     path("ajax/choose_poll_option/", views.choose_poll_option_AJAX, name="choose_poll_option"),
+    path("ajax/get_single_tweet/", views.get_single_tweet_AJAX, name="get_single_tweet"),
 ]

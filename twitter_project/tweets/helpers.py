@@ -71,20 +71,6 @@ def base64_to_image(string):
     return file
 
 
-def convert_images(request):
-    """
-    Converts all base64-encoded images from a request to image files
-
-    Returns:
-        images {dict}
-    """
-    images = {}
-    for img in ['image_1', 'image_2', 'image_3', 'image_4']:
-        if request.get(img):
-            images[img] = base64_to_image(request.get(img))
-    return images
-
-
 def get_giphy(query, limit=1, offset=0):
 
     # Escape special characters
@@ -120,6 +106,10 @@ def download_gif(data):
     gif = models.Gif(thumb_url=thumb_url,
                      gif_url=gif_url)
     return gif
+
+
+def get_single_tweet(tweet_id):
+    return models.Tweet.objects.get(id=tweet_id)
 
 
 def parse_new_tweet(data, profile):

@@ -27,6 +27,9 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
 
+    {% block body_scripts %}
+    {% endblock body_scripts %}
+
     {% comment %} use $("#blur").show() to blur the background {% endcomment %}
     <div id="cover" style='display:none'></div>
     {% block body_base %}
@@ -51,7 +54,7 @@
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
     </div>
-    <div id='main-body'>
+    <div id='main-body' class="shrink-l shrink-r">
         {% block body_navbar %}
         {% endblock body_navbar %}
     </div>

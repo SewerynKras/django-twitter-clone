@@ -1,0 +1,125 @@
+<div class='tweet-preview' tweet-id={{tweet.id}}>
+    <img src={{ tweet.author.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
+    <div class="clickable-name">
+        <a href="{% url 'profiles:profile' slug=tweet.author.slug%}">
+            {{tweet.author.display_name}}</a>
+        <span class="tweet-username">@{{tweet.author.username}}</span>
+    </div>
+    <span class="tweet-date" utc={{tweet.date|date:"U" }}></span>
+
+    <div class="tweet-text">{{tweet.text|linebreaks}}</div>
+
+    {% if tweet.media %}
+    <div class="tweet-media">
+        {% if tweet.media.type == "img" %}
+        <div class='tweet-media-images'>
+            <div class="tweet-image-cont-left">
+                {% if tweet.media.img.image_1 %}
+                <div class='tweet-image-cont' image-num='1'>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_1.url }}>
+                </div>
+                {% endif %}
+                {% if tweet.media.img.image_3 %}
+                <div class='tweet-image-cont' image-num='3'>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_3.url }}>
+                </div>
+                {% endif %}
+            </div>
+            <div class="tweet-image-cont-right">
+                {% if tweet.media.img.image_2 %}
+                <div class='tweet-image-cont' image-num='2'>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_2.url }}>
+                </div>
+                {% endif %}
+                {% if tweet.media.img.image_4 %}
+                <div class='tweet-image-cont' image-num='4'>
+                    <img class='tweet-image img-thumbnail' src={{ tweet.media.img.image_4.url }}>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% elif tweet.media.type == 'gif' %}
+        <div class='tweet-media-gif'>
+            <img src="" gif-url="{{tweet.media.gif.gif_url}}" thumb-url="{{tweet.media.gif.thumb_url}}">
+        </div>
+        {% elif tweet.media.type == 'poll' %}
+        <div class='tweet-media-poll' user-choice="{{ tweet.poll_chosen }}">
+            {% if tweet.media.poll.choice1_text %}
+            <div class='poll-choice-wrapper' choice-num='1' votes="{{ tweet.media.poll.votes1 }}">
+                <div class='poll-choice-bar'></div>
+                <span class='poll-choice-text'>{{ tweet.media.poll.choice1_text }}</span>
+                <span class='poll-choice-perc'></span>
+            </div>
+            {% endif %}
+            {% if tweet.media.poll.choice2_text %}
+            <div class='poll-choice-wrapper' choice-num='2' votes="{{ tweet.media.poll.votes2 }}">
+                <div class='poll-choice-bar'></div>
+                <span class='poll-choice-text'>{{ tweet.media.poll.choice2_text }}</span>
+                <span class='poll-choice-perc'></span>
+            </div>
+            {% endif %}
+            {% if tweet.media.poll.choice3_text %}
+            <div class='poll-choice-wrapper' choice-num='3' votes="{{ tweet.media.poll.votes3 }}">
+                <div class='poll-choice-bar'></div>
+                <span class='poll-choice-text'>{{ tweet.media.poll.choice3_text }}</span>
+                <span class='poll-choice-perc'></span>
+            </div>
+            {% endif %}
+            {% if tweet.media.poll.choice4_text %}
+            <div class='poll-choice-wrapper' choice-num='4' votes="{{ tweet.media.poll.votes4 }}">
+                <div class='poll-choice-bar'></div>
+                <span class='poll-choice-text'>{{ tweet.media.poll.choice4_text }}</span>
+                <span class='poll-choice-perc'></span>
+            </div>
+            {% endif %}
+            <div class='poll-totalvotes'>
+                TOTAL VOTES: <span class='num'>{{ tweet.media.poll.total_votes}}</span>
+            </div>
+            <div class='poll-time-left' end-date="{{ tweet.media.poll.end_date|date:'U' }}">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if show_full_info %}
+    <hr>
+    <div class='tweet-full-info'>
+        <span class='tweet-info-likes-link'>
+            LIKES:
+            <span class="tweet-likes-num">{{tweet.likes}}</span>
+        </span>
+        <span class='tweet-info-retweets-link'>
+            RETWEETS:
+            <span class="tweet-retweets-num">{{tweet.retweets}}</span>
+        </span>
+    </div>
+    {% endif %}
+
+    <hr>
+    <div class='tweet-media-btns'>
+        <div class="action-btn comment-btn">
+            <span class="tweet-comments-icon">C:</span>
+            {% if not show_full_info %}
+            <span class="tweet-comments-num">{{tweet.comments}}</span>
+            {% endif %}
+        </div>
+        <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
+            <span class="tweet-rts-icon">R:</span>
+            {% if not show_full_info %}
+            <span class="tweet-rts-num">{{tweet.rts}}</span>
+            {% endif %}
+        </div>
+        <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
+            <span class="tweet-likes-icon">L:</span>
+            {% if not show_full_info %}
+            <span class="tweet-likes-num">{{tweet.likes}}</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% comment %} {% if show_comments %}
+{% for comment in tweet.comments %}
+
+{% endfor %}
+{% endif %} {% endcomment %}

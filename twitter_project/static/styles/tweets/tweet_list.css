@@ -61,3 +61,8 @@
 .poll-time-left {
     height: 20px;
 }
+
+.tweet-preview {
+    border: 1px solid darkblue;
+    margin-top: 10px;
+}
