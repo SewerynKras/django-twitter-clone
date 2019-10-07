@@ -1,3 +1,7 @@
+.expanded {
+    width: 50%;
+}
+
 .shrink-r {
     margin-right: 300px !important;
 }

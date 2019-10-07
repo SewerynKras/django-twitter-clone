@@ -5,24 +5,12 @@
 {% block body_scripts %}
 <script src="{% static "scripts/tweets/new_tweet.js" %}"></script>
 <script src="{% static "scripts/tweets/tweet_list.js" %}"></script>
-<script src="{% static "scripts/tweets/images.js" %}"></script>
 <script src="{% static "scripts/tweets/utils.js" %}"></script>
 <link rel="stylesheet" href="{% static "styles/tweets/tweet_list.css" %}">
 <link rel="stylesheet" href="{% static "styles/tweets/new_tweet.css" %}">
 <link rel="stylesheet" href="{% static "styles/tweets/utils.css" %}">
 <link href="{% static "lib/emoji-picker/jquery.lsxemojipicker.css" %}" rel="stylesheet">
 <script src="{% static "lib/emoji-picker/jquery.lsxemojipicker.js" %}"></script>
-{% endblock body_scripts %}
-
-{% block body_navbar%}
-<div class="container">
-    <div id='new-tweet'>
-        {% include "tweets/new_tweet.html" %}
-    </div>
-
-    <div id='tweet-list'>
-    </div>
-</div>
 
 <div id='gif-selector' style='display:none'>
     <form class="form-inline" id="gif-search-form">
@@ -43,4 +31,8 @@
     </div>
     <div id='gif-list'></div>
 </div>
+
+{% endblock body_scripts %}
+
+{% block body_navbar%}
 {% endblock body_navbar %}

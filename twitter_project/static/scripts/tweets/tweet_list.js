@@ -65,15 +65,26 @@ function fix_poll_timestamp() {
 }
 
 /**
+ * Make the Tweets like button send an AJAX request to create a new Like,
+ * Updates the like counter.
+ */
+function set_like_btns() {
+    var $tweet = $(this);
+    var $btn = $tweet.find(".like-btn");
+    var $counter = $tweet.find(".tweet-likes-num");
+
+    $btn.one("click", function () {
+        like_tweet_AJAX($tweet, $btn, $counter);
+    })
+}
+
+/**
  * Sends an AJAX request to create a new Like object, updates
  * the amount of like a tweet has by 1
  */
-function like_tweet_AJAX() {
-    var $btn = $(this);
-    var tweet_id = $(this).closest(".tweet-preview").attr("tweet-id");
-    var $num_counter = $(this).children('.tweet-likes-num').eq(0);
-    var num_likes = $num_counter.text();
-
+function like_tweet_AJAX($tweet, $btn, $counter) {
+    var num_likes = $counter.text();
+    var tweet_id = $tweet.attr("tweet-id")
     $.ajax({
         url: "/ajax/like_tweet/",
         data: {
@@ -92,28 +103,14 @@ function like_tweet_AJAX() {
                 num_likes = -1 + +num_likes;
                 $btn.removeClass("is-liked");
             }
-            $num_counter.text(num_likes);
-            $btn.one("click", like_tweet_AJAX);
+            $counter.text(num_likes);
+            $btn.one("click", function () {
+                like_tweet_AJAX($tweet, $btn, $counter);
+            })
         }
     });
 }
 
-/**
- * Sends an AJAX GET request and appends the tweet list with received elements
- */
-function get_tweets() {
-    var $tweet_list = $("#tweet-list");
-    $.ajax({
-        url: "/ajax/get_tweets/",
-        dataType: "html",
-        type: "get",
-        success: function (response) {
-            new_tweet_list = $($.parseHTML(response)).find(".tweet-preview");
-            $tweet_list.prepend(new_tweet_list);
-            setup_tweet_list(new_tweet_list);
-        }
-    });
-}
 /**
  * Parses the .tweet-text with twemoji
  */
@@ -133,18 +130,23 @@ function setup_gif() {
 }
 
 function setup_tweet_list($tweets) {
+    $tweets.each(setup_singe_tweet)
+    $tweets.one('click', display_single_tweet_AJAX)
+}
 
-    let $media = $tweets.find(".tweet-media");
+function setup_singe_tweet() {
+    let $tweet = $(this)
+    let $media = $tweet.find(".tweet-media");
     $media.each(function () {
         rearrange_images($(this));
     })
     $media.each(setup_gif);
 
     // Convert each tweets emoji into twemojis
-    $tweets.each(parse_twemoji);
+    $tweet.each(parse_twemoji);
 
     // Convert dates to time elapsed
-    let dates = $tweets.find(".tweet-date");
+    let dates = $tweet.find(".tweet-date");
     dates.each(fix_tweet_timestamp);
 
     // make like button clickable
@@ -152,23 +154,20 @@ function setup_tweet_list($tweets) {
     // prevent the user from sending multiple requests in
     // a very short time, the like_tweet_AJAX function will rebind
     // itself to the button once the request finishes
-    let $like_btn = $tweets.find(".like-btn");
-    $like_btn.one("click", like_tweet_AJAX);
+    $tweet.each(set_like_btns)
 
     // Make each poll choice clickable
     // NOTE: I'm using one() here for the same reason as above 
-    let poll_btns = $tweets.find(".poll-choice-wrapper");
+    let poll_btns = $tweet.find(".poll-choice-wrapper");
     poll_btns.one("click", choose_poll_option_AJAX);
 
     // Make each poll reflect whether or not the user has voted in it
-    let polls = $tweets.find(".tweet-media-poll");
+    let polls = $tweet.find(".tweet-media-poll");
     polls.each(setup_poll_choice);
 
     // Convert end dates to time left
-    let poll_dates = $tweets.find(".poll-time-left");
+    let poll_dates = $tweet.find(".poll-time-left");
     poll_dates.each(fix_poll_timestamp);
-
-    $tweets.click(display_single_tweet_AJAX)
 }
 
 /**
@@ -305,27 +304,54 @@ function display_single_tweet_AJAX() {
         dataType: "html",
         success: function (response) {
             tweet = $($.parseHTML(response));
-            setup_tweet_list(tweet)
-            replace_main_body(tweet)
+            tweet.each(setup_singe_tweet)
+            $main_body.html(tweet)
             hide_right_body()
             show_left_body()
         }
     });
 }
 
+/**
+ * Sends an AJAX GET request and appends the tweet list with received elements
+ */
+function get_tweet_list_AJAX(callback) {
+    var $tweet_list = $("#tweet-list");
+    $.ajax({
+        url: "/ajax/get_tweets/",
+        dataType: "html",
+        type: "get",
+        success: function (response) {
+            new_tweet_list = $($.parseHTML(response)).find(".tweet-preview");
+            callback(new_tweet_list)
+        }
+    });
+}
+
+function load_tweet_list() {
+    get_tweet_list_AJAX(function ($list) {
+        setup_tweet_list(new_tweet_list);
+        var $tweet_date = $list.find(".tweet-date")
+        var $poll_time_left = $list.find(".poll-time-left")
+
+        // Change all dates from UNIX timestamps to user-readable timestamps
+        $tweet_date.each(fix_tweet_timestamp);
+        $poll_time_left.each(fix_poll_timestamp);
+
+        // update the timestamps every couple seconds
+        setInterval(function () {
+            $tweet_date.each(fix_tweet_timestamp);
+            $poll_time_left.each(fix_poll_timestamp);
+        }, 5000);
+
+        if (!$("#tweet-list").length) {
+            $main_body.append("<div id='tweet-list'></div>")
+        }
+        $("#tweet-list").prepend(new_tweet_list);
+    })
+}
+
+
 $(document).ready(function () {
-    $main_body = $("#main-body")
-
-    get_tweets();
-
-    // Change all dates from UNIX timestamps to user-readable timestamps
-    $(".tweet-date").each(fix_tweet_timestamp);
-    $(".poll-time-left").each(fix_poll_timestamp);
-
-    // update the timestamps every couple seconds
-    setInterval(function () {
-        $(".tweet-date").each(fix_tweet_timestamp);
-        $(".poll-time-left").each(fix_poll_timestamp);
-    }, 5000);
-
+    load_tweet_list()
 });

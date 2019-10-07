@@ -193,7 +193,7 @@ function slot_image(file) {
  * This also cascades all images.
  */
 function delete_image() {
-    var image = $(this).find(".tweet-image");
+    var image = $form.find(this).find(".tweet-image");
     image.removeAttr("src");
     $(this).hide();
     cascade_images();
@@ -284,7 +284,7 @@ function query_gifs(query, offset) {
         },
         dataType: "html",
         success: function (response) {
-            new_gif_list = $($.parseHTML(response));
+            new_gif_list = $form.find($.parseHTML(response));
             new_gif_list.each(set_gif_url);
             new_gif_list.click(select_gif);
             $gif_list.append(new_gif_list);
@@ -417,136 +417,155 @@ function new_tweet_AJAX() {
 
 }
 
-$(document).ready(function () {
-
-    // Fill jquery selectors
-    $barLeft = $(".new-tweet-bar-l");
-    $barRight = $(".new-tweet-bar-r");
-    $textfield = $(".new-tweet-textarea");
-    $placeholder = $(".new-tweet-placeholder");
-
-    $cover = $("#cover");
-    $media = $(".tweet-media");
-
-    $img_media_button = $(".new-tweet-media-image");
-    $gif_media_button = $(".new-tweet-media-gif");
-    $poll_media_button = $(".new-tweet-media-poll");
-    $emoji_media_button = $(".new-tweet-media-emoji");
-
-    $image_button = $(".new-tweet-image-button");
-    $images_media = $media.find(".tweet-media-images");
-    $image1_cont = $images_media.find("[image-num='1']");
-    $image2_cont = $images_media.find("[image-num='2']");
-    $image3_cont = $images_media.find("[image-num='3']");
-    $image4_cont = $images_media.find("[image-num='4']");
-    $image1 = $image1_cont.find(".tweet-image");
-    $image2 = $image2_cont.find(".tweet-image");
-    $image3 = $image3_cont.find(".tweet-image");
-    $image4 = $image4_cont.find(".tweet-image");
-    $gif_media = $media.find(".tweet-media-gif");
-    $gif_img = $gif_media.find("img");
-
-    $poll_media = $(".tweet-media-poll");
-    $poll_exit_btn = $poll_media.find(".exit-btn");
-    $poll_ch1 = $poll_media.find("[choice-num='1']");
-    $poll_ch2 = $poll_media.find("[choice-num='2']");
-    $poll_ch3 = $poll_media.find("[choice-num='3']");
-    $poll_ch4 = $poll_media.find("[choice-num='4']");
-    $poll_ch2_btn = $poll_ch2.find("[type='button']");
-    $poll_ch3_btn = $poll_ch3.find("[type='button']");
-
-    $poll_date_days = $poll_media.find("select[name='days']");
-    $poll_date_hours = $poll_media.find("select[name='hours']");
-    $poll_date_minutes = $poll_media.find("select[name='minutes']");
-
-    $gif_selector = $("#gif-selector");
-    $gif_search_bar = $("#gif-search-bar");
-    $gif_list = $("#gif-list");
-    $gif_prev_list = $("#gif-preview-list");
-    $gif_icon_btn = $("#gif-icon-btn");
-    $gif_icon_btn_text = $("#gif-icon-btn-text");
-
-    $placeholder.text($placeholder.attr("placeholder"));
-
-    $placeholder.click(function () {
-        $textfield.focus();
-    })
-
-    $textfield.on('input', check_tweet_len);
-
-    $(".new-tweet-submit").click(function (e) {
-        e.preventDefault();
-        new_tweet_AJAX();
-    })
-
-    $emoji_media_button.lsxEmojiPicker({
-        twemoji: true,
-        height: 200,
-        width: 240,
-        onSelect: function (emoji) {
-            $textfield.append("<span>" + emoji.value + "<span>");
-            check_tweet_len();
-        }
+function load_new_tweet_AJAX(callback) {
+    $.ajax({
+        url: "/ajax/get_new_tweet_form/",
+        type: "get",
+        dataType: "html",
+        success: function (response) {
+            $form = $($.parseHTML(response))
+            $main_body.html($form)
+            callback($form)
+        },
     });
+}
 
-    $img_media_button.click(function (e) {
-        e.preventDefault();
-        $image_button.click();
+function load_new_tweet_form() {
+    load_new_tweet_AJAX(function ($form) {
+
+        // Fill jquery selectors
+        $barLeft = $form.find(".new-tweet-bar-l");
+        $barRight = $form.find(".new-tweet-bar-r");
+        $textfield = $form.find(".new-tweet-textarea");
+        $placeholder = $form.find(".new-tweet-placeholder");
+
+        $cover = $form.find("#cover");
+        $media = $form.find(".tweet-media");
+
+        $img_media_button = $form.find(".new-tweet-media-image");
+        $gif_media_button = $form.find(".new-tweet-media-gif");
+        $poll_media_button = $form.find(".new-tweet-media-poll");
+        $emoji_media_button = $form.find(".new-tweet-media-emoji");
+
+        $image_button = $form.find(".new-tweet-image-button");
+        $images_media = $media.find(".tweet-media-images");
+        $image1_cont = $images_media.find("[image-num='1']");
+        $image2_cont = $images_media.find("[image-num='2']");
+        $image3_cont = $images_media.find("[image-num='3']");
+        $image4_cont = $images_media.find("[image-num='4']");
+        $image1 = $image1_cont.find(".tweet-image");
+        $image2 = $image2_cont.find(".tweet-image");
+        $image3 = $image3_cont.find(".tweet-image");
+        $image4 = $image4_cont.find(".tweet-image");
+        $gif_media = $media.find(".tweet-media-gif");
+        $gif_img = $gif_media.find("img");
+
+        $poll_media = $form.find(".tweet-media-poll");
+        $poll_exit_btn = $poll_media.find(".exit-btn");
+        $poll_ch1 = $poll_media.find("[choice-num='1']");
+        $poll_ch2 = $poll_media.find("[choice-num='2']");
+        $poll_ch3 = $poll_media.find("[choice-num='3']");
+        $poll_ch4 = $poll_media.find("[choice-num='4']");
+        $poll_ch2_btn = $poll_ch2.find("[type='button']");
+        $poll_ch3_btn = $poll_ch3.find("[type='button']");
+
+        $poll_date_days = $poll_media.find("select[name='days']");
+        $poll_date_hours = $poll_media.find("select[name='hours']");
+        $poll_date_minutes = $poll_media.find("select[name='minutes']");
+
+        $gif_selector = $form.find("#gif-selector");
+        $gif_search_bar = $form.find("#gif-search-bar");
+        $gif_list = $form.find("#gif-list");
+        $gif_prev_list = $form.find("#gif-preview-list");
+        $gif_icon_btn = $form.find("#gif-icon-btn");
+        $gif_icon_btn_text = $form.find("#gif-icon-btn-text");
+
+        $placeholder.text($placeholder.attr("placeholder"));
+
+        $placeholder.click(function () {
+            $textfield.focus();
+        })
+
+        $textfield.on('input', check_tweet_len);
+
+        $form.find(".new-tweet-submit").click(function (e) {
+            e.preventDefault();
+            new_tweet_AJAX();
+        })
+
+        $emoji_media_button.lsxEmojiPicker({
+            twemoji: true,
+            height: 200,
+            width: 240,
+            onSelect: function (emoji) {
+                $textfield.append("<span>" + emoji.value + "<span>");
+                check_tweet_len();
+            }
+        });
+
+        $img_media_button.click(function (e) {
+            e.preventDefault();
+            $image_button.click();
+        })
+
+        $image_button.change(order_images);
+
+        $($image1_cont).click(delete_image);
+        $($image2_cont).click(delete_image);
+        $($image3_cont).click(delete_image);
+        $($image4_cont).click(delete_image);
+
+        $gif_media_button.click(function (e) {
+            e.preventDefault();
+            show_gif_selector();
+        })
+
+        $cover.click(function (e) {
+            e.preventDefault();
+            hide_gif_selector();
+        })
+        $gif_icon_btn.click(function (e) {
+            e.preventDefault();
+            hide_gif_selector();
+        })
+
+        $form.find("#gif-search-submit").click(function (e) {
+            e.preventDefault();
+            search_gifs();
+        })
+
+        $form.find(".gif-preview").each(set_gif_thumb);
+
+        $form.find(".gif-preview").click(function (e) {
+            e.preventDefault();
+            select_gif_prev_list($(this));
+        })
+
+        $gif_img.click(delete_gif);
+
+        $poll_media_button.click(function (e) {
+            e.preventDefault();
+            show_poll_media();
+        })
+
+        $poll_ch2_btn.click(function (e) {
+            e.preventDefault();
+            $(this).hide();
+            $poll_ch3.show();
+        })
+        $poll_ch3_btn.click(function (e) {
+            e.preventDefault();
+            $(this).hide();
+            $poll_ch4.show();
+        })
+
+        $poll_exit_btn.click(function (e) {
+            e.preventDefault();
+            hide_all_media();
+        })
     })
+}
 
-    $image_button.change(order_images);
-
-    $($image1_cont).click(delete_image);
-    $($image2_cont).click(delete_image);
-    $($image3_cont).click(delete_image);
-    $($image4_cont).click(delete_image);
-
-    $gif_media_button.click(function (e) {
-        e.preventDefault();
-        show_gif_selector();
-    })
-
-    $cover.click(function (e) {
-        e.preventDefault();
-        hide_gif_selector();
-    })
-    $gif_icon_btn.click(function (e) {
-        e.preventDefault();
-        hide_gif_selector();
-    })
-
-    $("#gif-search-submit").click(function (e) {
-        e.preventDefault();
-        search_gifs();
-    })
-
-    $(".gif-preview").each(set_gif_thumb);
-
-    $(".gif-preview").click(function (e) {
-        e.preventDefault();
-        select_gif_prev_list($(this));
-    })
-
-    $gif_img.click(delete_gif);
-
-    $poll_media_button.click(function (e) {
-        e.preventDefault();
-        show_poll_media();
-    })
-
-    $poll_ch2_btn.click(function (e) {
-        e.preventDefault();
-        $(this).hide();
-        $poll_ch3.show();
-    })
-    $poll_ch3_btn.click(function (e) {
-        e.preventDefault();
-        $(this).hide();
-        $poll_ch4.show();
-    })
-
-    $poll_exit_btn.click(function (e) {
-        e.preventDefault();
-        hide_all_media();
-    })
+$(document).ready(function () {
+    load_new_tweet_form();
 });

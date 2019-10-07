@@ -55,8 +55,10 @@
         </form>
     </div>
     <div id='main-body' class="shrink-l shrink-r">
-        {% block body_navbar %}
-        {% endblock body_navbar %}
+        <div class="container">
+            {% block body_navbar %}
+            {% endblock body_navbar %}
+        </div>
     </div>
 
     {% endblock body_base %}

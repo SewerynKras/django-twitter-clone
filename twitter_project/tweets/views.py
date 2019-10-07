@@ -21,6 +21,11 @@ class MainPage(TemplateView):
         return context
 
 
+def get_new_tweet_form_AJAX(request):
+    template = render(request, "tweets/new_tweet.html")
+    return template
+
+
 def like_tweet_AJAX(request):
     if request.method == 'POST':
         if not request.user.is_authenticated:
