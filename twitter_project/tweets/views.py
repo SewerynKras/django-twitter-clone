@@ -4,21 +4,41 @@ import re
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import DetailView
 
 from tweets import helpers, models
 
 
-class MainPage(TemplateView):
+class MainPage(DetailView):
     template_name = "tweets/homepage.html"
+    context_object_name = "tweet_list"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['gif_list'] = models.GifCategory.objects.all()
+        context['main_body'] = "main_page"
 
-        user = self.request.user
-        context['tweet_list'] = helpers.get_tweet_list(user.profile)
         return context
+
+    def get_object(self):
+        user = self.request.user
+        return helpers.get_tweet_list(user.profile)
+
+
+class SingleTweet(DetailView):
+    template_name = "tweets/homepage.html"
+    context_object_name = 'tweet'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['gif_list'] = models.GifCategory.objects.all()
+        context['main_body'] = "tweet"
+        return context
+
+    def get_object(self):
+        username = self.kwargs.get("username")
+        tweet_id = self.kwargs.get("tweet_id")
+        return models.Tweet.objects.get(author__username=username, id=tweet_id)
 
 
 def get_new_tweet_form_AJAX(request):

@@ -7,6 +7,7 @@ app_name = "tweets"
 
 urlpatterns = [
     path("home/", views.MainPage.as_view(), name='homepage'),
+    path("<slug:username>/status/<slug:tweet_id>", views.SingleTweet.as_view(), name='single_tweet'),
     path("ajax/like_tweet/", views.like_tweet_AJAX, name="like_tweet"),
     path("ajax/get_gifs/", views.get_gifs_AJAX, name="get_gifs"),
     path("ajax/get_tweets/", views.get_tweets_AJAX, name="get_tweets"),

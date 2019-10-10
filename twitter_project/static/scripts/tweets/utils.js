@@ -1,7 +1,6 @@
 var $main_body;
 var $left_body
 var $right_body;
-var CURRENT_STATE = "home";
 
 function hide_right_body() {
     $right_body.hide();
@@ -23,20 +22,34 @@ function show_left_body() {
     $main_body.addClass("shrink-l");
 }
 
-function change_url(new_state, new_url) {
-    history.pushState({
-        state: CURRENT_STATE
-    }, "", new_url)
-    CURRENT_STATE = new_state;
+function change_url(state, url, push_state) {
+    if (push_state)
+        history.pushState(state, "", url)
+    else
+        history.replaceState(state, "", url)
 }
 
-function show_home() {
-    // change_url("home", "/home/")
+function show_home(push_state = true) {
     show_left_body();
     show_right_body();
     $main_body.empty();
     load_new_tweet_form();
     load_tweet_list();
+    change_url({
+        state: "home"
+    }, "/home", push_state);
+}
+
+function show_single_tweet(tweet_id, author, push_state = true) {
+    show_left_body();
+    show_right_body();
+    $main_body.empty();
+    load_single_tweet(tweet_id)
+    change_url({
+        state: "tweet",
+        tweet_id: tweet_id,
+        author: author
+    }, `/${author}/status/${tweet_id}`, push_state);
 }
 
 /**
@@ -131,14 +144,18 @@ function rearrange_images($images) {
         $images.hide();
 }
 $(document).ready(function () {
-    $main_body = $("#main-body")
-    $left_body = $("#left-body")
-    $right_body = $("#right-body")
+    $main_body = $("#main-body");
+    $left_body = $("#left-body");
+    $right_body = $("#right-body");
 
     window.onpopstate = function (event) {
         if (event.state) {
             if (event.state.state == "home") {
-                show_home()
+                show_home(push_state = false);
+            } else if (event.state.state == "tweet") {
+                show_single_tweet(event.state.tweet_id,
+                    event.state.author,
+                    push_state = false);
             }
         }
     };

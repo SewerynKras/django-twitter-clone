@@ -424,7 +424,6 @@ function load_new_tweet_AJAX(callback) {
         dataType: "html",
         success: function (response) {
             $form = $($.parseHTML(response))
-            $main_body.html($form)
             callback($form)
         },
     });
@@ -479,6 +478,8 @@ function load_new_tweet_form() {
         $gif_prev_list = $form.find("#gif-preview-list");
         $gif_icon_btn = $form.find("#gif-icon-btn");
         $gif_icon_btn_text = $form.find("#gif-icon-btn-text");
+
+        $main_body.html($form)
 
         $placeholder.text($placeholder.attr("placeholder"));
 
@@ -565,7 +566,3 @@ function load_new_tweet_form() {
         })
     })
 }
-
-$(document).ready(function () {
-    load_new_tweet_form();
-});

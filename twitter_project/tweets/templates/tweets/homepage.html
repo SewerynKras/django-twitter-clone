@@ -35,4 +35,19 @@
 {% endblock body_scripts %}
 
 {% block body_navbar%}
+{% if main_body == "main_page" %}
+<script>
+    $(function () {
+        show_home(push_state = false)
+    });
+
+</script>
+{% elif main_body == "tweet" %}
+<script>
+    $(function () {
+        show_single_tweet("{{tweet.id}}", "{{tweet.author.profile.username}}", push_state = false)
+    });
+
+</script>
+{% endif %}
 {% endblock body_navbar %}

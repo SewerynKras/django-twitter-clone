@@ -131,7 +131,11 @@ function setup_gif() {
 
 function setup_tweet_list($tweets) {
     $tweets.each(setup_singe_tweet)
-    $tweets.one('click', display_single_tweet_AJAX)
+    $tweets.one('click', function () {
+        let id = $(this).attr("tweet-id")
+        let author = $(this).attr("author-username")
+        show_single_tweet(id, author, push_state = true)
+    })
 }
 
 function setup_singe_tweet() {
@@ -205,12 +209,12 @@ function calc_poll_perc() {
         if ($ch) {
             if (total_votes > 0) {
                 var perc = Math.round($ch.attr("votes") / total_votes * 100);
-                $ch.find(".poll-choice-perc").text(perc + "%")
+                $ch.find(".poll-choice-perc").text(perc + "%");
             } else {
-                var perc = 100
-                $ch.find(".poll-choice-perc").text("")
+                var perc = 100;
+                $ch.find(".poll-choice-perc").text("");
             }
-            $ch.find(".poll-choice-bar").css("width", perc + "%")
+            $ch.find(".poll-choice-bar").css("width", perc + "%");
         }
     }
 
@@ -293,8 +297,7 @@ function choose_poll_option_AJAX() {
     });
 }
 
-function display_single_tweet_AJAX() {
-    var tweet_id = $(this).attr("tweet-id");
+function get_single_tweet_AJAX(tweet_id, callback) {
     $.ajax({
         url: "/ajax/get_single_tweet/",
         data: {
@@ -303,11 +306,8 @@ function display_single_tweet_AJAX() {
         type: "get",
         dataType: "html",
         success: function (response) {
-            tweet = $($.parseHTML(response));
-            tweet.each(setup_singe_tweet)
-            $main_body.html(tweet)
-            hide_right_body()
-            show_left_body()
+            $tweet = $($.parseHTML(response));
+            callback($tweet)
         }
     });
 }
@@ -316,7 +316,6 @@ function display_single_tweet_AJAX() {
  * Sends an AJAX GET request and appends the tweet list with received elements
  */
 function get_tweet_list_AJAX(callback) {
-    var $tweet_list = $("#tweet-list");
     $.ajax({
         url: "/ajax/get_tweets/",
         dataType: "html",
@@ -328,9 +327,18 @@ function get_tweet_list_AJAX(callback) {
     });
 }
 
+function load_single_tweet(tweet_id) {
+    get_single_tweet_AJAX(
+        tweet_id,
+        function ($tweet) {
+            $tweet.each(setup_singe_tweet)
+            $main_body.html($tweet)
+        })
+}
+
 function load_tweet_list() {
     get_tweet_list_AJAX(function ($list) {
-        setup_tweet_list(new_tweet_list);
+        setup_tweet_list($list);
         var $tweet_date = $list.find(".tweet-date")
         var $poll_time_left = $list.find(".poll-time-left")
 
@@ -348,10 +356,6 @@ function load_tweet_list() {
             $main_body.append("<div id='tweet-list'></div>")
         }
         $("#tweet-list").prepend(new_tweet_list);
+
     })
 }
-
-
-$(document).ready(function () {
-    load_tweet_list()
-});
