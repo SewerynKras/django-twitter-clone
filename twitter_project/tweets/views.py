@@ -4,41 +4,29 @@ import re
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.views.generic import DetailView
+from django.views.generic import TemplateView
 
 from tweets import helpers, models
 
 
-class MainPage(DetailView):
+class MainPage(TemplateView):
     template_name = "tweets/homepage.html"
-    context_object_name = "tweet_list"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['gif_list'] = models.GifCategory.objects.all()
         context['main_body'] = "main_page"
-
         return context
 
-    def get_object(self):
-        user = self.request.user
-        return helpers.get_tweet_list(user.profile)
 
-
-class SingleTweet(DetailView):
+class SingleTweet(TemplateView):
     template_name = "tweets/homepage.html"
-    context_object_name = 'tweet'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['gif_list'] = models.GifCategory.objects.all()
         context['main_body'] = "tweet"
         return context
-
-    def get_object(self):
-        username = self.kwargs.get("username")
-        tweet_id = self.kwargs.get("tweet_id")
-        return models.Tweet.objects.get(author__username=username, id=tweet_id)
 
 
 def get_new_tweet_form_AJAX(request):
@@ -99,7 +87,9 @@ def get_gifs_AJAX(request):
 
 def get_tweets_AJAX(request):
     profile = request.user.profile
-    context = {'tweet_list': helpers.get_tweet_list(profile)}
+    tweets = helpers.get_tweet_list(profile)
+    tweets = helpers.annotate_tweets(tweets, profile)
+    context = {'tweet_list': tweets}
     rendered_template = render(request=request,
                                template_name="tweets/tweet_list.html",
                                context=context)
@@ -108,7 +98,9 @@ def get_tweets_AJAX(request):
 
 def get_single_tweet_AJAX(request):
     tweet_id = request.GET.get("tweet_id")
-    context = {'tweet': helpers.get_single_tweet(tweet_id),
+    tweet = helpers.get_single_tweet(tweet_id)
+    tweet = helpers.annotate_tweets(tweet, request.user.profile)[0]
+    context = {'tweet': tweet,
                'show_full_info': True}
     rendered_template = render(request=request,
                                template_name="tweets/single_tweet.html",

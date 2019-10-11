@@ -7,6 +7,15 @@
     </div>
     <span class="tweet-date" utc={{tweet.date|date:"U" }}></span>
 
+    {% if tweet.comment_to %}
+    <div class='tweet-comment-to'>Replying to
+        <div class="clickable-name">
+            <a href="{% url 'profiles:profile' slug=tweet.comment_to.author.slug%}"
+                class="tweet-username">@{{tweet.comment_to.author.username}}</a>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="tweet-text">{{tweet.text|linebreaks}}</div>
 
     {% if tweet.media %}
@@ -118,8 +127,3 @@
         </div>
     </div>
 </div>
-{% comment %} {% if show_comments %}
-{% for comment in tweet.comments %}
-
-{% endfor %}
-{% endif %} {% endcomment %}

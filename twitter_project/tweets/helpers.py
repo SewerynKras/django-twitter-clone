@@ -14,7 +14,94 @@ from tweets import models
 from twitter_project.logging import logger
 
 
+def annotate_tweets(tweets, profile):
+    """
+    Gives each tweet in the queryset the following values:
+    [1] is_liked {bool} -- has this profile liked this tweet?
+    [2] is_rt {bool} -- has this profile retweeted this tweet?
+    [3] poll_chosen {int} -- which option in a poll has this profile selected?
+
+    Arguments:
+        tweets {Queryset}
+        profile {Profile}
+
+    Returns:
+        Queryset
+    """
+    logger.debug(f"Annotating tweets for {tweets}")
+
+    # [1]
+    # give each tweet a bool value whether the user has liked the
+    # tweet before or not
+    is_liked_by_user = models.Like.objects.filter(tweet=OuterRef("id"), author=profile)
+    tweets = tweets.annotate(is_liked=Exists(is_liked_by_user))
+
+    # [2]
+    # give each tweet a bool value whether the user has retweeted the
+    # tweet before or not
+    is_rt_by_user = models.Tweet.objects.filter(retweet=OuterRef("id"), author=profile)
+    tweets = tweets.annotate(is_rt=Exists(is_rt_by_user))
+
+    # NOTE:
+    # Twitter doesn't indicate whether the user has commented on
+    # a tweet or not (probably because you can comment multiple times?)
+
+    # [3]
+    # Give each tweet an int value indicating which option the user has selected
+    selected = models.PollVote.objects.filter(author=profile, poll__media__tweet=OuterRef("pk"))
+    tweets = tweets.annotate(poll_chosen=Subquery(selected.values("choice")))
+
+    return tweets
+
+
+def get_comments(tweet, before=None, after=None):
+    """
+    Queries all comments of the given tweet.
+    Resulting queryset is reverse ordered by date.
+
+    Arguments:
+        tweet {Tweet}
+
+    Keyword Arguments:
+        before {datetime} -- (default: {None})
+        after {datetime} -- (default: {None})
+
+    Returns:
+        Queryset
+    """
+    logger.debug(f"Getting comments for tweet: {tweet}")
+
+    comments = models.Tweet.objects.filter(comment_to=tweet.id)
+
+    if before:
+        # lt == less than == before
+        comments = comments.filter(date__lt=before)
+
+    if after:
+        # gt == greater than == after
+        comments = comments.filter(date__gt=after)
+
+    comments = comments.order_by("-date")
+    return comments
+
+
 def get_tweet_list(profile, before=None, after=None):
+    """
+    Queries all tweets based on the given profiles following.
+    Resulting queryset is reverse ordered by date.
+
+    Arguments:
+        profile {Profile}
+
+    Keyword Arguments:
+        before {datetime} -- (default: {None})
+        after {datetime} -- (default: {None})
+
+    Returns:
+        Queryset
+    """
+    logger.debug(f"Getting tweet list for {profile}")
+
     following = models.Follow.objects.filter(follower=profile).values("following")
     tweets = models.Tweet.objects.filter(Q(author__in=following) | Q(author=profile))
 
@@ -26,29 +113,22 @@ def get_tweet_list(profile, before=None, after=None):
         # gt == greater than == after
         tweets = tweets.filter(date__gt=after)
 
-    logger.debug(f"Getting tweet list for {profile}")
-
-    # give each tweet a bool value whether the user has liked the
-    # tweet before or not
-    is_liked_by_user = models.Like.objects.filter(tweet=OuterRef("id"), author=profile)
-    tweets = tweets.annotate(is_liked=Exists(is_liked_by_user))
-
-    # now the same thing for retweets
-
-    # give each tweet a bool value whether the user has retweeted the
-    # tweet before or not
-    is_rt_by_user = models.Tweet.objects.filter(retweet=OuterRef("id"), author=profile)
-    tweets = tweets.annotate(is_rt=Exists(is_rt_by_user))
-
-    # Twitter doesn't indicate whether the user has commented on
-    # a tweet or not (probably because you can comment multiple times?)
-
-    # Give each tweet an int value indicating which option the user has selected
-    selected = models.PollVote.objects.filter(author=profile, poll__media__tweet=OuterRef("pk"))
-    tweets = tweets.annotate(poll_chosen=Subquery(selected.values("choice")))
-
     tweets = tweets.order_by("-date")
     return tweets
+
+
+def get_single_tweet(id):
+    """
+    Queries a single tweet with the given id.
+    NOTE: this returns a Queryset of length 1, not the actual Tweet
+
+    Arguments:
+        id {str}
+
+    Returns:
+        Queryset
+    """
+    return models.Tweet.objects.filter(id=id)
 
 
 def base64_to_image(string):
@@ -67,7 +147,19 @@ def base64_to_image(string):
 
 
 def get_giphy(query, limit=1, offset=0):
+    """
+    Queries the Giphy api
 
+    Arguments:
+        query {str}
+
+    Keyword Arguments:
+        limit {int} -- (default: {1})
+        offset {int} -- (default: {0})
+
+    Returns:
+        list
+    """
     # Escape special characters
     query = urllib.parse.quote(query)
     gifs = []
@@ -103,24 +195,16 @@ def download_gif(data):
     return gif
 
 
-def get_single_tweet(tweet_id):
-    return models.Tweet.objects.get(id=tweet_id)
-
-
 def parse_new_tweet(data, profile):
     """
-    {
-        "text": ...,
-        "retweet": ...,
-        "media": {
-            "type": ...,
-            "values": {
-                "value1": ...,
-                "value2": ...,
-                ...
-                }
-            }
-    }
+    Parses, creates and saves a new Tweet object alongside its Media (if applicable)
+
+    Arguments:
+        data {dict} -- JSON body
+        profile {Profile}
+
+    Returns:
+        Tweet
     """
     tweet = models.Tweet()
     media = None
@@ -139,8 +223,10 @@ def parse_new_tweet(data, profile):
     if request_media:
 
         values = request_media.get("values")
+
         media = models.Media()
         media_type = request_media.get("type")
+
         if media_type == "img":
             media.type = "img"
             media_item = models.Images()
@@ -171,13 +257,19 @@ def parse_new_tweet(data, profile):
                 option = values.get(name)
                 if option:
                     setattr(media_item, name, option)
+
             total_seconds = 0
+            # convert days hours and minutes to seconds since timedelta
+            # takes seconds
             days = values.get("days_left")
             total_seconds += int(days) * 24 * 60 * 60
+
             hours = values.get("hours_left")
             total_seconds += int(hours) * 60 * 60
+
             minutes = values.get("minutes_left")
             total_seconds += int(minutes) * 60
+
             delta = timedelta(seconds=total_seconds)
             end_date = timezone.now() + delta
             media_item.end_date = end_date
