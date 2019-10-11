@@ -130,7 +130,7 @@ function setup_gif() {
 }
 
 function setup_tweet_list($tweets) {
-    $tweets.each(setup_singe_tweet)
+    $tweets.each(setup_single_tweet)
     $tweets.one('click', function () {
         let id = $(this).attr("tweet-id")
         let author = $(this).attr("author-username")
@@ -138,7 +138,7 @@ function setup_tweet_list($tweets) {
     })
 }
 
-function setup_singe_tweet() {
+function setup_single_tweet() {
     let $tweet = $(this)
     let $media = $tweet.find(".tweet-media");
     $media.each(function () {
@@ -270,7 +270,7 @@ function change_users_vote($poll, prev, updated) {
 function choose_poll_option_AJAX() {
     var $btn = $(this);
     var $poll = $(this).closest(".tweet-media-poll");
-    var tweet_id = $(this).closest(".tweet-preview").attr("tweet-id");
+    var tweet_id = $(this).closest(".tweet-container").attr("tweet-id");
 
     if ($(this).hasClass("chosen"))
         var num = null;
@@ -321,7 +321,7 @@ function get_tweet_list_AJAX(callback) {
         dataType: "html",
         type: "get",
         success: function (response) {
-            new_tweet_list = $($.parseHTML(response)).find(".tweet-preview");
+            new_tweet_list = $($.parseHTML(response)).find(".tweet-container");
             callback(new_tweet_list)
         }
     });

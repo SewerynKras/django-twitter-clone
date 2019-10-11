@@ -26,6 +26,9 @@ class SingleTweet(TemplateView):
         context = super().get_context_data(**kwargs)
         context['gif_list'] = models.GifCategory.objects.all()
         context['main_body'] = "tweet"
+
+        context['tweet_id'] = self.kwargs.get("tweet_id")
+        context['author_username'] = self.kwargs.get("username")
         return context
 
 
@@ -98,9 +101,15 @@ def get_tweets_AJAX(request):
 
 def get_single_tweet_AJAX(request):
     tweet_id = request.GET.get("tweet_id")
+    profile = request.user.profile
     tweet = helpers.get_single_tweet(tweet_id)
-    tweet = helpers.annotate_tweets(tweet, request.user.profile)[0]
+    tweet = helpers.annotate_tweets(tweet, profile)[0]
+
+    # comments = helpers.get_comments(tweet)
+    # comments = helpers.annotate_tweets(comments, profile)
+
     context = {'tweet': tweet,
+            #    'comments': comments,
                'show_full_info': True}
     rendered_template = render(request=request,
                                template_name="tweets/single_tweet.html",

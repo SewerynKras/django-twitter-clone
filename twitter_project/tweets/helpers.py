@@ -28,7 +28,7 @@ def annotate_tweets(tweets, profile):
     Returns:
         Queryset
     """
-    logger.debug(f"Annotating tweets for {tweets}")
+    logger.debug(f"Annotating tweets for {profile}")
 
     # [1]
     # give each tweet a bool value whether the user has liked the

@@ -45,7 +45,7 @@
 {% elif main_body == "tweet" %}
 <script>
     $(function () {
-        show_single_tweet("{{tweet.id}}", "{{tweet.author.profile.username}}", push_state = false)
+        show_single_tweet("{{tweet_id}}", "{{author_username}}", push_state = false)
     });
 
 </script>
