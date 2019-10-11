@@ -466,7 +466,7 @@ class Test_Like_Tweet_AJAX(TestCase):
         self.assertEqual(cont, {"tweet_id": "This tweet doesn't exists."})
 
     def test_correct_like_add(self):
-        likes_before = self.tweet.likes
+        likes_before = self.tweet.likes_num
 
         request = self.factory.post(reverse("tweets:like_tweet"),
                                     {"tweet_id": self.tweet.id})
@@ -478,11 +478,11 @@ class Test_Like_Tweet_AJAX(TestCase):
         cont = json.loads(response.content)
         self.assertEqual(cont, {"liked": True})
 
-        likes_now = self.tweet.likes
+        likes_now = self.tweet.likes_num
         self.assertEqual(likes_now, likes_before + 1)
 
     def test_correct_like_remove(self):
-        likes_before = self.tweet.likes
+        likes_before = self.tweet.likes_num
 
         request = self.factory.post(reverse("tweets:like_tweet"),
                                     {"tweet_id": self.tweet.id})
@@ -495,7 +495,7 @@ class Test_Like_Tweet_AJAX(TestCase):
         cont = json.loads(response.content)
         self.assertEqual(cont, {"liked": False})
 
-        likes_now = self.tweet.likes
+        likes_now = self.tweet.likes_num
         self.assertEqual(likes_now, likes_before)
 
     @classmethod
