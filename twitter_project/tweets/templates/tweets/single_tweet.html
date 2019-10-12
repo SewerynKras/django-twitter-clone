@@ -4,7 +4,7 @@
     {% if comments %}
     <div id='comment-list'>
         {% for comment in comments %}
-        {% include 'tweets/tweet_template.html' with tweet=comment %}
+        {% include 'tweets/tweet_template.html' with tweet=comment show_full_info=False %}
         {% endfor %}
     </div>
     {% endif %}

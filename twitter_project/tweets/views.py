@@ -105,11 +105,11 @@ def get_single_tweet_AJAX(request):
     tweet = helpers.get_single_tweet(tweet_id)
     tweet = helpers.annotate_tweets(tweet, profile)[0]
 
-    # comments = helpers.get_comments(tweet)
-    # comments = helpers.annotate_tweets(comments, profile)
+    comments = helpers.get_comments(tweet)
+    comments = helpers.annotate_tweets(comments, profile)
 
     context = {'tweet': tweet,
-            #    'comments': comments,
+               'comments': comments,
                'show_full_info': True}
     rendered_template = render(request=request,
                                template_name="tweets/single_tweet.html",

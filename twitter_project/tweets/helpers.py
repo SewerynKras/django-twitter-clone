@@ -71,7 +71,7 @@ def get_comments(tweet, before=None, after=None):
     """
     logger.debug(f"Getting comments for tweet: {tweet}")
 
-    comments = models.Tweet.objects.filter(comment_to=tweet.id)
+    comments = models.Tweet.objects.filter(comment_to=tweet)
 
     if before:
         # lt == less than == before
