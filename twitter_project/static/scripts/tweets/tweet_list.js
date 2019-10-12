@@ -331,7 +331,7 @@ function load_single_tweet(tweet_id) {
     get_single_tweet_AJAX(
         tweet_id,
         function ($tweet) {
-            $tweet.each(setup_singe_tweet)
+            $tweet.each(setup_single_tweet)
             $main_body.html($tweet)
         })
 }

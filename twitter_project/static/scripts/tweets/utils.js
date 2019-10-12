@@ -1,6 +1,7 @@
 var $main_body;
 var $left_body
 var $right_body;
+var $cover;
 
 function hide_right_body() {
     $right_body.hide();
@@ -147,6 +148,7 @@ $(document).ready(function () {
     $main_body = $("#main-body");
     $left_body = $("#left-body");
     $right_body = $("#right-body");
+    $cover = $("#cover");
 
     window.onpopstate = function (event) {
         if (event.state) {

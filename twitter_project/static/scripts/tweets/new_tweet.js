@@ -284,11 +284,10 @@ function query_gifs(query, offset) {
         },
         dataType: "html",
         success: function (response) {
-            new_gif_list = $form.find($.parseHTML(response));
+            new_gif_list = $($.parseHTML(response));
             new_gif_list.each(set_gif_url);
             new_gif_list.click(select_gif);
             $gif_list.append(new_gif_list);
-
         },
     });
 }
@@ -438,7 +437,6 @@ function load_new_tweet_form() {
         $textfield = $form.find(".new-tweet-textarea");
         $placeholder = $form.find(".new-tweet-placeholder");
 
-        $cover = $form.find("#cover");
         $media = $form.find(".tweet-media");
 
         $img_media_button = $form.find(".new-tweet-media-image");
@@ -472,12 +470,12 @@ function load_new_tweet_form() {
         $poll_date_hours = $poll_media.find("select[name='hours']");
         $poll_date_minutes = $poll_media.find("select[name='minutes']");
 
-        $gif_selector = $form.find("#gif-selector");
-        $gif_search_bar = $form.find("#gif-search-bar");
-        $gif_list = $form.find("#gif-list");
-        $gif_prev_list = $form.find("#gif-preview-list");
-        $gif_icon_btn = $form.find("#gif-icon-btn");
-        $gif_icon_btn_text = $form.find("#gif-icon-btn-text");
+        $gif_selector = $("#gif-selector");
+        $gif_search_bar = $gif_selector.find("#gif-search-bar");
+        $gif_list = $gif_selector.find("#gif-list");
+        $gif_prev_list = $gif_selector.find("#gif-preview-list");
+        $gif_icon_btn = $gif_selector.find("#gif-icon-btn");
+        $gif_icon_btn_text = $gif_selector.find("#gif-icon-btn-text");
 
         $main_body.html($form)
 
@@ -530,14 +528,14 @@ function load_new_tweet_form() {
             hide_gif_selector();
         })
 
-        $form.find("#gif-search-submit").click(function (e) {
+        $gif_selector.find("#gif-search-submit").click(function (e) {
             e.preventDefault();
             search_gifs();
         })
 
-        $form.find(".gif-preview").each(set_gif_thumb);
+        $gif_prev_list.find(".gif-preview").each(set_gif_thumb);
 
-        $form.find(".gif-preview").click(function (e) {
+        $gif_prev_list.find(".gif-preview").click(function (e) {
             e.preventDefault();
             select_gif_prev_list($(this));
         })
