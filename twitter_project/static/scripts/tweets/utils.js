@@ -105,7 +105,7 @@ function rearrange_images($images) {
     // |   3   |        |
     // |       |        |
     // ------------------
-    if (!$image4_cont.is(":visible"))
+    if (!$image4_cont.find("img").attr("src"))
         $image2_cont.addClass("tall");
 
     // if there is no third image the first one
@@ -119,7 +119,7 @@ function rearrange_images($images) {
     // |       |        |
     // |       |        |
     // ------------------
-    if (!$image3_cont.is(":visible"))
+    if (!$image3_cont.find("img").attr("src"))
         $image1_cont.addClass("tall");
 
     // if there is no second image the first one
@@ -133,14 +133,14 @@ function rearrange_images($images) {
     // |                |
     // |                |
     // ------------------
-    if (!$image2_cont.is(":visible")) {
+    if (!$image2_cont.find("img").attr("src")) {
         $image_cont_left.addClass("wide");
         $image_cont_right.addClass("narrow");
         $image1_cont.addClass("tall");
     }
 
     // hide the media element if there are no images
-    if (!$image1_cont.is(":visible"))
+    if (!$image1_cont.find("img").attr("src"))
         $images.hide();
 }
 $(document).ready(function () {
