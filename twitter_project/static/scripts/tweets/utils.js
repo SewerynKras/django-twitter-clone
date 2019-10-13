@@ -34,8 +34,12 @@ function show_home(push_state = true) {
     show_left_body();
     show_right_body();
     $main_body.empty();
-    load_new_tweet_form();
-    load_tweet_list();
+    load_new_tweet_form(function ($form) {
+        $main_body.html($form);
+    });
+    load_tweet_list(function ($list) {
+        $main_body.append($list)
+    });
     change_url({
         state: "home"
     }, "/home", push_state);

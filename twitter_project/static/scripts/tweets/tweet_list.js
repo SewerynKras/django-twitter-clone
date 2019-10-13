@@ -306,7 +306,7 @@ function get_single_tweet_AJAX(tweet_id, callback) {
         type: "get",
         dataType: "html",
         success: function (response) {
-            $tweet = $($.parseHTML(response));
+            $tweet = $($.parseHTML(response)).find(".tweet-container");
             callback($tweet)
         }
     });
@@ -336,7 +336,7 @@ function load_single_tweet(tweet_id) {
         })
 }
 
-function load_tweet_list() {
+function load_tweet_list(callback) {
     get_tweet_list_AJAX(function ($list) {
         setup_tweet_list($list);
         var $tweet_date = $list.find(".tweet-date")
@@ -352,10 +352,6 @@ function load_tweet_list() {
             $poll_time_left.each(fix_poll_timestamp);
         }, 5000);
 
-        if (!$("#tweet-list").length) {
-            $main_body.append("<div id='tweet-list'></div>")
-        }
-        $("#tweet-list").prepend(new_tweet_list);
-
+        callback($list)
     })
 }

@@ -4,9 +4,6 @@ const AJAX_GIF_LIMIT = 12;
 
 var GIF_SEARCHED = false;
 
-
-var $cover;
-
 var $barLeft;
 var $barRight;
 var $placeholder;
@@ -428,7 +425,7 @@ function load_new_tweet_AJAX(callback) {
     });
 }
 
-function load_new_tweet_form() {
+function load_new_tweet_form(callback) {
     load_new_tweet_AJAX(function ($form) {
 
         // Fill jquery selectors
@@ -476,8 +473,6 @@ function load_new_tweet_form() {
         $gif_prev_list = $gif_selector.find("#gif-preview-list");
         $gif_icon_btn = $gif_selector.find("#gif-icon-btn");
         $gif_icon_btn_text = $gif_selector.find("#gif-icon-btn-text");
-
-        $main_body.html($form)
 
         $placeholder.text($placeholder.attr("placeholder"));
 
@@ -562,5 +557,7 @@ function load_new_tweet_form() {
             e.preventDefault();
             hide_all_media();
         })
+
+        callback($form)
     })
 }
