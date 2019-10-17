@@ -247,3 +247,15 @@ img.emoji {
     display: inline-block;
     width: 20%;
 }
+
+/* reply form */
+
+#reply-form {
+    position: fixed;
+    height: 70%;
+    width: 40%;
+    top: 15%;
+    left: 30%;
+    background-color: darkgray;
+    z-index: 501;
+}

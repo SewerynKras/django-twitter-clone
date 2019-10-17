@@ -3,9 +3,9 @@
 {% load static %}
 
 {% block body_scripts %}
+<script src="{% static "scripts/tweets/utils.js" %}"></script>
 <script src="{% static "scripts/tweets/new_tweet.js" %}"></script>
 <script src="{% static "scripts/tweets/tweet_list.js" %}"></script>
-<script src="{% static "scripts/tweets/utils.js" %}"></script>
 <link rel="stylesheet" href="{% static "styles/tweets/tweet_list.css" %}">
 <link rel="stylesheet" href="{% static "styles/tweets/new_tweet.css" %}">
 <link rel="stylesheet" href="{% static "styles/tweets/utils.css" %}">
@@ -30,6 +30,14 @@
         {% endfor %}
     </div>
     <div id='gif-list'></div>
+</div>
+
+<div id='reply-form' style='display:none'>
+    <div id='reply-preview'></div>
+    <hr>
+    <div id='reply-text'>Replying to <span id='reply-name'></span></div>
+    <hr>
+    <div id='reply-new'></div>
 </div>
 
 {% endblock body_scripts %}

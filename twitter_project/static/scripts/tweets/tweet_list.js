@@ -138,6 +138,17 @@ function setup_tweet_list($tweets) {
     })
 }
 
+function set_comment_btns() {
+    var $tweet = $(this);
+    var $btn = $tweet.find(".comment-btn");
+    var $counter = $tweet.find(".tweet-comments-num");
+
+    $btn.click(function (e) {
+        e.preventDefault();
+        show_reply_form($tweet.attr("tweet-id"));
+    })
+}
+
 function setup_single_tweet() {
     let $tweet = $(this)
     let $media = $tweet.find(".tweet-media");
@@ -172,6 +183,8 @@ function setup_single_tweet() {
     // Convert end dates to time left
     let poll_dates = $tweet.find(".poll-time-left");
     poll_dates.each(fix_poll_timestamp);
+
+    $tweet.each(set_comment_btns)
 }
 
 /**
@@ -297,11 +310,12 @@ function choose_poll_option_AJAX() {
     });
 }
 
-function get_single_tweet_AJAX(tweet_id, callback) {
+function get_single_tweet_AJAX(tweet_id, minified, callback) {
     $.ajax({
         url: "/ajax/get_single_tweet/",
         data: {
             "tweet_id": tweet_id,
+            "minified": minified
         },
         type: "get",
         dataType: "html",
@@ -327,12 +341,13 @@ function get_tweet_list_AJAX(callback) {
     });
 }
 
-function load_single_tweet(tweet_id) {
+function load_single_tweet(tweet_id, callback, minified = false) {
     get_single_tweet_AJAX(
         tweet_id,
+        minified,
         function ($tweet) {
             $tweet.each(setup_single_tweet)
-            $main_body.html($tweet)
+            callback($tweet)
         })
 }
 

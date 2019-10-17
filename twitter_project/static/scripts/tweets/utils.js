@@ -2,6 +2,27 @@ var $main_body;
 var $left_body
 var $right_body;
 var $cover;
+var $reply_form;
+var $reply_form_preview;
+var $reply_form_name;
+var $reply_form_new_tweet;
+var $gif_selector;
+
+/**
+ * Changes the background-image css property to the url in
+ * the 'thumb_url' attribute
+ */
+function set_gif_thumb() {
+    $(this).css("background-image", `url(${$(this).attr("thumb-url")})`);
+}
+
+/**
+ * Changes the background-image css property to the url in
+ * the 'gif-url' attribute
+ */
+function set_gif_url() {
+    $(this).css("background-image", `url(${$(this).attr("gif-url")})`);
+}
 
 function hide_right_body() {
     $right_body.hide();
@@ -49,12 +70,39 @@ function show_single_tweet(tweet_id, author, push_state = true) {
     show_left_body();
     show_right_body();
     $main_body.empty();
-    load_single_tweet(tweet_id)
+    load_single_tweet(tweet_id, function ($tweet) {
+        $main_body.html($tweet);
+    })
     change_url({
         state: "tweet",
         tweet_id: tweet_id,
         author: author
     }, `/${author}/status/${tweet_id}`, push_state);
+}
+
+function show_reply_form(tweet_id, push_state = true) {
+    $cover.show();
+    $reply_form.show();
+    load_single_tweet(tweet_id,
+        callback = function ($tweet) {
+            $reply_form_preview.html($tweet);
+            $reply_form_name.text($tweet.attr("author-username"));
+        }, true) // minified = true
+
+    load_new_tweet_form(function ($form) {
+        $reply_form_new_tweet.html($form);
+    })
+
+    change_url({
+        state: "reply",
+        tweet_id: tweet_id,
+    }, "/compose/tweet", push_state);
+}
+
+function hide_all_cover() {
+    $reply_form.hide();
+    $gif_selector.hide();
+    $cover.hide();
 }
 
 /**
@@ -148,20 +196,40 @@ function rearrange_images($images) {
     if (!$image1_cont.find("img").attr("src"))
         $images.hide();
 }
+
+/**
+ * Displays the gif selector.
+ */
+function show_gif_selector() {
+    $cover.show();
+    $gif_selector.show();
+}
+
+
 $(document).ready(function () {
     $main_body = $("#main-body");
     $left_body = $("#left-body");
     $right_body = $("#right-body");
     $cover = $("#cover");
+    $reply_form = $("#reply-form");
+    $gif_selector = $("#gif-selector");
+    $reply_form_preview = $reply_form.find("#reply-preview");
+    $reply_form_name = $reply_form.find("#reply-name");
+    $reply_form_new_tweet = $reply_form.find("#reply-new");
+
+    $cover.click(hide_all_cover);
 
     window.onpopstate = function (event) {
         if (event.state) {
+            hide_all_cover();
             if (event.state.state == "home") {
-                show_home(push_state = false);
+                show_home(false);
             } else if (event.state.state == "tweet") {
                 show_single_tweet(event.state.tweet_id,
                     event.state.author,
-                    push_state = false);
+                    false);
+            } else if (event.state.state == "reply") {
+                show_reply_form(event.state.tweet_id, false);
             }
         }
     };

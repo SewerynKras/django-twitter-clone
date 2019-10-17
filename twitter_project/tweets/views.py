@@ -34,7 +34,7 @@ class SingleTweet(TemplateView):
 
 def get_new_tweet_form_AJAX(request):
     template = render(request, "tweets/new_tweet.html")
-    return template
+    return HttpResponse(template)
 
 
 def like_tweet_AJAX(request):
@@ -101,16 +101,24 @@ def get_tweets_AJAX(request):
 
 def get_single_tweet_AJAX(request):
     tweet_id = request.GET.get("tweet_id")
+    minified = request.GET.get("minified")
+    minified = True if minified == "true" else False
+
     profile = request.user.profile
     tweet = helpers.get_single_tweet(tweet_id)
     tweet = helpers.annotate_tweets(tweet, profile)[0]
 
-    comments = helpers.get_comments(tweet)
-    comments = helpers.annotate_tweets(comments, profile)
+    context = {'tweet': tweet}
 
-    context = {'tweet': tweet,
-               'comments': comments,
-               'show_full_info': True}
+    if minified:
+        context['hide_media'] = True
+        context['hide_buttons'] = True
+    else:
+        comments = helpers.get_comments(tweet)
+        comments = helpers.annotate_tweets(comments, profile)
+        context['comments'] = comments
+        context['show_full_info'] = True
+
     rendered_template = render(request=request,
                                template_name="tweets/single_tweet.html",
                                context=context)

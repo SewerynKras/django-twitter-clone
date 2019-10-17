@@ -2,7 +2,6 @@ const HTML_X = "&times;";
 const HTML_ARROW = "&larr;";
 const AJAX_GIF_LIMIT = 12;
 
-var GIF_SEARCHED = false;
 
 function load_new_tweet_AJAX(callback) {
     $.ajax({
@@ -10,15 +9,127 @@ function load_new_tweet_AJAX(callback) {
         type: "get",
         dataType: "html",
         success: function (response) {
-            $form = $($.parseHTML(response))
-            callback($form)
+            $form = $($.parseHTML(response));
+            callback($form);
         },
     });
 }
 
+
+$(document).ready(function () {
+    var GIF_SEARCHED = false;
+
+    var $gif_search_bar = $gif_selector.find("#gif-search-bar");
+    var $gif_list = $gif_selector.find("#gif-list");
+    var $gif_prev_list = $gif_selector.find("#gif-preview-list");
+    var $gif_icon_btn = $gif_selector.find("#gif-icon-btn");
+    var $gif_icon_btn_text = $gif_selector.find("#gif-icon-btn-text");
+
+    $gif_icon_btn.click(function (e) {
+        e.preventDefault();
+        hide_gif_selector();
+    })
+    $gif_selector.find("#gif-search-submit").click(function (e) {
+        e.preventDefault();
+        search_gifs();
+    })
+
+    $gif_prev_list.find(".gif-preview").each(set_gif_thumb);
+
+    $gif_prev_list.find(".gif-preview").click(function (e) {
+        e.preventDefault();
+        select_gif_prev_list($(this));
+    })
+
+
+    /**
+     * Hides the gif selector.
+     */
+    function hide_gif_selector(force) {
+        if (GIF_SEARCHED && !force) {
+            $gif_icon_btn_text.html(HTML_X);
+            reset_gif_list();
+        } else {
+            $cover.hide();
+            $gif_selector.hide();
+        }
+    }
+
+    /**
+     * Calls query_gifs on the 
+     */
+    function search_gifs() {
+        let query = $gif_search_bar.val();
+        if (query != "") {
+            $gif_icon_btn_text.html(HTML_ARROW);
+            $gif_prev_list.hide();
+            $gif_list.show();
+            GIF_SEARCHED = true;
+            query_gifs(query, 0);
+        }
+    }
+
+    /**
+     * Sends an AJAX request to the giphy api and appends
+     * received gifs to the gif list
+     * @param {String} query 
+     * @param {Number} offset
+     */
+    function query_gifs(query, offset) {
+        $gif_list.empty();
+        $.ajax({
+            url: "/ajax/get_gifs/",
+            data: {
+                "query": query,
+                "limit": AJAX_GIF_LIMIT,
+                "offset": offset
+            },
+            dataType: "html",
+            success: function (response) {
+                new_gif_list = $($.parseHTML(response));
+                new_gif_list.each(set_gif_url);
+                new_gif_list.click(select_gif);
+                $gif_list.append(new_gif_list);
+            },
+        });
+    }
+
+    /**
+     * Changes the search bars text to that of the given gif-preview
+     * @param {Jquery selector} $preview 
+     */
+    function select_gif_prev_list($preview) {
+        $gif_search_bar.val($.trim($preview.find(".gif-preview-text").text()));
+    }
+
+    /**
+     * Resets the gif-list to its original state
+     */
+    function reset_gif_list() {
+        $gif_list.empty();
+        $gif_prev_list.show();
+        GIF_SEARCHED = false;
+        $gif_search_bar.val("");
+    }
+    /**
+     * Slots the selected gif to the gif media field,
+     * hides and resets the gif selector.
+     */
+    function select_gif() {
+        reset_gif_list();
+        hide_gif_selector();
+        event = new CustomEvent("gif-selected", {
+            detail: {
+                gif_url: $(this).attr("gif-url"),
+                thumb_url: $(this).attr("thumb-url")
+            }
+        });
+        window.dispatchEvent(event);
+    }
+});
+
 function load_new_tweet_form(callback) {
     load_new_tweet_AJAX(function ($form) {
-        var GIF_SEARCHED = false;
 
         var $barLeft = $form.find(".new-tweet-bar-l");
         var $barRight = $form.find(".new-tweet-bar-r");
@@ -57,13 +168,6 @@ function load_new_tweet_form(callback) {
         var $poll_date_days = $poll_media.find("select[name='days']");
         var $poll_date_hours = $poll_media.find("select[name='hours']");
         var $poll_date_minutes = $poll_media.find("select[name='minutes']");
-
-        var $gif_selector = $("#gif-selector");
-        var $gif_search_bar = $gif_selector.find("#gif-search-bar");
-        var $gif_list = $gif_selector.find("#gif-list");
-        var $gif_prev_list = $gif_selector.find("#gif-preview-list");
-        var $gif_icon_btn = $gif_selector.find("#gif-icon-btn");
-        var $gif_icon_btn_text = $gif_selector.find("#gif-icon-btn-text");
 
 
         /**
@@ -245,120 +349,16 @@ function load_new_tweet_form(callback) {
         }
 
         /**
-         * Displays the gif selector.
-         */
-        function show_gif_selector() {
-            $cover.show();
-            $gif_selector.show();
-        }
-
-        /**
-         * Hides the gif selector.
-         */
-        function hide_gif_selector(force) {
-            if (GIF_SEARCHED) {
-                $gif_icon_btn_text.html(HTML_X);
-                reset_gif_list();
-            } else {
-                $cover.hide();
-                $gif_selector.hide();
-            }
-        }
-
-        /**
-         * Calls query_gifs on the 
-         */
-        function search_gifs() {
-            let query = $gif_search_bar.val();
-            if (query != "") {
-                $gif_icon_btn_text.html(HTML_ARROW);
-                $gif_prev_list.hide();
-                $gif_list.show();
-                GIF_SEARCHED = true;
-                query_gifs(query, 0);
-            }
-        }
-
-        /**
-         * Sends an AJAX request to the giphy api and appends
-         * received gifs to the gif list
-         * @param {String} query 
-         * @param {Number} offset
-         */
-        function query_gifs(query, offset) {
-            $gif_list.empty();
-            $.ajax({
-                url: "/ajax/get_gifs/",
-                data: {
-                    "query": query,
-                    "limit": AJAX_GIF_LIMIT,
-                    "offset": offset
-                },
-                dataType: "html",
-                success: function (response) {
-                    new_gif_list = $($.parseHTML(response));
-                    new_gif_list.each(set_gif_url);
-                    new_gif_list.click(select_gif);
-                    $gif_list.append(new_gif_list);
-                },
-            });
-        }
-
-/**
- * Changes the background-image css property to the url in
- * the 'thumb_url' attribute
- */
-function set_gif_thumb() {
-    $(this).css("background-image", `url(${$(this).attr("thumb-url")})`);
-}
-
-/**
- * Changes the background-image css property to the url in
- * the 'gif-url' attribute
- */
-function set_gif_url() {
-    $(this).css("background-image", `url(${$(this).attr("gif-url")})`);
-}
-
-        /**
-         * Changes the search bars text to that of the given gif-preview
-         * @param {Jquery selector} $preview 
-         */
-        function select_gif_prev_list($preview) {
-            $gif_search_bar.val($.trim($preview.find(".gif-preview-text").text()));
-        }
-
-        /**
-         * Resets the gif-list to its original state
-         */
-        function reset_gif_list() {
-            $gif_list.empty();
-            $gif_prev_list.show();
-            GIF_SEARCHED = false;
-            $gif_search_bar.val("");
-        }
-
-        /**
          * Changes the gif media fields attributes to
          * reflect the selected gif.
-         * @param {Jquery selector} $gif 
          */
-        function slot_gif($gif) {
+        window.addEventListener("gif-selected", function (e) {
             show_gif_media();
-            $gif_img.attr("gif-url", $gif.attr("gif-url"));
-            $gif_img.attr("thumb-url", $gif.attr("thumb-url"));
-            $gif_img.attr("src", $gif_img.attr("gif-url"));
-        }
-
-        /**
-         * Slots the selected gif to the gif media field,
-         * hides and resets the gif selector.
-         */
-        function select_gif() {
-            slot_gif($(this));
-            reset_gif_list();
-            hide_gif_selector();
-        }
+            detail = e.detail
+            $gif_img.attr("gif-url", detail.gif_url);
+            $gif_img.attr("thumb-url", detail.thumb_url);
+            $gif_img.attr("src", detail.gif_url);
+        })
 
         /**
          * Clears the gif media field.
@@ -428,67 +428,6 @@ function set_gif_url() {
 
         }
 
-function load_new_tweet_AJAX(callback) {
-    $.ajax({
-        url: "/ajax/get_new_tweet_form/",
-        type: "get",
-        dataType: "html",
-        success: function (response) {
-            $form = $($.parseHTML(response))
-            callback($form)
-        },
-    });
-}
-
-function load_new_tweet_form(callback) {
-    load_new_tweet_AJAX(function ($form) {
-
-        // Fill jquery selectors
-        $barLeft = $form.find(".new-tweet-bar-l");
-        $barRight = $form.find(".new-tweet-bar-r");
-        $textfield = $form.find(".new-tweet-textarea");
-        $placeholder = $form.find(".new-tweet-placeholder");
-
-        $media = $form.find(".tweet-media");
-
-        $img_media_button = $form.find(".new-tweet-media-image");
-        $gif_media_button = $form.find(".new-tweet-media-gif");
-        $poll_media_button = $form.find(".new-tweet-media-poll");
-        $emoji_media_button = $form.find(".new-tweet-media-emoji");
-
-        $image_button = $form.find(".new-tweet-image-button");
-        $images_media = $media.find(".tweet-media-images");
-        $image1_cont = $images_media.find("[image-num='1']");
-        $image2_cont = $images_media.find("[image-num='2']");
-        $image3_cont = $images_media.find("[image-num='3']");
-        $image4_cont = $images_media.find("[image-num='4']");
-        $image1 = $image1_cont.find(".tweet-image");
-        $image2 = $image2_cont.find(".tweet-image");
-        $image3 = $image3_cont.find(".tweet-image");
-        $image4 = $image4_cont.find(".tweet-image");
-        $gif_media = $media.find(".tweet-media-gif");
-        $gif_img = $gif_media.find("img");
-
-        $poll_media = $form.find(".tweet-media-poll");
-        $poll_exit_btn = $poll_media.find(".exit-btn");
-        $poll_ch1 = $poll_media.find("[choice-num='1']");
-        $poll_ch2 = $poll_media.find("[choice-num='2']");
-        $poll_ch3 = $poll_media.find("[choice-num='3']");
-        $poll_ch4 = $poll_media.find("[choice-num='4']");
-        $poll_ch2_btn = $poll_ch2.find("[type='button']");
-        $poll_ch3_btn = $poll_ch3.find("[type='button']");
-
-        $poll_date_days = $poll_media.find("select[name='days']");
-        $poll_date_hours = $poll_media.find("select[name='hours']");
-        $poll_date_minutes = $poll_media.find("select[name='minutes']");
-
-        $gif_selector = $("#gif-selector");
-        $gif_search_bar = $gif_selector.find("#gif-search-bar");
-        $gif_list = $gif_selector.find("#gif-list");
-        $gif_prev_list = $gif_selector.find("#gif-preview-list");
-        $gif_icon_btn = $gif_selector.find("#gif-icon-btn");
-        $gif_icon_btn_text = $gif_selector.find("#gif-icon-btn-text");
-
         $placeholder.text($placeholder.attr("placeholder"));
 
         $placeholder.click(function () {
@@ -529,27 +468,6 @@ function load_new_tweet_form(callback) {
             show_gif_selector();
         })
 
-        $cover.click(function (e) {
-            e.preventDefault();
-            hide_gif_selector();
-        })
-        $gif_icon_btn.click(function (e) {
-            e.preventDefault();
-            hide_gif_selector();
-        })
-
-        $gif_selector.find("#gif-search-submit").click(function (e) {
-            e.preventDefault();
-            search_gifs();
-        })
-
-        $gif_prev_list.find(".gif-preview").each(set_gif_thumb);
-
-        $gif_prev_list.find(".gif-preview").click(function (e) {
-            e.preventDefault();
-            select_gif_prev_list($(this));
-        })
-
         $gif_img.click(delete_gif);
 
         $poll_media_button.click(function (e) {
@@ -573,6 +491,6 @@ function load_new_tweet_form(callback) {
             hide_all_media();
         })
 
-        callback($form)
+        callback($form);
     })
 }

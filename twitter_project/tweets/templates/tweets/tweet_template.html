@@ -1,4 +1,5 @@
 <div class='tweet-container' tweet-id={{tweet.id}} author-username={{tweet.author.username}}>
+    <div class='tweet-clickable-bg'></div>
     <img src={{ tweet.author.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
     <div class="clickable-name">
         <a href="{% url 'profiles:profile' slug=tweet.author.slug%}">
@@ -18,7 +19,7 @@
 
     <div class="tweet-text">{{tweet.text|linebreaks}}</div>
 
-    {% if tweet.media %}
+    {% if tweet.media and not hide_media %}
     <div class="tweet-media">
         {% if tweet.media.type == "img" %}
         <div class='tweet-media-images'>
@@ -91,6 +92,7 @@
     </div>
     {% endif %}
 
+    {% if not hide_buttons %}
     {% if show_full_info %}
     <hr>
     <div class='tweet-full-info'>
@@ -107,23 +109,24 @@
 
     <hr>
     <div class='tweet-media-btns'>
-        <div class="action-btn comment-btn">
-            <span class="tweet-comments-icon">C:</span>
+        <button class="action-btn comment-btn">
+            <span class="tweet-comments-icon">C</span>
             {% if not show_full_info %}
             <span class="tweet-comments-num">{{tweet.comments_num}}</span>
             {% endif %}
-        </div>
-        <div class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
-            <span class="tweet-rts-icon">R:</span>
+        </button>
+        <button class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
+            <span class="tweet-rts-icon">R</span>
             {% if not show_full_info %}
             <span class="tweet-rts-num">{{tweet.retweets_num}}</span>
             {% endif %}
-        </div>
-        <div class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
-            <span class="tweet-likes-icon">L:</span>
+        </button>
+        <button class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
+            <span class="tweet-likes-icon">L</span>
             {% if not show_full_info %}
             <span class="tweet-likes-num">{{tweet.likes_num}}</span>
             {% endif %}
-        </div>
+        </button>
     </div>
+    {% endif %}
 </div>
