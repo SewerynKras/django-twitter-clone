@@ -73,7 +73,9 @@ function set_like_btns() {
     var $btn = $tweet.find(".like-btn");
     var $counter = $tweet.find(".tweet-likes-num");
 
-    $btn.one("click", function () {
+    $btn.one("click", function (e) {
+        e.stopPropagation();
+
         like_tweet_AJAX($tweet, $btn, $counter);
     })
 }
@@ -104,7 +106,8 @@ function like_tweet_AJAX($tweet, $btn, $counter) {
                 $btn.removeClass("is-liked");
             }
             $counter.text(num_likes);
-            $btn.one("click", function () {
+            $btn.one("click", function (e) {
+                e.stopPropagation();
                 like_tweet_AJAX($tweet, $btn, $counter);
             })
         }
@@ -131,7 +134,7 @@ function setup_gif() {
 
 function setup_tweet_list($tweets) {
     $tweets.each(setup_single_tweet)
-    $tweets.one('click', function () {
+    $tweets.one('click', function (e) {
         let id = $(this).attr("tweet-id")
         let author = $(this).attr("author-username")
         show_single_tweet(id, author, push_state = true)
@@ -144,7 +147,7 @@ function set_comment_btns() {
     var $counter = $tweet.find(".tweet-comments-num");
 
     $btn.click(function (e) {
-        e.preventDefault();
+        e.stopPropagation();
         show_reply_form($tweet.attr("tweet-id"));
     })
 }

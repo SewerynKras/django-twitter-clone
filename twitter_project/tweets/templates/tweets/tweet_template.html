@@ -1,5 +1,4 @@
 <div class='tweet-container' tweet-id={{tweet.id}} author-username={{tweet.author.username}}>
-    <div class='tweet-clickable-bg'></div>
     <img src={{ tweet.author.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
     <div class="clickable-name">
         <a href="{% url 'profiles:profile' slug=tweet.author.slug%}">

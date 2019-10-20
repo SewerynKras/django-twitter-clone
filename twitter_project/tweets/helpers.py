@@ -206,15 +206,17 @@ def parse_new_tweet(data, profile):
     Returns:
         Tweet
     """
+    logger.debug(f"Parsing new tweet with raw data: {data}")
+
     tweet = models.Tweet()
     media = None
 
     tweet.author = profile
 
-    retweet_id = data.get("retweet")
-    if retweet_id:
-        retweet = models.Tweet.objects.get(id=retweet_id)
-        tweet.retweet = retweet
+    replying_to = data.get("replying_to")
+    if replying_to:
+        parent_tweet = models.Tweet.objects.get(id=replying_to)
+        tweet.comment_to = parent_tweet
 
     text = data.get("text")
     tweet.text = text

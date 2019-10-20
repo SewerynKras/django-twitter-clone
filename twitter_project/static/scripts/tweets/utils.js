@@ -91,7 +91,7 @@ function show_reply_form(tweet_id, push_state = true) {
 
     load_new_tweet_form(function ($form) {
         $reply_form_new_tweet.html($form);
-    })
+    }, tweet_id)
 
     change_url({
         state: "reply",

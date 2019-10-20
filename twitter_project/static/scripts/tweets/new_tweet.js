@@ -128,7 +128,7 @@ $(document).ready(function () {
     }
 });
 
-function load_new_tweet_form(callback) {
+function load_new_tweet_form(callback, replying_to = "") {
     load_new_tweet_AJAX(function ($form) {
 
         var $barLeft = $form.find(".new-tweet-bar-l");
@@ -404,17 +404,22 @@ function load_new_tweet_form(callback) {
                 var type = null;
                 var values = null;
             };
+            if (type)
+                var media = {
+                    type: typ,
+                    values: values
+                }
+            else
+                var media = null
 
             let data = {
                 "text": $textfield.text(),
-                "media": {
-                    "type": type,
-                    "values": values
-                },
+                "replying_to": replying_to,
+                "media": media
             };
             console.log(data);
             $.ajax({
-                url: "/new_tweet/",
+                url: "/ajax/new_tweet/",
                 headers: {
                     'X-CSRFToken': Cookies.get('csrftoken')
                 },
@@ -424,6 +429,13 @@ function load_new_tweet_form(callback) {
                 success: function (response) {
                     console.log(response);
                 },
+                error: function (request, status, error) {
+                    console.log({
+                        request,
+                        status,
+                        error
+                    });
+                }
             });
 
         }
