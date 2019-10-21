@@ -159,6 +159,8 @@ INVALID_USERNAME_MESSAGE = """
                             Please double-check and try again.
                            """
 
+FORBIDDEN_NAMES = ["home", "tweet", "login", "logout", "ajax", "signup"]
+
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
 

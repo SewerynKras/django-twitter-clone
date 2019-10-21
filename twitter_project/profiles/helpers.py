@@ -2,6 +2,7 @@ import re
 from profiles.models import Profile, User
 from django.db.models.functions import Lower
 from twitter_project.logging import logger
+from django.conf import settings
 
 
 def get_username(name):
@@ -18,17 +19,19 @@ def get_username(name):
     pattern = r'[^a-zA-Z]+'
     name = re.sub(pattern, "", name)
 
-    # get all usernames that start with $name
-    pattern = fr'^{name}\d*'
-    usernames = Profile.objects.filter(username__iregex=pattern).order_by(Lower("username"))
+    if name.lower() not in settings.FORBIDDEN_NAMES:
+        # get all usernames that start with $name
+        pattern = fr'^{name}\d*'
+        usernames = Profile.objects.filter(username__iregex=pattern).order_by(Lower("username"))
 
-    # in case the name is unique
-    if len(usernames) == 0:
-        logger.debug(name + " is unique in the db")
-        return name
-
-    # get the number
-    number = usernames.last().username[len(name):]
+        # in case the name is unique and not forbidden
+        if not usernames.exists():
+            logger.debug(f"Name: {name} is valid")
+            return name
+        # get the number
+        number = usernames.last().username[len(name):]
+    else:
+        number = ""
 
     if number == "":
         number = 1
@@ -37,7 +40,7 @@ def get_username(name):
         number += 1
     new_name = name + str(number)
 
-    logger.debug(name + " is not unique so the new username is " + new_name)
+    logger.debug(f"Name: {name} is not valid so the new username is {new_name}")
     return new_name
 
 
