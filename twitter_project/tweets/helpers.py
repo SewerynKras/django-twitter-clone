@@ -11,6 +11,7 @@ from django.db.models import Exists, OuterRef, Q, Subquery
 from django.conf import settings
 
 from tweets import models
+from profiles.models import Follow
 from twitter_project.logging import logger
 
 
@@ -102,8 +103,40 @@ def get_tweet_list(profile, before=None, after=None):
     """
     logger.debug(f"Getting tweet list for {profile}")
 
-    following = models.Follow.objects.filter(follower=profile).values("following")
+    following = Follow.objects.filter(follower=profile).values("following")
     tweets = models.Tweet.objects.filter(Q(author__in=following) | Q(author=profile))
+
+    if before:
+        # lt == less than == before
+        tweets = tweets.filter(date__lt=before)
+
+    if after:
+        # gt == greater than == after
+        tweets = tweets.filter(date__gt=after)
+
+    tweets = tweets.order_by("-date")
+    return tweets
+
+
+def get_tweet_list_by_single_auth(author, before=None, after=None):
+    """
+    Queries all tweets based on the given author.
+    (This is used mostly in profile previews).
+    Resulting queryset is reverse ordered by date.
+
+    Arguments:
+        author {Profile}
+
+    Keyword Arguments:
+        before {datetime} -- (default: {None})
+        after {datetime} -- (default: {None})
+
+    Returns:
+        Queryset
+    """
+    logger.debug(f"Getting tweet list by {author}")
+
+    tweets = models.Tweet.objects.filter(author=author)
 
     if before:
         # lt == less than == before

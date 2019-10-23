@@ -66,3 +66,12 @@
     border: 1px solid darkblue;
     margin-top: 10px;
 }
+
+.tweet-clickable-name {
+    color: blue;
+}
+
+.tweet-clickable-name:hover {
+    color: purple;
+    cursor: pointer;
+}

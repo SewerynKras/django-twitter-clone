@@ -1,18 +1,24 @@
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import TemplateView
 from profiles import models, forms, helpers
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from twitter_project.logging import logger
 from django.contrib.auth import login, logout, authenticate
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.messages import error
+from django.shortcuts import render
 
 
-class ProfileView(DetailView):
-    model = models.Profile
-    template_name = "profiles/profile.html"
-    context_object_name = 'profile'
+class ProfileView(TemplateView):
+    template_name = "tweets/homepage.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['main_body'] = "profile"
+
+        context['profile_id'] = self.kwargs.get("profile_id")
+        return context
 
 
 class SignupView(TemplateView):
@@ -110,3 +116,14 @@ def check_email_AJAX(request):
     logger.debug("Email checked: " + email + " error found: " + error)
 
     return JsonResponse(response)
+
+
+def get_profile_AJAX(request):
+    if request.method == "GET":
+        profile_id = request.GET.get("profile_id")
+        profile = models.Profile.objects.get(username__iexact=profile_id)
+        context = {"profile": profile}
+        rendered_template = render(request=request,
+                                   template_name="profiles/profile.html",
+                                   context=context)
+        return HttpResponse(rendered_template)

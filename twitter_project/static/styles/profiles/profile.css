@@ -1,0 +1,60 @@
+#profile {
+    border: 1px solid darkblue;
+}
+
+#profile-background-pic {
+    width: 100%;
+    height: 100px;
+}
+
+#profile-pic {
+    height: 100px;
+    width: 100px;
+    margin-top: -100px;
+}
+
+#follow-btn {
+    float: right;
+}
+
+
+#profile-display-name {
+    display: block;
+    font-weight: bold;
+}
+
+#profile-clickable-name {
+    display: block;
+    color: darkgray;
+}
+
+#profile-bio {
+    display: block;
+}
+
+#bonus-info {
+    color: darkgray;
+    font-size: 0.9em;
+}
+
+
+#profile-location,
+#profile-site,
+#profile-joined {
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+}
+
+#profile-following {
+    display: inline-block;
+}
+
+#profile-following .num,
+#profile-followers .num {
+    color: darkgray;
+}
+
+#profile-followers {
+    display: inline-block;
+}

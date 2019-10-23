@@ -44,6 +44,19 @@ def get_username(name):
     return new_name
 
 
+def get_single_author(id):
+    """
+    Queries an author with the given id.
+
+    Arguments:
+        id {str}
+
+    Returns:
+        Profile
+    """
+    return Profile.objects.get(slug=id)
+
+
 def is_email_valid(email):
     pattern = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
     matches = bool(re.match(pattern, email))

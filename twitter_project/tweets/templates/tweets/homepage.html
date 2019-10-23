@@ -6,9 +6,11 @@
 <script src="{% static "scripts/tweets/utils.js" %}"></script>
 <script src="{% static "scripts/tweets/new_tweet.js" %}"></script>
 <script src="{% static "scripts/tweets/tweet_list.js" %}"></script>
+<script src="{% static "scripts/profiles/profile.js" %}"></script>
 <link rel="stylesheet" href="{% static "styles/tweets/tweet_list.css" %}">
 <link rel="stylesheet" href="{% static "styles/tweets/new_tweet.css" %}">
 <link rel="stylesheet" href="{% static "styles/tweets/utils.css" %}">
+<link rel="stylesheet" href="{% static "styles/profiles/profile.css" %}">
 <link href="{% static "lib/emoji-picker/jquery.lsxemojipicker.css" %}" rel="stylesheet">
 <script src="{% static "lib/emoji-picker/jquery.lsxemojipicker.js" %}"></script>
 
@@ -46,16 +48,26 @@
 {% if main_body == "main_page" %}
 <script>
     $(function () {
-        show_home(push_state = false)
+        show_home(false)
     });
 
 </script>
+
 {% elif main_body == "tweet" %}
 <script>
     $(function () {
-        show_single_tweet("{{tweet_id}}", "{{author_username}}", push_state = false)
+        show_single_tweet("{{tweet_id}}", "{{author_username}}", false)
+    });
+
+</script>
+
+{% elif main_body == "profile" %}
+<script>
+    $(function () {
+        show_profile("{{profile_id}}", false)
     });
 
 </script>
 {% endif %}
+
 {% endblock body_navbar %}

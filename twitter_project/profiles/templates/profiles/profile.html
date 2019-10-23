@@ -1,5 +1,23 @@
-{% extends 'base.html' %}
-
-{% block body_navbar %}
-{{profile.user.username}}
-{% endblock body_navbar %}
+<div id='profile'>
+    <img src={{ profile.background_pic.url }} class="img-fluid" id="profile-background-pic">
+    <img src={{ profile.profile_pic.url }} class="img-fluid" id="profile-pic">
+    <button class='btn-success' id="follow-btn">Follow</button>
+    <div id="profile-display-name">
+        {{profile.display_name}}
+    </div>
+    <div id="profile-clickable-name">@{{profile.username}}</div>
+    <div id='profile-bio'>{{profile.bio}}</div>
+    <div id='bonus-info'>
+        {% if profile.location %}
+        <div id='profile-location'>{{profile.location}}</div>
+        {% endif %}
+        {% if profile.website %}
+        <div id='profile-site'>{{profile.website}}</div>
+        {% endif %}
+        {% if profile.joined %}
+        <div id='profile-joined'>Joined {{profile.joined}}</div>
+        {% endif %}
+    </div>
+    <div id='profile-following'><span class='num'>{{profile.following}}</span> Following</div>
+    <div id='profile-followers'><span class='num'>{{profile.followers}}</span> Followers</div>
+</div>

@@ -187,7 +187,17 @@ function setup_single_tweet() {
     let poll_dates = $tweet.find(".poll-time-left");
     poll_dates.each(fix_poll_timestamp);
 
-    $tweet.each(set_comment_btns)
+    // Make the reply form appear when the comment btn is pressed
+    $tweet.each(set_comment_btns);
+
+    // Make the @ clickable
+    let clickable_name = $tweet.find('.tweet-clickable-name')
+    clickable_name.click(function (e) {
+        e.stopPropagation();
+        let profile_id = $(this).attr("profile-id");
+        show_profile(profile_id, true);
+    })
+
 }
 
 /**
@@ -332,9 +342,12 @@ function get_single_tweet_AJAX(tweet_id, minified, callback) {
 /**
  * Sends an AJAX GET request and appends the tweet list with received elements
  */
-function get_tweet_list_AJAX(callback) {
+function get_tweet_list_AJAX(single_author, callback) {
     $.ajax({
         url: "/ajax/get_tweets/",
+        data: {
+            single_author: single_author
+        },
         dataType: "html",
         type: "get",
         success: function (response) {
@@ -354,22 +367,24 @@ function load_single_tweet(tweet_id, callback, minified = false) {
         })
 }
 
-function load_tweet_list(callback) {
-    get_tweet_list_AJAX(function ($list) {
-        setup_tweet_list($list);
-        var $tweet_date = $list.find(".tweet-date")
-        var $poll_time_left = $list.find(".poll-time-left")
+function load_tweet_list(callback, single_author = null) {
+    get_tweet_list_AJAX(
+        single_author,
+        function ($list) {
+            setup_tweet_list($list);
+            var $tweet_date = $list.find(".tweet-date")
+            var $poll_time_left = $list.find(".poll-time-left")
 
-        // Change all dates from UNIX timestamps to user-readable timestamps
-        $tweet_date.each(fix_tweet_timestamp);
-        $poll_time_left.each(fix_poll_timestamp);
-
-        // update the timestamps every couple seconds
-        setInterval(function () {
+            // Change all dates from UNIX timestamps to user-readable timestamps
             $tweet_date.each(fix_tweet_timestamp);
             $poll_time_left.each(fix_poll_timestamp);
-        }, 5000);
 
-        callback($list)
-    })
+            // update the timestamps every couple seconds
+            setInterval(function () {
+                $tweet_date.each(fix_tweet_timestamp);
+                $poll_time_left.each(fix_poll_timestamp);
+            }, 5000);
+
+            callback($list)
+        })
 }

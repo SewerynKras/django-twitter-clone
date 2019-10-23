@@ -72,17 +72,6 @@ class Media(models.Model):
         return f"MEDIA OF TYPE {self.type} FOR {self.tweet}"
 
 
-class Follow(models.Model):
-    follower = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE,
-                                 related_name="follow_follower")
-    following = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE,
-                                  related_name="follow_following")
-    date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.follower} FOLLOWS {self.following}"
-
-
 class Like(models.Model):
     author = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE)
     tweet = models.ForeignKey("tweets.Tweet", on_delete=models.CASCADE)

@@ -99,6 +99,23 @@ function show_reply_form(tweet_id, push_state = true) {
     }, "/compose/tweet", push_state);
 }
 
+function show_profile(profile_id, push_state = false) {
+    show_left_body();
+    show_right_body();
+    $main_body.empty();
+    load_profile(profile_id, function ($profile) {
+        $main_body.html($profile);
+    })
+    load_tweet_list(function ($list) {
+        $main_body.append($list)
+    }, profile_id);
+    change_url({
+        state: "profile",
+        profile_id: profile_id,
+    }, `/${profile_id}`, push_state);
+}
+
+
 function hide_all_cover() {
     $reply_form.hide();
     $gif_selector.hide();

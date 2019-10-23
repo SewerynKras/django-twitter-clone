@@ -1,18 +1,16 @@
 <div class='tweet-container' tweet-id={{tweet.id}} author-username={{tweet.author.username}}>
     <img src={{ tweet.author.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
     <div class="clickable-name">
-        <a href="{% url 'profiles:profile' slug=tweet.author.slug%}">
-            {{tweet.author.display_name}}</a>
-        <span class="tweet-username">@{{tweet.author.username}}</span>
+        <span class='tweet-username'>{{tweet.author.display_name}}</span>
+        <span class="tweet-clickable-name" profile-id={{tweet.author.slug}}>@{{tweet.author.username}}</span>
     </div>
     <span class="tweet-date" utc={{tweet.date|date:"U" }}></span>
 
     {% if tweet.comment_to %}
     <div class='tweet-comment-to'>Replying to
-        <div class="clickable-name">
-            <a href="{% url 'profiles:profile' slug=tweet.comment_to.author.slug%}"
-                class="tweet-username">@{{tweet.comment_to.author.username}}</a>
-        </div>
+        <span class="tweet-clickable-name" profile-id={{tweet.comment_to.author.slug}}>
+            @{{tweet.comment_to.author.username}}
+        </span>
     </div>
     {% endif %}
 

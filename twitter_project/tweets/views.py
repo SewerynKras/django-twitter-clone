@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from tweets import helpers, models
+from profiles.helpers import get_single_author
 
 
 class MainPage(TemplateView):
@@ -90,7 +91,14 @@ def get_gifs_AJAX(request):
 
 def get_tweets_AJAX(request):
     profile = request.user.profile
-    tweets = helpers.get_tweet_list(profile)
+
+    auth_id = request.GET.get("single_author")
+    if auth_id:
+        auth = get_single_author(auth_id)
+        tweets = helpers.get_tweet_list_by_single_auth(auth)
+    else:
+        tweets = helpers.get_tweet_list(profile)
+
     tweets = helpers.annotate_tweets(tweets, profile)
     context = {'tweet_list': tweets}
     rendered_template = render(request=request,
