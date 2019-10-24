@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.http import JsonResponse, HttpResponse
 from twitter_project.logging import logger
 from django.contrib.auth import login, logout, authenticate
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.messages import error
 from django.shortcuts import render
 
@@ -121,9 +121,46 @@ def check_email_AJAX(request):
 def get_profile_AJAX(request):
     if request.method == "GET":
         profile_id = request.GET.get("profile_id")
-        profile = models.Profile.objects.get(username__iexact=profile_id)
-        context = {"profile": profile}
+        try:
+            profile = models.Profile.objects.get(username__iexact=profile_id)
+        except (ObjectDoesNotExist, ValidationError):
+            return HttpResponse(None, status=403)
+
+        follower = request.user.profile
+        following = profile
+        is_followed = helpers.check_if_user_follows(follower=follower,
+                                                    following=following)
+
+        context = {"profile": profile, "is_followed": is_followed}
         rendered_template = render(request=request,
                                    template_name="profiles/profile.html",
                                    context=context)
         return HttpResponse(rendered_template)
+
+
+def follow_AJAX(request):
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({"user": "User not logged in."}, status=401)
+        follower = request.user.profile
+        following_id = request.POST.get("profile_id")
+        try:
+            following = models.Profile.objects.get(username__iexact=following_id)
+        except (ObjectDoesNotExist, ValidationError):
+            return JsonResponse({"following_id": "This profile doesn't exists."}, status=403)
+
+        if follower == following:
+            return JsonResponse({"following_id": "You can't follow yourself."}, status=405)
+
+        # check if the user has already followed this profile
+        follow = models.Follow.objects.filter(follower=follower, following=following)
+        if follow.exists():
+            follow.delete()
+            followed = False
+        else:
+            new_follow = models.Follow(follower=follower, following=following)
+            new_follow.save()
+            followed = True
+        return JsonResponse({"followed": followed})
+    else:
+        return JsonResponse({}, status=405)

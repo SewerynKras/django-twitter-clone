@@ -1,7 +1,15 @@
 <div id='profile'>
     <img src={{ profile.background_pic.url }} class="img-fluid" id="profile-background-pic">
     <img src={{ profile.profile_pic.url }} class="img-fluid" id="profile-pic">
-    <button class='btn-success' id="follow-btn">Follow</button>
+    {% if profile == user.profile %}
+    <button class='profile-btn' id='edit-profile-btn'>Edit Profile</button>
+    {% else %}
+    <button class='profile-btn {% if is_followed %}is-followed{% endif %}' id="follow-btn">
+        {% spaceless %}
+        Follow{% if is_followed %}ing{% endif %}
+        {% endspaceless %}
+    </button>
+    {% endif %}
     <div id="profile-display-name">
         {{profile.display_name}}
     </div>

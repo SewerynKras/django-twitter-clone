@@ -247,6 +247,8 @@ $(document).ready(function () {
                     false);
             } else if (event.state.state == "reply") {
                 show_reply_form(event.state.tweet_id, false);
+            } else if (event.state.state == "profile") {
+                show_profile(event.state.profile_id, false);
             }
         }
     };

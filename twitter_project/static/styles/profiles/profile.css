@@ -13,10 +13,16 @@
     margin-top: -100px;
 }
 
-#follow-btn {
+.profile-btn {
     float: right;
+    background-color: #007bff;
+    color: white;
 }
 
+.is-followed {
+    background-color: transparent;
+    color: #007bff;
+}
 
 #profile-display-name {
     display: block;

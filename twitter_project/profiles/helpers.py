@@ -1,5 +1,5 @@
 import re
-from profiles.models import Profile, User
+from profiles.models import Profile, User, Follow
 from django.db.models.functions import Lower
 from twitter_project.logging import logger
 from django.conf import settings
@@ -68,3 +68,18 @@ def is_email_unique(email):
     unique = not User.objects.filter(email__iexact=email).exists()
     logger.debug(f"Checking if email: {email} is unique, verdict: {unique}")
     return unique
+
+
+def check_if_user_follows(follower, following):
+    """
+    Returns a boolean value describing wheather a Follow objects exists
+    between the follower and following
+
+    Arguments:
+        follower {Profile}
+        following {Profile}
+
+    Returns:
+        bool
+    """
+    return Follow.objects.filter(follower=follower, following=following).exists()
