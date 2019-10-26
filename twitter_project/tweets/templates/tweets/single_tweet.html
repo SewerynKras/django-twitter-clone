@@ -1,11 +1,10 @@
 <div id='single_tweet'>
-    {% include 'tweets/tweet_template.html' with tweet=tweet %}
-
-    {% if comments %}
-    <div id='comment-list'>
-        {% for comment in comments %}
-        {% include 'tweets/tweet_template.html' with tweet=comment show_full_info=False %}
-        {% endfor %}
-    </div>
-    {% endif %}
+    {% include 'tweets/tweet_template.html' with tweet=tweet %}x
 </div>
+{% if comments %}
+<div id='comment-list'>
+    {% for comment in comments %}
+    {% include 'tweets/tweet_template.html' with tweet=comment show_full_info=False %}
+    {% endfor %}
+</div>
+{% endif %}

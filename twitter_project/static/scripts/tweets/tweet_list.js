@@ -114,6 +114,43 @@ function like_tweet_AJAX($tweet, $btn, $counter) {
     });
 }
 
+function set_rt_btns() {
+    let $rt_btn = $(this).find(".rt-btn");
+    let $dropdown = $(this).find(".dropdown-menu");
+    let $counter = $(this).find(".tweet-rts-num");
+    let tweet_id = $(this).attr("tweet-id");
+
+    $rt_btn.click(function (e) {
+        e.stopPropagation();
+        $dropdown.toggle();
+    })
+
+    $(this).find(".rt-no-comment").click(function (e) {
+        e.stopPropagation();
+        rt_tweet_AJAX(tweet_id, $rt_btn, $counter);
+    })
+}
+
+
+function rt_tweet_AJAX(tweet_id, $btn, $counter) {
+    var num_rts = $counter.text();
+    $.ajax({
+        url: "/ajax/rt/",
+        data: {
+            "tweet_id": tweet_id,
+        },
+        type: "post",
+        dataType: "json",
+        headers: {
+            'X-CSRFToken': Cookies.get('csrftoken')
+        },
+        success: function (response) {
+            $btn.addClass("is-rt");
+            $counter.text(1 + +num_rts);
+        }
+    });
+}
+
 /**
  * Parses the .tweet-text with twemoji
  */
@@ -190,8 +227,11 @@ function setup_single_tweet() {
     // Make the reply form appear when the comment btn is pressed
     $tweet.each(set_comment_btns);
 
+    // Make the rt button clickable
+    $tweet.each(set_rt_btns);
+
     // Make the @ clickable
-    let clickable_name = $tweet.find('.tweet-clickable-name')
+    let clickable_name = $tweet.find('.tweet-clickable-name');
     clickable_name.click(function (e) {
         e.stopPropagation();
         let profile_id = $(this).attr("profile-id");

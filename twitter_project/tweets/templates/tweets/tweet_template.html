@@ -112,12 +112,18 @@
             <span class="tweet-comments-num">{{tweet.comments_num}}</span>
             {% endif %}
         </button>
-        <button class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}">
-            <span class="tweet-rts-icon">R</span>
-            {% if not show_full_info %}
-            <span class="tweet-rts-num">{{tweet.retweets_num}}</span>
-            {% endif %}
-        </button>
+        <div class="dropdown" style='display: inline;'>
+            <button class="action-btn rt-btn {% if tweet.is_rt %} is-rt {% endif %}" data-toggle="dropdown">
+                <span class="tweet-rts-icon">R</span>
+                {% if not show_full_info %}
+                <span class="tweet-rts-num">{{tweet.retweets_num}}</span>
+                {% endif %}
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item rt-no-comment">Retweet</a>
+                <a class="dropdown-item rt-with-comment">Retweet with comment</a>
+            </div>
+        </div>
         <button class="action-btn like-btn {% if tweet.is_liked %} is-liked {% endif %}">
             <span class="tweet-likes-icon">L</span>
             {% if not show_full_info %}

@@ -5,7 +5,7 @@ import uuid
 
 class Tweet(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    text = models.TextField(max_length=256)
+    text = models.TextField(max_length=256, null=True, blank=True)
     author = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
     # When the retweeted tweet gets deleted this also deletes itself,

@@ -1,9 +1,9 @@
-function load_profile(profile_id, callback, push_state = false) {
+function load_profile(profile_id, callback) {
     get_profile_AJAX(profile_id,
         function ($profile) {
             var $counter = $profile.find("#profile-followers .num");
             $profile.find("#follow-btn").one("click", function () {
-                follow_AJAX(profile_id, $(this), $counter)
+                follow_AJAX(profile_id, $(this), $counter);
             })
             callback($profile)
         })

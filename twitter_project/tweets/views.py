@@ -276,3 +276,24 @@ def choose_poll_option_AJAX(request):
         return JsonResponse({"voted": voted})
     else:
         return JsonResponse({}, status=405)
+
+
+def rt_AJAX(request):
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({"user": "User not logged in."}, status=401)
+
+        profile = request.user.profile
+        tweet_id = request.POST.get("tweet_id")
+
+        try:
+            tweet = models.Tweet.objects.get(pk=tweet_id)
+        except (ObjectDoesNotExist, ValidationError):
+            return JsonResponse({"tweet_id": "This tweet doesn't exists."},
+                                status=403)
+
+        new_tweet = models.Tweet(text=None, retweet_to=tweet, author=profile)
+        new_tweet.save()
+        return JsonResponse({})
+    else:
+        return JsonResponse({}, status=405)
