@@ -70,8 +70,9 @@ function show_single_tweet(tweet_id, author, push_state = true) {
     show_left_body();
     show_right_body();
     $main_body.empty();
-    load_single_tweet(tweet_id, function ($tweet) {
+    load_single_tweet(tweet_id, function ($tweet, $comments) {
         $main_body.html($tweet);
+        $main_body.append($comments);
     })
     change_url({
         state: "tweet",

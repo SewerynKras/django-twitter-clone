@@ -118,7 +118,7 @@ function set_rt_btns() {
     let $rt_btn = $(this).find(".rt-btn");
     let $dropdown = $(this).find(".dropdown-menu");
     let $counter = $(this).find(".tweet-rts-num");
-    let tweet_id = $(this).attr("tweet-id");
+    let tweet_id = $(this).find(".tweet-container").attr("tweet-id");
 
     $rt_btn.click(function (e) {
         e.stopPropagation();
@@ -172,14 +172,14 @@ function setup_gif() {
 function setup_tweet_list($tweets) {
     $tweets.each(setup_single_tweet)
     $tweets.one('click', function (e) {
-        let id = $(this).attr("tweet-id")
-        let author = $(this).attr("author-username")
-        show_single_tweet(id, author, push_state = true)
+        let id = $(this).find(".tweet-container").attr("tweet-id");
+        let author = $(this).find(".tweet-container").attr("author-username");
+        show_single_tweet(id, author, push_state = true);
     })
 }
 
 function set_comment_btns() {
-    var $tweet = $(this);
+    var $tweet = $(this).find("tweet-container");
     var $btn = $tweet.find(".comment-btn");
     var $counter = $tweet.find(".tweet-comments-num");
 
@@ -190,7 +190,7 @@ function set_comment_btns() {
 }
 
 function setup_single_tweet() {
-    let $tweet = $(this)
+    let $tweet = $(this).find(".tweet-container");
     let $media = $tweet.find(".tweet-media");
     $media.each(function () {
         rearrange_images($(this));
@@ -373,8 +373,10 @@ function get_single_tweet_AJAX(tweet_id, minified, callback) {
         type: "get",
         dataType: "html",
         success: function (response) {
-            $tweet = $($.parseHTML(response)).find(".tweet-container");
-            callback($tweet)
+            let $response = $($.parseHTML(response));
+            $tweet = $response.closest("#single-tweet");
+            $comments = $response.closest("#comment-list");
+            callback($tweet, $comments);
         }
     });
 }
@@ -391,7 +393,7 @@ function get_tweet_list_AJAX(single_author, callback) {
         dataType: "html",
         type: "get",
         success: function (response) {
-            new_tweet_list = $($.parseHTML(response)).find(".tweet-container");
+            new_tweet_list = $($.parseHTML(response)).find(".tweet-in-list");
             callback(new_tweet_list)
         }
     });
@@ -401,9 +403,10 @@ function load_single_tweet(tweet_id, callback, minified = false) {
     get_single_tweet_AJAX(
         tweet_id,
         minified,
-        function ($tweet) {
-            $tweet.each(setup_single_tweet)
-            callback($tweet)
+        function ($tweet, $comments) {
+            $tweet.each(setup_single_tweet);
+            $comments.each(setup_single_tweet);
+            callback($tweet, $comments);
         })
 }
 

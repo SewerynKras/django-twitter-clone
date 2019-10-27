@@ -40,7 +40,7 @@ def annotate_tweets(tweets, profile):
     # [2]
     # give each tweet a bool value whether the user has retweeted the
     # tweet before or not
-    is_rt_by_user = models.Tweet.objects.filter(retweet=OuterRef("id"), author=profile)
+    is_rt_by_user = models.Tweet.objects.filter(retweet_to=OuterRef("id"), author=profile)
     tweets = tweets.annotate(is_rt=Exists(is_rt_by_user))
 
     # NOTE:

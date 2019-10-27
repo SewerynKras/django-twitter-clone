@@ -1,5 +1,7 @@
 <div class="tweet-list">
     {% for tweet in tweet_list %}
-    {% include 'tweets/tweet_template.html' with tweet=tweet %}
+    <div class='tweet-in-list'>
+        {% include 'tweets/tweet_template.html' with tweet=tweet %}
+    </div>
     {% endfor %}
 </div>

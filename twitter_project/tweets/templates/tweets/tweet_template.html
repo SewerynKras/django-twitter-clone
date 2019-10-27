@@ -1,4 +1,5 @@
 <div class='tweet-container' tweet-id={{tweet.id}} author-username={{tweet.author.username}}>
+    {% if not tweet.retweet_to or hide_reply %}
     <img src={{ tweet.author.profile_pic.url }} class="img-fluid profile-pic" width="40" height="40">
     <div class="clickable-name">
         <span class='tweet-username'>{{tweet.author.display_name}}</span>
@@ -15,6 +16,15 @@
     {% endif %}
 
     <div class="tweet-text">{{tweet.text|linebreaks}}</div>
+
+    {% else %}
+    <span class="retweet-header" username={{tweet.author.username}}>
+        {{ tweet.author.username }} retweeted:
+    </span>
+
+    {% include 'tweets/tweet_template.html' with tweet=tweet.retweet_to hide_reply=True hide_buttons=True %}
+
+    {% endif %}
 
     {% if tweet.media and not hide_media %}
     <div class="tweet-media">
