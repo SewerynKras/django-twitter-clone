@@ -86,6 +86,12 @@
             </div>
         </div>
 
+        {% if retweet_to %}
+        <div class='new-tweet-retweet-prev'>
+            {% include 'tweets/tweet_template.html' with tweet=retweet_to hide_reply=True hide_buttons=True %}
+        </div>
+        {% endif %}
+
         <hr>
         <div class="new-tweet-media-buttons">
             <button class='new-tweet-media-image'>IMG</button>

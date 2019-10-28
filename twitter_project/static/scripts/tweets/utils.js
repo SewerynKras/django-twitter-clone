@@ -100,6 +100,20 @@ function show_reply_form(tweet_id, push_state = true) {
     }, "/compose/tweet", push_state);
 }
 
+function show_retweet_form(tweet_id, push_state = true) {
+    $cover.show();
+    $reply_form.show();
+    load_new_tweet_form(function ($form) {
+        $reply_form.html($form)
+    }, "", tweet_id)
+
+    change_url({
+        state: "retweet",
+        tweet_id: tweet_id,
+    }, "/compose/tweet", push_state);
+}
+
+
 function show_profile(profile_id, push_state = false) {
     show_left_body();
     show_right_body();
@@ -248,6 +262,8 @@ $(document).ready(function () {
                     false);
             } else if (event.state.state == "reply") {
                 show_reply_form(event.state.tweet_id, false);
+            } else if (event.state.state == "retweet") {
+                show_retweet_form(event.state.tweet_id, false);
             } else if (event.state.state == "profile") {
                 show_profile(event.state.profile_id, false);
             }

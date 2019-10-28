@@ -251,6 +251,11 @@ def parse_new_tweet(data, profile):
         parent_tweet = models.Tweet.objects.get(id=replying_to)
         tweet.comment_to = parent_tweet
 
+    retweet_id = data.get("retweet_id")
+    if retweet_id:
+        retweet = models.Tweet.objects.get(pk=retweet_id)
+        tweet.retweet_to = retweet
+
     text = data.get("text")
     tweet.text = text
 

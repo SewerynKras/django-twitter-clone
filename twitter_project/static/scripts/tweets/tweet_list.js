@@ -114,6 +114,7 @@ function like_tweet_AJAX($tweet, $btn, $counter) {
     });
 }
 
+
 function set_rt_btns() {
     let $rt_btn = $(this).find(".rt-btn");
     let $dropdown = $(this).find(".dropdown-menu");
@@ -128,6 +129,13 @@ function set_rt_btns() {
     $(this).find(".rt-no-comment").click(function (e) {
         e.stopPropagation();
         rt_tweet_AJAX(tweet_id, $rt_btn, $counter);
+    })
+
+    $(this).find(".rt-with-comment").click(function (e) {
+        e.stopPropagation();
+        // simulate a click to hide the dropdown
+        $rt_btn.trigger("click");
+        show_retweet_form(tweet_id, true);
     })
 }
 
@@ -179,9 +187,9 @@ function setup_tweet_list($tweets) {
 }
 
 function set_comment_btns() {
-    var $tweet = $(this).find("tweet-container");
-    var $btn = $tweet.find(".comment-btn");
-    var $counter = $tweet.find(".tweet-comments-num");
+    var $tweet = $(this).find(".tweet-container");
+    var $btn = $(this).find(".comment-btn");
+    var $counter = $(this).find(".tweet-comments-num");
 
     $btn.click(function (e) {
         e.stopPropagation();
@@ -399,6 +407,7 @@ function get_tweet_list_AJAX(single_author, callback) {
     });
 }
 
+
 function load_single_tweet(tweet_id, callback, minified = false) {
     get_single_tweet_AJAX(
         tweet_id,
@@ -409,6 +418,7 @@ function load_single_tweet(tweet_id, callback, minified = false) {
             callback($tweet, $comments);
         })
 }
+
 
 function load_tweet_list(callback, single_author = null) {
     get_tweet_list_AJAX(

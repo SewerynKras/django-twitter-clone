@@ -6,6 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from twitter_project.logging import logger
 from tweets import helpers, models
 from profiles.helpers import get_single_author
 
@@ -34,7 +35,11 @@ class SingleTweet(TemplateView):
 
 
 def get_new_tweet_form_AJAX(request):
-    template = render(request, "tweets/new_tweet.html")
+    retweet_to = request.GET.get("retweet_to")
+    if retweet_to:
+        retweet_to = models.Tweet.objects.get(pk=retweet_to)
+    context = {'retweet_to': retweet_to}
+    template = render(request, "tweets/new_tweet.html", context=context)
     return HttpResponse(template)
 
 
