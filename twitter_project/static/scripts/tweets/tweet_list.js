@@ -179,12 +179,19 @@ function setup_gif() {
 
 function setup_tweet_list($tweets) {
     $tweets.each(setup_single_tweet)
-    $tweets.one('click', function (e) {
+    $tweets.each(make_bg_clickable)
+}
+
+function make_bg_clickable() {
+    $(this).one("click", function (e) {
+        e.stopPropagation();
         let id = $(this).find(".tweet-container").attr("tweet-id");
         let author = $(this).find(".tweet-container").attr("author-username");
         show_single_tweet(id, author, push_state = true);
     })
 }
+
+
 
 function set_comment_btns() {
     var $tweet = $(this).find(".tweet-container");
@@ -237,6 +244,9 @@ function setup_single_tweet() {
 
     // Make the rt button clickable
     $tweet.each(set_rt_btns);
+
+    let nested_tweet = $tweet.find(".nested-tweet");
+    nested_tweet.each(make_bg_clickable);
 
     // Make the @ clickable
     let clickable_name = $tweet.find('.tweet-clickable-name');
