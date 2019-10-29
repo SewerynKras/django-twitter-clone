@@ -23,6 +23,12 @@
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
     </script>
 
+    <!-- Material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- ClipboardJS -->
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
 </head>
 
 <body>
@@ -41,22 +47,41 @@
 
     <!--navigation-->
     <div class="navbar navbar-inverse navbar-fixed-left" id='left-body'>
-        <a class="navbar-brand" href="#">LOGO</a>
-        <ul class="nav navbar-nav">
-            <li><a href="{% url 'tweets:homepage' %}"><span> Home </span></a></li>
-            <li><a href="#"><span> Explore </span></a></li>
-            <li><a href="#"><span> Notifications </span></a></li>
-            <li><a href="#"><span> Messages </span></a></li>
-            <li><a href="#"><span> Bookmarks </span></a></li>
-            <li><a href="#"><span> Lists </span></a></li>
-            <li><a href="#"><span> Profile </span></a></li>
-            <li><a href="#"><span> More </span></a></li>
-        </ul>
+        <div id='left-nav'>
+            <a class="navbar-brand" href="#">LOGO</a>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a id='nav-to-home'><i class='material-icons navbar-icon'>home</i>Home</a>
+                </li>
+                <li>
+                    <a id='nav-to-search'><i class='material-icons navbar-icon'>search</i> Explore </a>
+                </li>
+                <li>
+                    <a id='nav-to-notifications'><i class='material-icons navbar-icon'>notifications</i>
+                        Notifications</a>
+                </li>
+                <li>
+                    <a id='nav-to-messages'><i class='material-icons navbar-icon'>message</i> Messages </a>
+                </li>
+                <li>
+                    <a id='nav-to-bookmarks'><i class='material-icons navbar-icon'>bookmark_border</i> Bookmarks</a>
+                </li>
+                <li>
+                    <a id='nav-to-lists'><i class='material-icons navbar-icon'>list_alt</i> Lists </a></li>
+                <li>
+                    <a id='nav-to-profile'><img src={{ user.profile.profile_pic.url }}
+                            class="img-fluid rounded-circle navbar-profile-pic" username={{ user.profile.username }}>
+                        Profile </a>
+                </li>
+                <li>
+                    <a id='nav-to-more'><i class='material-icons navbar-icon'>more</i> More </a>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="navbar navbar-inverse navbar-fixed-right" id='right-body'>
         <form class="form-inline">
             <input class="form-control" type="search" placeholder="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
     </div>
     <div id='main-body' class="shrink-l shrink-r">

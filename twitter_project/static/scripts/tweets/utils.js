@@ -85,9 +85,10 @@ function show_reply_form(tweet_id, push_state = true) {
     $cover.show();
     $reply_form.show();
     load_single_tweet(tweet_id,
-        callback = function ($tweet) {
+        function ($tweet) {
             $reply_form_preview.html($tweet);
-            $reply_form_name.text($tweet.attr("author-username"));
+            $reply_form_name.text(
+                "@" + $tweet.find(".tweet-container").attr("author-username"));
         }, true) // minified = true
 
     load_new_tweet_form(function ($form) {
@@ -246,10 +247,22 @@ $(document).ready(function () {
     $reply_form = $("#reply-form");
     $gif_selector = $("#gif-selector");
     $reply_form_preview = $reply_form.find("#reply-preview");
-    $reply_form_name = $reply_form.find("#reply-name");
+    $reply_form_name = $reply_form.find(".tweet-reply-clickable-name");
     $reply_form_new_tweet = $reply_form.find("#reply-new");
 
     $cover.click(hide_all_cover);
+
+
+    // setup navigation 
+    let $nav = $left_body.find(".nav");
+
+    $nav.find("#nav-to-home").click(function (e) {
+        show_home(true);
+    })
+    $nav.find("#nav-to-profile").click(function (e) {
+        let profile_id = $(this).find("img").attr("username");
+        show_profile(profile_id, true);
+    })
 
     window.onpopstate = function (event) {
         if (event.state) {

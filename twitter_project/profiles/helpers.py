@@ -54,7 +54,7 @@ def get_single_author(id):
     Returns:
         Profile
     """
-    return Profile.objects.get(slug=id)
+    return Profile.objects.get(username__iexact=id)
 
 
 def is_email_valid(email):

@@ -1,14 +1,13 @@
 <div class='new-tweet'>
-    <form method="post" enctype='multipart/form-data'>
-        {% csrf_token %}
+    <div class='tweet-reserved-space'>
+        <img src={{ user.profile.profile_pic.url }} class="img-fluid rounded-circle profile-pic">
+    </div>
 
-        <img src={{ user.profile.profile_pic.url }} class="img-fluid profile-pic new-tweet-profile-pic">
+    <div class='tweet-contents'>
 
         <div class='new-tweet-input'>
-            {% spaceless %}
             <span class='new-tweet-textarea' contenteditable="true"></span>
             <span class='new-tweet-placeholder' placeholder="What's happening?"></span>
-            {% endspaceless %}
         </div>
 
         <p></p>
@@ -93,25 +92,38 @@
         {% endif %}
 
         <hr>
-        <div class="new-tweet-media-buttons">
-            <button class='new-tweet-media-image'>IMG</button>
-            <button class='new-tweet-media-gif'>GIF</button>
-            <button class='new-tweet-media-poll'>POLL</button>
-            <button class='new-tweet-media-emoji'>EMOJI</button>
-        </div>
-
-        <div class="new-tweet-extra">
-            <div class="progress">
-                <span class="progress-left">
-                    <span class="progress-bar border-primary new-tweet-bar-l"></span>
-                </span>
-                <span class="progress-right">
-                    <span class="progress-bar border-primar new-tweet-bar-r"></span>
-                </span>
+        <div class='new-tweet-bottom-bar'>
+            <div class="new-tweet-media-buttons">
+                <a class='new-tweet-media-image new-tweet-media-btn'>
+                    <i class='material-icons'>image</i>
+                </a>
+                <a class='new-tweet-media-gif new-tweet-media-btn'>
+                    <i class='material-icons'>gif</i>
+                </a>
+                <a class='new-tweet-media-poll new-tweet-media-btn'>
+                    <i class='material-icons'>format_list_bulleted</i>
+                </a>
+                <a class='new-tweet-media-emoji new-tweet-media-btn'>
+                    <i class='material-icons'>mood</i>
+                </a>
             </div>
-            <div class='new-tweet-separator'>|</div>
-            <input type='button' class='btn btn-primary new-tweet-add' value="+">
+
+            <input type='submit' class='btn btn-primary new-tweet-submit' value='Tweet'>
+
+            <div class="new-tweet-extra">
+                <div class="progress">
+                    <span class="progress-left">
+                        <span class="progress-bar border-primary new-tweet-bar-l"></span>
+                    </span>
+                    <span class="progress-right">
+                        <span class="progress-bar border-primar new-tweet-bar-r"></span>
+                    </span>
+                </div>
+                <div class='new-tweet-separator'>|</div>
+                <a class='new-tweet-add'>
+                    <i class='material-icons'>add_circle_outline</i>
+                </a>
+            </div>
         </div>
-        <input type='submit' class='btn btn-primary new-tweet-submit' value='Tweet'>
-    </form>
+    </div>
 </div>

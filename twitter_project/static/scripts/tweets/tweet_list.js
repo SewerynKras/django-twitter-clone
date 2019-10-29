@@ -116,27 +116,59 @@ function like_tweet_AJAX($tweet, $btn, $counter) {
 
 
 function set_rt_btns() {
-    let $rt_btn = $(this).find(".rt-btn");
-    let $dropdown = $(this).find(".dropdown-menu");
-    let $counter = $(this).find(".tweet-rts-num");
-    let tweet_id = $(this).find(".tweet-container").attr("tweet-id");
+    let $tweet = $(this).closest(".tweet-container");
+    let $rt_btn = $tweet.find(".rt-btn");
+    let $dropdown = $tweet.find(".rt-dropdown");
+    let $counter = $tweet.find(".tweet-rts-num");
+    let tweet_id = $tweet.attr("tweet-id");
 
     $rt_btn.click(function (e) {
         e.stopPropagation();
         $dropdown.toggle();
     })
 
-    $(this).find(".rt-no-comment").click(function (e) {
+    $tweet.find(".rt-no-comment").click(function (e) {
         e.stopPropagation();
         rt_tweet_AJAX(tweet_id, $rt_btn, $counter);
     })
 
-    $(this).find(".rt-with-comment").click(function (e) {
+    $tweet.find(".rt-with-comment").click(function (e) {
         e.stopPropagation();
         // simulate a click to hide the dropdown
         $rt_btn.trigger("click");
         show_retweet_form(tweet_id, true);
     })
+}
+
+
+function set_link_btns() {
+    let $tweet = $(this).closest(".tweet-container");
+    let $link_btn = $tweet.find(".link-btn");
+    let tweet_id = $tweet.attr("tweet-id");
+    let author_id = $tweet.attr("author-username");
+    let $dropdown = $tweet.find(".link-dropdown");
+    let $copy_link = $tweet.find(".copy-link");
+
+    $link_btn.click(function (e) {
+        e.stopPropagation();
+        $dropdown.toggle();
+    })
+
+    if ($copy_link[0])
+        var clipboard = new ClipboardJS($copy_link[0], {
+            text: function () {
+                let base = window.location.origin
+                let url = `${base}/${author_id}/status/${tweet_id}`
+                return url
+            }
+        });
+
+    $(this).find(".copy-link").click(function (e) {
+        e.stopPropagation();
+        $dropdown.toggle();
+
+    })
+
 }
 
 
@@ -194,9 +226,9 @@ function make_bg_clickable() {
 
 
 function set_comment_btns() {
-    var $tweet = $(this).find(".tweet-container");
-    var $btn = $(this).find(".comment-btn");
-    var $counter = $(this).find(".tweet-comments-num");
+    var $tweet = $(this).closest(".tweet-container");
+    var $btn = $tweet.find(".comment-btn");
+    var $counter = $tweet.find(".tweet-comments-num");
 
     $btn.click(function (e) {
         e.stopPropagation();
@@ -245,6 +277,9 @@ function setup_single_tweet() {
     // Make the rt button clickable
     $tweet.each(set_rt_btns);
 
+    // Make the link button clickable
+    $tweet.each(set_link_btns);
+
     let nested_tweet = $tweet.find(".nested-tweet");
     nested_tweet.each(make_bg_clickable);
 
@@ -252,7 +287,7 @@ function setup_single_tweet() {
     let clickable_name = $tweet.find('.tweet-clickable-name');
     clickable_name.click(function (e) {
         e.stopPropagation();
-        let profile_id = $(this).attr("profile-id");
+        let profile_id = $(this).closest(".tweet-container").attr("author-username");
         show_profile(profile_id, true);
     })
 

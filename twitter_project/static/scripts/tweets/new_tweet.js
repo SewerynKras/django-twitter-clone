@@ -110,6 +110,7 @@ $(document).ready(function () {
      */
     function reset_gif_list() {
         $gif_list.empty();
+        $gif_list.hide();
         $gif_prev_list.show();
         GIF_SEARCHED = false;
         $gif_search_bar.val("");
@@ -129,6 +130,8 @@ $(document).ready(function () {
         });
         window.dispatchEvent(event);
     }
+
+    reset_gif_list()
 });
 
 function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
@@ -174,6 +177,16 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
             var $poll_date_hours = $poll_media.find("select[name='hours']");
             var $poll_date_minutes = $poll_media.find("select[name='minutes']");
 
+            /**
+             * Returns the textfields text with emojis and whitespace.
+             */
+            function get_raw_text() {
+                let raw = $textfield.clone();
+                raw.find("img").each(function () {
+                    $(this).html($(this).attr("alt"))
+                })
+                return raw.text();
+            }
 
             /**
              * - removes the placeholder if the textfield isn't empty
@@ -181,7 +194,7 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
              * - converts standard emojis to their twemoji counterparts
              */
             function check_tweet_len() {
-                let text_len = $textfield.text().length;
+                let text_len = get_raw_text().length;
                 if (text_len > 0) {
                     $placeholder.text("");
                     $textfield.addClass("expanded");
@@ -314,7 +327,7 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
              * This also cascades all images.
              */
             function delete_image() {
-                var image = $form.find(this).find(".tweet-image");
+                var image = $(this).find(".tweet-image");
                 image.removeAttr("src");
                 $(this).hide();
                 cascade_images();
@@ -418,7 +431,7 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                     var media = null
 
                 let data = {
-                    "text": $textfield.text(),
+                    "text": get_raw_text(),
                     "replying_to": replying_to,
                     "retweet_id": retweet_to,
                     "media": media
@@ -452,6 +465,12 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                 $textfield.focus();
             })
 
+            $textfield.on("keypress paste", function (e) {
+                if (get_raw_text().length >= 256) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
             $textfield.on('input', check_tweet_len);
 
             $form.find(".new-tweet-submit").click(function (e) {
@@ -464,8 +483,10 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                 height: 200,
                 width: 240,
                 onSelect: function (emoji) {
-                    $textfield.append("<span>" + emoji.value + "<span>");
-                    check_tweet_len();
+                    if (get_raw_text().length < 256) {
+                        $textfield.append("<span>" + emoji.value + "<span>");
+                        check_tweet_len();
+                    }
                 }
             });
 
