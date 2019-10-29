@@ -2,6 +2,8 @@ var $main_body;
 var $left_body
 var $right_body;
 var $cover;
+var $header;
+var $header_text;
 var $reply_form;
 var $reply_form_preview;
 var $reply_form_name;
@@ -26,22 +28,18 @@ function set_gif_url() {
 
 function hide_right_body() {
     $right_body.hide();
-    $main_body.removeClass("shrink-r");
 }
 
 function show_right_body() {
     $right_body.show();
-    $main_body.addClass("shrink-r");
 }
 
 function hide_left_body() {
     $left_body.hide();
-    $main_body.removeClass("shrink-l");
 }
 
 function show_left_body() {
     $left_body.show();
-    $main_body.addClass("shrink-l");
 }
 
 function change_url(state, url, push_state) {
@@ -54,31 +52,33 @@ function change_url(state, url, push_state) {
 function show_home(push_state = true) {
     show_left_body();
     show_right_body();
-    $main_body.empty();
+    $main_body_contents.empty();
     load_new_tweet_form(function ($form) {
-        $main_body.html($form);
+        $main_body_contents.html($form);
     });
     load_tweet_list(function ($list) {
-        $main_body.append($list)
+        $main_body_contents.append($list)
     });
     change_url({
         state: "home"
     }, "/home", push_state);
+    $header_text.text("Latest Tweets");
 }
 
 function show_single_tweet(tweet_id, author, push_state = true) {
     show_left_body();
     show_right_body();
-    $main_body.empty();
+    $main_body_contents.empty();
     load_single_tweet(tweet_id, function ($tweet, $comments) {
-        $main_body.html($tweet);
-        $main_body.append($comments);
+        $main_body_contents.html($tweet);
+        $main_body_contents.append($comments);
     })
     change_url({
         state: "tweet",
         tweet_id: tweet_id,
         author: author
     }, `/${author}/status/${tweet_id}`, push_state);
+    $header_text.text("Thread");
 }
 
 function show_reply_form(tweet_id, push_state = true) {
@@ -118,17 +118,18 @@ function show_retweet_form(tweet_id, push_state = true) {
 function show_profile(profile_id, push_state = false) {
     show_left_body();
     show_right_body();
-    $main_body.empty();
+    $main_body_contents.empty();
     load_profile(profile_id, function ($profile) {
-        $main_body.html($profile);
+        $main_body_contents.html($profile);
     })
     load_tweet_list(function ($list) {
-        $main_body.append($list)
+        $main_body_contents.append($list)
     }, profile_id);
     change_url({
         state: "profile",
         profile_id: profile_id,
     }, `/${profile_id}`, push_state);
+    $header_text.text(profile_id)
 }
 
 
@@ -238,20 +239,35 @@ function show_gif_selector() {
     $gif_selector.show();
 }
 
+function resize_elements() {
+    $header.width($main_body.width());
+}
 
 $(document).ready(function () {
+
     $main_body = $("#main-body");
+    $main_body_contents = $main_body.find("#main-body-contents");
     $left_body = $("#left-body");
     $right_body = $("#right-body");
+    $header = $("#header");
+    $header_text = $header.find(("#header-text"));
+
     $cover = $("#cover");
-    $reply_form = $("#reply-form");
+
     $gif_selector = $("#gif-selector");
+
+    $reply_form = $("#reply-form");
     $reply_form_preview = $reply_form.find("#reply-preview");
     $reply_form_name = $reply_form.find(".tweet-reply-clickable-name");
     $reply_form_new_tweet = $reply_form.find("#reply-new");
 
+    $(window).resize(function (e) {
+        resize_elements()
+    })
+    $(document).ajaxComplete(function () {
+        resize_elements()
+    });
     $cover.click(hide_all_cover);
-
 
     // setup navigation 
     let $nav = $left_body.find(".nav");
@@ -264,6 +280,8 @@ $(document).ready(function () {
         show_profile(profile_id, true);
     })
 
+
+    resize_elements();
     window.onpopstate = function (event) {
         if (event.state) {
             hide_all_cover();

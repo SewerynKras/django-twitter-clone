@@ -45,52 +45,61 @@
     <div id="cover" style='display:none'></div>
     {% block body_base %}
 
-    <!--navigation-->
-    <div class="navbar navbar-inverse navbar-fixed-left" id='left-body'>
-        <div id='left-nav'>
-            <a class="navbar-brand" href="#">LOGO</a>
-            <ul class="nav navbar-nav">
-                <li>
-                    <a id='nav-to-home'><i class='material-icons navbar-icon'>home</i>Home</a>
-                </li>
-                <li>
-                    <a id='nav-to-search'><i class='material-icons navbar-icon'>search</i> Explore </a>
-                </li>
-                <li>
-                    <a id='nav-to-notifications'><i class='material-icons navbar-icon'>notifications</i>
-                        Notifications</a>
-                </li>
-                <li>
-                    <a id='nav-to-messages'><i class='material-icons navbar-icon'>message</i> Messages </a>
-                </li>
-                <li>
-                    <a id='nav-to-bookmarks'><i class='material-icons navbar-icon'>bookmark_border</i> Bookmarks</a>
-                </li>
-                <li>
-                    <a id='nav-to-lists'><i class='material-icons navbar-icon'>list_alt</i> Lists </a></li>
-                <li>
-                    <a id='nav-to-profile'><img src={{ user.profile.profile_pic.url }}
-                            class="img-fluid rounded-circle navbar-profile-pic" username={{ user.profile.username }}>
-                        Profile </a>
-                </li>
-                <li>
-                    <a id='nav-to-more'><i class='material-icons navbar-icon'>more</i> More </a>
-                </li>
-            </ul>
+    <div id='body'>
+        <!--navigation-->
+        <div class="navbar navbar-inverse navbar-fixed-left" id='left-body'>
+            <div id='left-nav'>
+                <a class="navbar-brand" href="#">LOGO</a>
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a id='nav-to-home'><i class='material-icons navbar-icon'>home</i>Home</a>
+                    </li>
+                    <li>
+                        <a id='nav-to-search'><i class='material-icons navbar-icon'>search</i> Explore </a>
+                    </li>
+                    <li>
+                        <a id='nav-to-notifications'><i class='material-icons navbar-icon'>notifications</i>
+                            Notifications</a>
+                    </li>
+                    <li>
+                        <a id='nav-to-messages'><i class='material-icons navbar-icon'>message</i> Messages </a>
+                    </li>
+                    <li>
+                        <a id='nav-to-bookmarks'><i class='material-icons navbar-icon'>bookmark_border</i> Bookmarks</a>
+                    </li>
+                    <li>
+                        <a id='nav-to-lists'><i class='material-icons navbar-icon'>list_alt</i> Lists </a></li>
+                    <li>
+                        <a id='nav-to-profile'><img src={{ user.profile.profile_pic.url }}
+                                class="img-fluid rounded-circle navbar-profile-pic"
+                                username={{ user.profile.username }}>
+                            Profile </a>
+                    </li>
+                    <li>
+                        <a id='nav-to-more'><i class='material-icons navbar-icon'>more</i> More </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="navbar navbar-inverse navbar-fixed-right" id='right-body'>
+            <form class="form-inline" id='right-search-bar'>
+                <input class="form-control" type="search" placeholder="Search">
+            </form>
+        </div>
+        <div id='main-body' class="shrink-l shrink-r">
+            <div id='header'>
+                <span id='header-text'>
+                    Twitter
+                </span>
+            </div>
+            <div id='content-wrapper'>
+                <div id='main-body-contents'>
+                    {% block body_navbar %}
+                    {% endblock body_navbar %}
+                </div>
+            </div>
         </div>
     </div>
-    <div class="navbar navbar-inverse navbar-fixed-right" id='right-body'>
-        <form class="form-inline">
-            <input class="form-control" type="search" placeholder="Search">
-        </form>
-    </div>
-    <div id='main-body' class="shrink-l shrink-r">
-        <div class="container">
-            {% block body_navbar %}
-            {% endblock body_navbar %}
-        </div>
-    </div>
-
     {% endblock body_base %}
 </body>
 

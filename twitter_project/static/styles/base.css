@@ -8,32 +8,44 @@
     z-index: 500;
 }
 
-#left-body {
-    width: 300px;
-    position: fixed;
-    left: 0;
+#left-body,
+#right-body {
+    display: block;
 }
 
-
 #right-body {
-    width: 300px;
+    flex: 0 0 21em;
+    order: 1;
+}
+
+#left-body {
+    flex: 0 0 16em;
+    order: -1;
+}
+
+#left-nav,
+#right-search-bar {
     position: fixed;
-    right: 0;
 }
 
 #left-nav {
-    margin: auto;
+    padding-left: 3em;
 }
 
-body {
+#body {
     background: #15202b;
     color: white;
-
+    min-height: 100vh;
+    display: flex;
 }
 
 #main-body {
-    border: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+}
 
+#main-body-contents {
+    margin-top: 2.5em;
 }
 
 .navbar-brand {
@@ -60,4 +72,19 @@ body {
     color: rgb(0, 200, 255);
     border-radius: 50%;
     cursor: pointer;
+}
+
+#header {
+    border-bottom: gray 1px solid;
+    position: fixed;
+    background-color: #15202b;
+    height: 2.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    z-index: 400;
+}
+
+#header-text {
+    font-weight: bold;
+    padding-left: 1em;
 }

@@ -4,6 +4,7 @@
 
 .new-tweet-input {
     display: inline;
+    word-break: break-all;
 }
 
 .new-tweet-textarea {
@@ -285,5 +286,6 @@ img.emoji {
     left: 30%;
     overflow-Y: scroll;
     background-color: #15202b;
+    color: white;
     z-index: 501;
 }
