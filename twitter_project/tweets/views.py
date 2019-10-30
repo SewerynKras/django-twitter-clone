@@ -105,7 +105,7 @@ def get_tweets_AJAX(request):
         tweets = helpers.get_tweet_list(profile)
 
     tweets = helpers.annotate_tweets(tweets, profile)
-    context = {'tweet_list': tweets}
+    context = {'tweet_list': tweets[:40]}
     rendered_template = render(request=request,
                                template_name="tweets/tweet_list.html",
                                context=context)

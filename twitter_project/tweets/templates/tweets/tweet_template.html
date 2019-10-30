@@ -29,19 +29,7 @@
         <div class="tweet-text">{{tweet.text|linebreaks}}</div>
 
         {% endif %}
-        {% if tweet.retweet_to and not hide_reply %}
 
-        {% if not tweet.text %}
-        <span class="retweet-header" username={{tweet.author.username}}>
-            {{ tweet.author.username }} retweeted:
-        </span>
-        {% endif %}
-
-        <div class='nested-tweet'>
-            {% include 'tweets/tweet_template.html' with tweet=tweet.retweet_to hide_reply=True hide_buttons=True %}
-        </div>
-
-        {% endif %}
 
         {% if tweet.media and not hide_media %}
         <div class="tweet-media">
@@ -114,6 +102,19 @@
             </div>
             {% endif %}
         </div>
+        {% endif %}
+        {% if tweet.retweet_to and not hide_reply %}
+
+        {% if not tweet.text %}
+        <span class="retweet-header" username={{tweet.author.username}}>
+            {{ tweet.author.username }} retweeted:
+        </span>
+        {% endif %}
+
+        <div class='nested-tweet'>
+            {% include 'tweets/tweet_template.html' with tweet=tweet.retweet_to hide_reply=True hide_buttons=True %}
+        </div>
+
         {% endif %}
 
         {% if not hide_buttons %}
