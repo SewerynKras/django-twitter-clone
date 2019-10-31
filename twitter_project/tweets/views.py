@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from twitter_project.logging import logger
+from django.conf import settings
 from tweets import helpers, models
 from profiles.helpers import get_single_author
 
@@ -97,15 +98,25 @@ def get_gifs_AJAX(request):
 def get_tweets_AJAX(request):
     profile = request.user.profile
 
+    before = request.GET.get("before")
+    if before:
+        before = models.Tweet.objects.get(pk=before)
+
+    after = request.GET.get("after")
+    if after:
+        after = models.Tweet.objects.get(pk=after)
+
     auth_id = request.GET.get("single_author")
     if auth_id:
         auth = get_single_author(auth_id)
-        tweets = helpers.get_tweet_list_by_single_auth(auth)
+        tweets = helpers.get_tweet_list_by_single_auth(auth, before=before, after=after)
     else:
-        tweets = helpers.get_tweet_list(profile)
+        tweets = helpers.get_tweet_list(profile, before=before, after=after)
 
     tweets = helpers.annotate_tweets(tweets, profile)
-    context = {'tweet_list': tweets[:40]}
+
+    tweets = tweets[:settings.AJAX_OBJECTS_LIMIT]
+    context = {'tweet_list': tweets}
     rendered_template = render(request=request,
                                template_name="tweets/tweet_list.html",
                                context=context)

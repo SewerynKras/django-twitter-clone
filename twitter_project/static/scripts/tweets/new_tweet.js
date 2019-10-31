@@ -177,6 +177,8 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
             var $poll_date_hours = $poll_media.find("select[name='hours']");
             var $poll_date_minutes = $poll_media.find("select[name='minutes']");
 
+            var $submit_btn = $form.find(".new-tweet-submit");
+
             /**
              * Returns the textfields text with emojis and whitespace.
              */
@@ -445,15 +447,15 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                     data: JSON.stringify(data),
                     type: "post",
                     dataType: "json",
-                    success: function (response) {
-                        console.log(response);
+                    success: function () {
+                        $submit_btn.removeClass("disabled");
+                        $submit_btn.one("click", new_tweet_AJAX)
+                        $textfield.text("");
+                        check_tweet_len();
                     },
-                    error: function (request, status, error) {
-                        console.log({
-                            request,
-                            status,
-                            error
-                        });
+                    error: function () {
+                        $submit_btn.removeClass("disabled");
+                        $submit_btn.one("click", new_tweet_AJAX)
                     }
                 });
 
@@ -473,8 +475,9 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
             });
             $textfield.on('input', check_tweet_len);
 
-            $form.find(".new-tweet-submit").click(function (e) {
+            $submit_btn.one("click", function (e) {
                 e.preventDefault();
+                $(this).addClass("disabled");
                 new_tweet_AJAX();
             })
 

@@ -161,6 +161,9 @@ INVALID_USERNAME_MESSAGE = """
 
 FORBIDDEN_NAMES = ["home", "tweet", "login", "logout", "ajax", "signup", "admin"]
 
+# Defines the maximum amount of elements returned by an AJAX call
+# (used in infinite scrolling)
+AJAX_OBJECTS_LIMIT = 10
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
 

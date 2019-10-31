@@ -437,11 +437,13 @@ function get_single_tweet_AJAX(tweet_id, minified, callback) {
 /**
  * Sends an AJAX GET request and appends the tweet list with received elements
  */
-function get_tweet_list_AJAX(single_author, callback) {
+function get_tweet_list_AJAX(single_author, before, after, callback) {
     $.ajax({
         url: "/ajax/get_tweets/",
         data: {
-            single_author: single_author
+            single_author: single_author,
+            after: after,
+            before: before
         },
         dataType: "html",
         type: "get",
@@ -465,9 +467,15 @@ function load_single_tweet(tweet_id, callback, minified = false) {
 }
 
 
-function load_tweet_list(callback, single_author = null) {
+function load_tweet_list(callback, single_author = null, before = null, after = null) {
+    if (before)
+        before = before.attr("tweet-id")
+    if (after)
+        after = after.attr("tweet-id")
     get_tweet_list_AJAX(
         single_author,
+        before,
+        after,
         function ($list) {
             setup_tweet_list($list);
             var $tweet_date = $list.find(".tweet-date")

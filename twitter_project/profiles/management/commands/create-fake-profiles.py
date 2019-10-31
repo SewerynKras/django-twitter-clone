@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from profiles.models import Profile, User, Follow
 from faker import Faker
-from faker.providers import person, python, phone_number, date_time, internet
+from faker.providers import person, python, date_time, internet
 from profiles.helpers import get_username, check_if_user_follows
 from random import sample
 
@@ -47,20 +47,6 @@ class Command(BaseCommand):
                 fake=True)
             profile.randomize_media()
             profile.save()
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             profiles.append(profile)
 
         if num_profiles > 1:

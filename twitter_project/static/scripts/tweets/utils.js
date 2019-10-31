@@ -9,6 +9,9 @@ var $reply_form_preview;
 var $reply_form_name;
 var $reply_form_new_tweet;
 var $gif_selector;
+var FIRST_TWEET;
+var LAST_TWEET;
+
 
 /**
  * Changes the background-image css property to the url in
@@ -49,16 +52,61 @@ function change_url(state, url, push_state) {
         history.replaceState(state, "", url)
 }
 
+$(document).on("scroll", function () {
+    if (!LAST_TWEET)
+        return
+
+    if (window.scrollY >= LAST_TWEET.offset().top - $(window).height()) {
+        append_tweets_to_main();
+    }
+})
+
+window.setInterval(function () {
+    if (!FIRST_TWEET)
+        return
+
+    if (window.scrollY >= FIRST_TWEET.offset().top - $(window).height()) {
+        console.log("this runs")
+        prepend_tweets_to_main();
+    }
+
+}, 5000);
+
+
+function reset_scroll_states() {
+    LAST_TWEET = null;
+    FIRST_TWEET = null;
+}
+
+function append_tweets_to_main(set_first = false) {
+    load_tweet_list(function ($list) {
+        $main_body_contents.append($list)
+        LAST_TWEET = $list.eq(-1).find(".tweet-container");
+        if (set_first)
+            FIRST_TWEET = $list.eq(0).find(".tweet-container");
+    }, null, LAST_TWEET, null);
+    LAST_TWEET = null;
+}
+
+function prepend_tweets_to_main() {
+    load_tweet_list(function ($list) {
+        if ($list.length) {
+            $list.insertBefore(FIRST_TWEET);
+            FIRST_TWEET = $list.eq(0).find(".tweet-container");
+        }
+    }, null, null, FIRST_TWEET);
+}
+
+
 function show_home(push_state = true) {
     show_left_body();
     show_right_body();
+    reset_scroll_states()
     $main_body_contents.empty();
     load_new_tweet_form(function ($form) {
         $main_body_contents.html($form);
     });
-    load_tweet_list(function ($list) {
-        $main_body_contents.append($list)
-    });
+    append_tweets_to_main(true);
     change_url({
         state: "home"
     }, "/home", push_state);
@@ -68,6 +116,7 @@ function show_home(push_state = true) {
 function show_single_tweet(tweet_id, author, push_state = true) {
     show_left_body();
     show_right_body();
+    reset_scroll_states()
     $main_body_contents.empty();
     load_single_tweet(tweet_id, function ($tweet, $comments) {
         $main_body_contents.html($tweet);
@@ -118,13 +167,12 @@ function show_retweet_form(tweet_id, push_state = true) {
 function show_profile(profile_id, push_state = false) {
     show_left_body();
     show_right_body();
+    reset_scroll_states()
     $main_body_contents.empty();
     load_profile(profile_id, function ($profile) {
         $main_body_contents.html($profile);
     })
-    load_tweet_list(function ($list) {
-        $main_body_contents.append($list)
-    }, profile_id);
+    append_tweets_to_main();
     change_url({
         state: "profile",
         profile_id: profile_id,

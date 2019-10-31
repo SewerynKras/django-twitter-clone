@@ -95,8 +95,8 @@ def get_tweet_list(profile, before=None, after=None):
         profile {Profile}
 
     Keyword Arguments:
-        before {datetime} -- (default: {None})
-        after {datetime} -- (default: {None})
+        before {Tweet}
+        after {Tweet}
 
     Returns:
         Queryset
@@ -108,11 +108,11 @@ def get_tweet_list(profile, before=None, after=None):
 
     if before:
         # lt == less than == before
-        tweets = tweets.filter(date__lt=before)
+        tweets = tweets.filter(date__lt=before.date)
 
     if after:
         # gt == greater than == after
-        tweets = tweets.filter(date__gt=after)
+        tweets = tweets.filter(date__gt=after.date)
 
     tweets = tweets.order_by("-date")
     return tweets
