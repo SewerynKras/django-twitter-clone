@@ -11,6 +11,7 @@ var $reply_form_new_tweet;
 var $gif_selector;
 var FIRST_TWEET;
 var LAST_TWEET;
+var PROFILE;
 
 
 /**
@@ -52,25 +53,36 @@ function change_url(state, url, push_state) {
         history.replaceState(state, "", url)
 }
 
-$(document).on("scroll", function () {
+/**
+ * Every time the user scrolls check if the last tweet is visible,
+ * if so query and append more tweets to the list
+ * (infinite scrolling)
+ */
+function check_last_tweet() {
     if (!LAST_TWEET)
         return
 
     if (window.scrollY >= LAST_TWEET.offset().top - $(window).height()) {
         append_tweets_to_main();
     }
-})
+}
+$(document).on("scroll", check_last_tweet)
 
-window.setInterval(function () {
+/**
+ * Every couple seconds check if the user is at the top of the tweet list
+ * (aka looking at the first tweet)
+ * if so query and prepend newer tweets to the list
+ */
+function check_first_tweet() {
     if (!FIRST_TWEET)
         return
 
     if (window.scrollY >= FIRST_TWEET.offset().top - $(window).height()) {
-        console.log("this runs")
         prepend_tweets_to_main();
     }
-
-}, 5000);
+}
+// 5 seconds
+window.setInterval(check_first_tweet, 5000);
 
 
 function reset_scroll_states() {
@@ -78,23 +90,31 @@ function reset_scroll_states() {
     FIRST_TWEET = null;
 }
 
+/**
+ * Loads and appends a list of tweets based on the current cached LAST_TWEET
+ * @param {bool} set_first if true the first element of the list will be cached 
+ * as FIRST_TWEET (useful if this call creates the initial list)
+ */
 function append_tweets_to_main(set_first = false) {
     load_tweet_list(function ($list) {
         $main_body_contents.append($list)
         LAST_TWEET = $list.eq(-1).find(".tweet-container");
         if (set_first)
             FIRST_TWEET = $list.eq(0).find(".tweet-container");
-    }, null, LAST_TWEET, null);
+    }, PROFILE, LAST_TWEET, null);
     LAST_TWEET = null;
 }
 
+/**
+ * Loads and prepends a list of tweets based on the current cached FIRST_TWEET
+ */
 function prepend_tweets_to_main() {
     load_tweet_list(function ($list) {
         if ($list.length) {
             $list.insertBefore(FIRST_TWEET);
             FIRST_TWEET = $list.eq(0).find(".tweet-container");
         }
-    }, null, null, FIRST_TWEET);
+    }, PROFILE, null, FIRST_TWEET);
 }
 
 
@@ -118,6 +138,7 @@ function show_single_tweet(tweet_id, author, push_state = true) {
     show_right_body();
     reset_scroll_states()
     $main_body_contents.empty();
+    PROFILE = author;
     load_single_tweet(tweet_id, function ($tweet, $comments) {
         $main_body_contents.html($tweet);
         $main_body_contents.append($comments);
@@ -287,6 +308,11 @@ function show_gif_selector() {
     $gif_selector.show();
 }
 
+
+/**
+ * This will be called every time the window is resized or an AJAX call
+ * is finished
+ */
 function resize_elements() {
     $header.width($main_body.width());
 }

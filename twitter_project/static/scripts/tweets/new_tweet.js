@@ -200,9 +200,11 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                 if (text_len > 0) {
                     $placeholder.text("");
                     $textfield.addClass("expanded");
+                    $submit_btn.removeClass("disabled");
                 } else {
                     $placeholder.text($placeholder.attr("placeholder"));
                     $textfield.removeClass("expanded");
+                    $submit_btn.addClass("disabled");
                 }
                 updateBar(Math.floor(text_len * 100 / 256));
                 twemoji.parse($textfield[0]);
@@ -456,6 +458,7 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                     error: function () {
                         $submit_btn.removeClass("disabled");
                         $submit_btn.one("click", new_tweet_AJAX)
+                        check_tweet_len();
                     }
                 });
 

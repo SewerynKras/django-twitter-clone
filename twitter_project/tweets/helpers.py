@@ -1,3 +1,7 @@
+"""
+All functions defined in this file expect valid data and should
+not be called on raw request data!
+"""
 import base64
 import uuid
 import urllib.request
@@ -221,6 +225,7 @@ def download_gif(data):
         data {dict} -- part of the json response provided by
             the Giphy api
     """
+    logger.debug(f"Downloading gif with data: {data}")
     thumb_url = data['images']['original_still']['url']
     gif_url = data['images']['original']['url']
     gif = models.Gif(thumb_url=thumb_url,
@@ -246,11 +251,13 @@ def parse_new_tweet(data, profile):
 
     tweet.author = profile
 
+    # in case the tweet is a comment
     replying_to = data.get("replying_to")
     if replying_to:
         parent_tweet = models.Tweet.objects.get(id=replying_to)
         tweet.comment_to = parent_tweet
 
+    # in case the tweet is a retweet (with text and/or media)
     retweet_id = data.get("retweet_id")
     if retweet_id:
         retweet = models.Tweet.objects.get(pk=retweet_id)
@@ -261,6 +268,17 @@ def parse_new_tweet(data, profile):
 
     request_media = data.get("media")
     if request_media:
+
+        # valid image media dictionary looks like the following:
+        # {
+        #   type: "img",
+        #   values: {
+        #      "image_1": "...",
+        #      "image_2": "...",
+        #      "image_3": "...",
+        #      "image_4": "..."
+        #   }
+        # }
 
         values = request_media.get("values")
 
@@ -276,6 +294,15 @@ def parse_new_tweet(data, profile):
                     img_file = base64_to_image(img)
                     setattr(media_item, name, img_file)
 
+        # valid gif media dictionary looks like the following:
+        # {
+        #   type: "gif",
+        #   values: {
+        #      "thumb_url": "...",
+        #      "gif_url": "..."
+        #   }
+        # }
+
         elif media_type == 'gif':
             media.type = 'gif'
 
@@ -285,6 +312,20 @@ def parse_new_tweet(data, profile):
 
             media_item.gif_url = gif_url
             media_item.thumb_url = thumb_url
+
+        # valid poll media dictionary looks like the following:
+        # {
+        #   type: "poll",
+        #   values: {
+        #      "choice1_text": "...",
+        #      "choice2_text": "...",
+        #      "choice3_text": "...",
+        #      "choice4_text": "...",
+        #      "days": "...",
+        #      "hours": "...",
+        #      "minutes": "..."
+        #   }
+        # }
 
         elif media_type == 'poll':
             media.type = 'poll'

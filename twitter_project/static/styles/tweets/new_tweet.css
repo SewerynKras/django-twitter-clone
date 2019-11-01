@@ -1,5 +1,10 @@
 .new-tweet {
     display: flex;
+    border-bottom: 0.5em solid gray;
+}
+
+.new-tweet .tweet-contents {
+    margin-top: 1em;
 }
 
 .new-tweet-input {

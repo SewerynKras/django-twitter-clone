@@ -114,7 +114,10 @@ function like_tweet_AJAX($tweet, $btn, $counter) {
     });
 }
 
-
+/**
+ * Sets up the retweet button by binding proper functions to
+ * each element in the dropdown
+ */
 function set_rt_btns() {
     let $tweet = $(this).closest(".tweet-container");
     let $rt_btn = $tweet.find(".rt-btn");
@@ -140,7 +143,9 @@ function set_rt_btns() {
     })
 }
 
-
+/**
+ * Sets up the link button functionality by making a new ClipboardJS element
+ */
 function set_link_btns() {
     let $tweet = $(this).closest(".tweet-container");
     let $link_btn = $tweet.find(".link-btn");
@@ -171,7 +176,10 @@ function set_link_btns() {
 
 }
 
-
+/**
+ * Sends an AJAX POST request and on success adds the 'is-rt' class to the $btn
+ * and updates to counter to show 1 more
+ */
 function rt_tweet_AJAX(tweet_id, $btn, $counter) {
     var num_rts = $counter.text();
     $.ajax({
@@ -228,7 +236,6 @@ function make_bg_clickable() {
 function set_comment_btns() {
     var $tweet = $(this).closest(".tweet-container");
     var $btn = $tweet.find(".comment-btn");
-    var $counter = $tweet.find(".tweet-comments-num");
 
     $btn.click(function (e) {
         e.stopPropagation();
@@ -416,6 +423,10 @@ function choose_poll_option_AJAX() {
     });
 }
 
+/**
+ * Sends an AJAX GET request and calls the given callback function with
+ * the parsed response
+ */
 function get_single_tweet_AJAX(tweet_id, minified, callback) {
     $.ajax({
         url: "/ajax/get_single_tweet/",
@@ -435,7 +446,8 @@ function get_single_tweet_AJAX(tweet_id, minified, callback) {
 }
 
 /**
- * Sends an AJAX GET request and appends the tweet list with received elements
+ * Sends an AJAX GET request and calls the given callback function with
+ * the parsed response
  */
 function get_tweet_list_AJAX(single_author, before, after, callback) {
     $.ajax({

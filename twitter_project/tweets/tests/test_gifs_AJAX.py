@@ -89,7 +89,7 @@ class Test_gifs_AJAX(TestCase):
                                      "offset": offset,
                                      "limit": limit})
         response = views.get_gifs_AJAX(request)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 405)
 
     @classmethod
     def tearDownClass(cls):

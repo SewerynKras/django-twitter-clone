@@ -50,7 +50,7 @@ class Test_Like_Tweet_AJAX(TestCase):
         request.user = self.user
 
         response = views.like_tweet_AJAX(request)
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
         cont = json.loads(response.content)
         self.assertEqual(cont, {"tweet_id": "This tweet doesn't exists."})
 

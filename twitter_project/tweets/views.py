@@ -10,6 +10,7 @@ from twitter_project.logging import logger
 from django.conf import settings
 from tweets import helpers, models
 from profiles.helpers import get_single_author
+from profiles.models import Profile
 
 
 class MainPage(TemplateView):
@@ -36,24 +37,43 @@ class SingleTweet(TemplateView):
 
 
 def get_new_tweet_form_AJAX(request):
-    retweet_to = request.GET.get("retweet_to")
-    if retweet_to:
-        retweet_to = models.Tweet.objects.get(pk=retweet_to)
-    context = {'retweet_to': retweet_to}
-    template = render(request, "tweets/new_tweet.html", context=context)
-    return HttpResponse(template)
+    logger.debug("Processing raw request: " + str(request))
+
+    if request.method == "GET":
+        # in case the form should be used in creating a retweet the template
+        # would include a preview of the tweet
+        retweet_to = request.GET.get("retweet_to")
+        if retweet_to:
+            try:
+                tweet = helpers.get_single_tweet(retweet_to)[0]
+            except (IndexError, ObjectDoesNotExist, ValidationError):
+                # 404 == not found
+                return HttpResponse(status=404)
+            context = {'retweet_to': tweet}
+        else:
+            context = {}
+        template = render(request, "tweets/new_tweet.html", context=context)
+        return HttpResponse(template)
+    else:
+        # 405 == method not allowed
+        return HttpResponse(status=405)
 
 
 def like_tweet_AJAX(request):
+    logger.debug("Processing raw request: " + str(request))
     if request.method == 'POST':
         if not request.user.is_authenticated:
+            # 401 == unauthorized
             return JsonResponse({"user": "User not logged in."}, status=401)
+
         profile = request.user.profile
         tweet_id = request.POST.get("tweet_id")
         try:
-            tweet = models.Tweet.objects.get(pk=tweet_id)
-        except (ObjectDoesNotExist, ValidationError):
-            return JsonResponse({"tweet_id": "This tweet doesn't exists."}, status=403)
+            tweet = helpers.get_single_tweet(tweet_id)[0]
+        except (IndexError, ObjectDoesNotExist, ValidationError):
+            # 404 == not found
+            return JsonResponse({"tweet_id": "This tweet doesn't exists."}, status=404)
+
         # check if the user has already liked this tweet
         like = models.Like.objects.filter(tweet=tweet, author=profile)
         if like.exists():
@@ -65,91 +85,128 @@ def like_tweet_AJAX(request):
             liked = True
         return JsonResponse({"liked": liked})
     else:
+        # 405 == method not allowed
         return JsonResponse({}, status=405)
 
 
 def get_gifs_AJAX(request):
+    logger.debug("Processing raw request: " + str(request))
     if request.method == "GET":
         query = request.GET.get("query")
         offset = request.GET.get("offset")
         limit = request.GET.get("limit")
+        try:
+            offset = int(offset)
+            limit = int(limit)
+        except ValueError:
+            # 400 == bad request
+            return HttpResponse(status=400)
 
-        if query and limit and offset:
+        if query and (0 <= offset <= 20) and (0 < limit <= 20):
 
-            try:
-                offset = int(offset)
-                limit = int(limit)
-            except ValueError:
-                return HttpResponse(status=400)
+            context = {"gif_list": helpers.get_giphy(query=query,
+                                                     offset=offset,
+                                                     limit=limit)}
+            rendered_template = render(request=request,
+                                       template_name="tweets/gif_list.html",
+                                       context=context)
+            return HttpResponse(rendered_template)
+        else:
+            # 400 == bad request
+            return HttpResponse(status=400)
 
-            if (0 <= offset <= 20) and (0 < limit <= 20):
-
-                context = {"gif_list": helpers.get_giphy(query=query,
-                                                         offset=offset,
-                                                         limit=limit)}
-                rendered_template = render(request=request,
-                                           template_name="tweets/gif_list.html",
-                                           context=context)
-                return HttpResponse(rendered_template)
-
-    return HttpResponse(status=400)
+    # 405 == method not allowed
+    return HttpResponse(status=405)
 
 
 def get_tweets_AJAX(request):
-    profile = request.user.profile
+    logger.debug("Processing raw request: " + str(request))
+    if request.method == "GET":
+        profile = request.user.profile
 
-    before = request.GET.get("before")
-    if before:
-        before = models.Tweet.objects.get(pk=before)
+        before = request.GET.get("before")
+        if before:
+            try:
+                before = helpers.get_single_tweet(before)[0]
+            except (IndexError, ObjectDoesNotExist, ValidationError):
+                # 404 == not found
+                return HttpResponse(status=404)
 
-    after = request.GET.get("after")
-    if after:
-        after = models.Tweet.objects.get(pk=after)
+        after = request.GET.get("after")
+        if after:
+            try:
+                after = helpers.get_single_tweet(after)[0]
+            except (IndexError, ObjectDoesNotExist, ValidationError):
+                # 404 == not found
+                return HttpResponse(status=404)
 
-    auth_id = request.GET.get("single_author")
-    if auth_id:
-        auth = get_single_author(auth_id)
-        tweets = helpers.get_tweet_list_by_single_auth(auth, before=before, after=after)
+        auth_id = request.GET.get("single_author")
+        if auth_id:
+            try:
+                auth = get_single_author(auth_id)
+            except Profile.DoesNotExist:
+                # 404 == not found
+                return HttpResponse(status=404)
+            tweets = helpers.get_tweet_list_by_single_auth(auth, before=before, after=after)
+        else:
+            tweets = helpers.get_tweet_list(profile, before=before, after=after)
+
+        tweets = helpers.annotate_tweets(tweets, profile)
+
+        tweets = tweets[:settings.AJAX_OBJECTS_LIMIT]
+        context = {'tweet_list': tweets}
+        rendered_template = render(request=request,
+                                   template_name="tweets/tweet_list.html",
+                                   context=context)
+        return HttpResponse(rendered_template)
     else:
-        tweets = helpers.get_tweet_list(profile, before=before, after=after)
-
-    tweets = helpers.annotate_tweets(tweets, profile)
-
-    tweets = tweets[:settings.AJAX_OBJECTS_LIMIT]
-    context = {'tweet_list': tweets}
-    rendered_template = render(request=request,
-                               template_name="tweets/tweet_list.html",
-                               context=context)
-    return HttpResponse(rendered_template)
+        # 405 == method not allowed
+        return HttpResponse(code=405)
 
 
 def get_single_tweet_AJAX(request):
-    tweet_id = request.GET.get("tweet_id")
-    minified = request.GET.get("minified")
-    minified = True if minified == "true" else False
+    logger.debug("Processing raw request: " + str(request))
+    if request.method == "GET":
+        tweet_id = request.GET.get("tweet_id")
 
-    profile = request.user.profile
-    tweet = helpers.get_single_tweet(tweet_id)
-    tweet = helpers.annotate_tweets(tweet, profile)[0]
+        minified = request.GET.get("minified")
+        minified = True if minified == "true" else False
 
-    context = {'tweet': tweet}
+        profile = request.user.profile
+        try:
+            tweet = helpers.get_single_tweet(tweet_id)
+        except (ValidationError):
+            # 404 == not found
+            return HttpResponse(status=404)
 
-    if minified:
-        context['hide_media'] = True
-        context['hide_buttons'] = True
+        try:
+            tweet = helpers.annotate_tweets(tweet, profile)[0]
+        except IndexError:
+            # 404 == not found
+            return HttpResponse(status=404)
+
+        context = {'tweet': tweet}
+
+        if minified:
+            context['hide_media'] = True
+            context['hide_buttons'] = True
+        else:
+            comments = helpers.get_comments(tweet)
+            comments = helpers.annotate_tweets(comments, profile)
+            context['comments'] = comments
+            context['show_full_info'] = True
+
+        rendered_template = render(request=request,
+                                   template_name="tweets/single_tweet.html",
+                                   context=context)
+        return HttpResponse(rendered_template)
     else:
-        comments = helpers.get_comments(tweet)
-        comments = helpers.annotate_tweets(comments, profile)
-        context['comments'] = comments
-        context['show_full_info'] = True
-
-    rendered_template = render(request=request,
-                               template_name="tweets/single_tweet.html",
-                               context=context)
-    return HttpResponse(rendered_template)
+        # 405 == method not allowed
+        return HttpResponse(code=405)
 
 
 def new_tweet_AJAX(request):
+    logger.debug("Processing raw request: " + str(request))
     errors = {}
     if request.method == "POST":
         if not request.user.is_authenticated:
@@ -166,12 +223,9 @@ def new_tweet_AJAX(request):
 
         retweet_id = data.get("retweet_id")
         if retweet_id:
-            if len(retweet_id) == 36:
-                try:
-                    models.Tweet.objects.get(id=retweet_id)
-                except ObjectDoesNotExist:
-                    errors["retweet"] = "Incorrect retweet id."
-            else:
+            try:
+                helpers.get_single_tweet(retweet_id)[0]
+            except (ObjectDoesNotExist, ValidationError, IndexError):
                 errors["retweet"] = "Incorrect retweet id."
 
         media = data.get("media")
@@ -254,6 +308,7 @@ def new_tweet_AJAX(request):
 
 
 def choose_poll_option_AJAX(request):
+    logger.debug("Processing raw request: " + str(request))
     if request.method == "POST":
         if not request.user.is_authenticated:
             return JsonResponse({"user": "User not logged in."}, status=401)
@@ -295,7 +350,9 @@ def choose_poll_option_AJAX(request):
 
 
 def rt_AJAX(request):
+    logger.debug("Processing raw request: " + str(request))
     if request.method == "POST":
+        # 401 == unauthorized
         if not request.user.is_authenticated:
             return JsonResponse({"user": "User not logged in."}, status=401)
 
@@ -305,8 +362,9 @@ def rt_AJAX(request):
         try:
             tweet = models.Tweet.objects.get(pk=tweet_id)
         except (ObjectDoesNotExist, ValidationError):
+            # 403 == not found
             return JsonResponse({"tweet_id": "This tweet doesn't exists."},
-                                status=403)
+                                status=404)
 
         new_tweet = models.Tweet(text=None, retweet_to=tweet, author=profile)
         new_tweet.save()
