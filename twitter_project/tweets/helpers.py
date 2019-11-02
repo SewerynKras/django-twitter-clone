@@ -80,11 +80,11 @@ def get_comments(tweet, before=None, after=None):
 
     if before:
         # lt == less than == before
-        comments = comments.filter(date__lt=before)
+        comments = comments.filter(date__lt=before.date)
 
     if after:
         # gt == greater than == after
-        comments = comments.filter(date__gt=after)
+        comments = comments.filter(date__gt=after.date)
 
     comments = comments.order_by("-date")
     return comments
@@ -144,11 +144,11 @@ def get_tweet_list_by_single_auth(author, before=None, after=None):
 
     if before:
         # lt == less than == before
-        tweets = tweets.filter(date__lt=before)
+        tweets = tweets.filter(date__lt=before.date)
 
     if after:
         # gt == greater than == after
-        tweets = tweets.filter(date__gt=after)
+        tweets = tweets.filter(date__gt=after.date)
 
     tweets = tweets.order_by("-date")
     return tweets

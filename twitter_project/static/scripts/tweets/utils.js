@@ -88,6 +88,7 @@ window.setInterval(check_first_tweet, 5000);
 function reset_scroll_states() {
     LAST_TWEET = null;
     FIRST_TWEET = null;
+    PROFILE = null;
 }
 
 /**
@@ -138,7 +139,6 @@ function show_single_tweet(tweet_id, author, push_state = true) {
     show_right_body();
     reset_scroll_states()
     $main_body_contents.empty();
-    PROFILE = author;
     load_single_tweet(tweet_id, function ($tweet, $comments) {
         $main_body_contents.html($tweet);
         $main_body_contents.append($comments);
@@ -189,11 +189,12 @@ function show_profile(profile_id, push_state = false) {
     show_left_body();
     show_right_body();
     reset_scroll_states()
+    PROFILE = profile_id;
     $main_body_contents.empty();
     load_profile(profile_id, function ($profile) {
         $main_body_contents.html($profile);
     })
-    append_tweets_to_main();
+    append_tweets_to_main(true);
     change_url({
         state: "profile",
         profile_id: profile_id,
