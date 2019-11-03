@@ -1,8 +1,4 @@
 #lp-left {
-    position: fixed;
-    top: 0;
-    left: 0;
-
     width: 50%;
     height: 100%;
 
@@ -11,25 +7,92 @@
     padding-left: 10%;
     padding-right: 10%;
     color: white;
+    font-weight: bold;
+    position: absolute;
+    z-index: 0;
 
     background-color: #00abfd;
 }
 
 #lp-right {
-    position: fixed;
-    top: 0;
-    left: 50%;
-
     width: 50%;
     height: 100%;
 
     padding-top: 25%;
     padding-bottom: 25%;
     padding-left: 10%;
-    padding-right: 10%
+    padding-right: 10%;
+    position: absolute;
+    background-color: white;
+    z-index: 4;
+    right: 0;
+
 }
 
 form {
     position: fixed;
     top: 0;
+}
+
+#r-header,
+#r-sub-header {
+    font-weight: bold;
+}
+
+#r-header {
+    margin-bottom: 2em;
+}
+
+.bp-cont {
+    margin-bottom: 2em;
+}
+
+#main-body {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#landing-page {
+    display: flex;
+    width: 100%;
+    height: 95%;
+    position: absolute;
+}
+
+#footer {
+    height: 5%;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    border-top: 0.5px solid gray;
+}
+
+#footer-links {
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 0.6em;
+    color: gray;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 100%;
+}
+
+.twitter-logo {
+    width: 3em;
+    display: block;
+}
+
+#bird {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    z-index: 1;
+}
+
+#bulletpoints {
+    position: absolute;
+    z-index: 2;
 }
