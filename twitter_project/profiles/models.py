@@ -45,6 +45,9 @@ class Profile(models.Model):
         return super().save(*args, **kwargs)
 
     def randomize_media(self):
+        """
+        Changes the background_pic and profile_pic to one of the default ones
+        """
         colors = ['GRAY', "BLUE", "YELLOW", "PINK", "PURPLE", "RED", "GREEN"]
         bg_color = choice(colors)
         self.background_pic = f"background_pics/DEFAULT_{bg_color}.png"

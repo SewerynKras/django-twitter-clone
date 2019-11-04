@@ -10,10 +10,10 @@ class LoginMiddleware:
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
-        # meta graphics should not be loggin locked since these can
+        # meta graphics should not be login locked since these can
         # appear on the login page
         path = request.path_info
-        if path.startswith("/media/meta/"):
+        if path.startswith("/meta/"):
             return None
 
         if not request.user.is_authenticated:

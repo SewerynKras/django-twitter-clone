@@ -83,3 +83,33 @@ def check_if_user_follows(follower, following):
         bool
     """
     return Follow.objects.filter(follower=follower, following=following).exists()
+
+
+def create_new_profile(name, email, password, sync_email, person_ads, send_news):
+    """
+    Registers a new user by creating and saving a User and Profile instance
+
+    Arguments:
+        name {str}
+        email {str}
+        password {str}
+        sync_email {bool}
+        person_ads {bool}
+        send_news {bool}
+
+    Returns:
+        Profile
+    """
+    username = get_username(name)
+    user = User(username=email, email=email)
+    user.set_password(password)
+    user.save()
+    profile = Profile(user=user,
+                      username=username,
+                      sync_email=sync_email,
+                      send_news=send_news,
+                      personalize_ads=person_ads,
+                      display_name=name)
+    profile.randomize_media()
+    profile.save()
+    return profile

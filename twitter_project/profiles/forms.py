@@ -3,11 +3,9 @@ from profiles import models
 
 
 class SignUpForm(forms.ModelForm):
-    name_first = forms.CharField(required=True)
-    name_verify = forms.CharField(required=True)
-    email_first = forms.EmailField(required=True)
-    email_verify = forms.EmailField(required=True)
-    code = forms.CharField(required=True)
+    name = forms.CharField(required=True, max_length=50)
+    email = forms.EmailField(required=True)
+    code = forms.CharField(required=True, max_length=4)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
 
     class Meta:
@@ -17,6 +15,10 @@ class SignUpForm(forms.ModelForm):
 
 class LoginForm(forms.Form):
     identifier = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'Phone, email or username'}), label='')
+        attrs={'placeholder': 'Phone, email or username',
+               'id': 'loginform-id'}),
+               label='')
     password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'placeholder': 'Password'}),  label='')
+        attrs={'placeholder': 'Password',
+               'id': 'loginform-password'}),
+               label='')

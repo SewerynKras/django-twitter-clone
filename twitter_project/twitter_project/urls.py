@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("tweets.urls")),
     path('', include("profiles.urls")),  # profiles have to be included last
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + (static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
++ static(settings.META_MEDIA_URL, document_root=settings.META_MEDIA_ROOT))

@@ -2,59 +2,45 @@
 {% load static %}
 {% block title %}Sign up!{% endblock title %}
 
-{% block body_navbar %}
+{% block body_base %}
 
 <script src="{% static "scripts/profiles/sign_up.js" %}" async></script>
 <link rel="stylesheet" href="{% static "styles/profiles/sign_up.css" %}">
 
-<div class="container">
+<div class="container" id='main-body'>
 
-    <ul class="nav nav-tabs">
-        <li><a class="not-click" href="#part1" id='tab1'></a></li>
-        <li><a class="not-click" href="#part2" id='tab2'></a></li>
-        <li><a class="not-click" href="#part3" id='tab3'></a></li>
-        <li><a class="not-click" href="#part4" id='tab4'></a></li>
-        <li><a class="not-click" href="#part5" id='tab5'></a></li>
-    </ul>
-    <p id='current-page'>1 of 5</p>
-    <form method="post">
-        {% csrf_token %}
-        <div class="tab-content">
-            <div id="part1" class="tab-pane fade in active">
-                <a role='button' class='btn btn-primary disabled' lead-to="2" id='first_button'>next</a>
-                <p>Name:{{ form.name_first }}</p>
-                <p id="char_count"></p>
-                <p>Email:{{ form.email_first }}</p>
-                <p class="error-message" id="error_email_first"></p>
+    <button class='btn btn-primary' id='prev-btn' style='display: none;'>Prev</button>
+    <button class='btn btn-primary' id='next-btn' disabled>Next</button>
+    <p id='page-counter'>1 of 5</p>
+    <div id='contents'>
+        <div id="tab0" style='display: none;'>
+            <div>Name:{{ form.name }}</div>
+            <p class="error-message" id="error-name"></p>
+            <div id='char-counter'>
+                <span id="char-count">0</span>/50
             </div>
-            <div id="part2" class="tab-pane fade">
-                <a role='button' class='btn btn-primary' lead-to="1">prev</a>
-                <a role='button' class='btn btn-primary' lead-to="3">next</a>
-                <p>Synchronize email contacts:{{ form.sync_email }}</p>
-                <p>Send news/offers:{{ form.send_news }}</p>
-                <p>Personalize ads:{{ form.personalize_ads }}</p>
-            </div>
-            <div id="part3" class="tab-pane fade">
-                <a role='button' class='btn btn-primary' lead-to="2">prev</a>
-                <a role='button' class='btn btn-primary' lead-to="4">next</a>
-                <p>Name:{{ form.name_verify }}</p>
-                <p class="error-message" id="error_name_verify"></p>
-                <p>Email:{{ form.email_verify }}</p>
-                <p class="error-message" id="error_email_verify"></p>
-            </div>
-            <div id="part4" class="tab-pane fade">
-                <a role='button' class='btn btn-primary' lead-to="3">prev</a>
-                <a role='button' class='btn btn-primary' lead-to="5" disabled>next</a>
-                <p>Code:{{ form.code }}</p>
-                <p class="error-message" id="error_code"></p>
-            </div>
-            <div id="part5" class="tab-pane fade">
-                <a role='button' class='btn btn-primary' lead-to="4">prev</a>
-                <p>Password:{{ form.password }}</p>
-                <p class="error-message" id="error_password"></p>
-                <input type="submit" class="btn btn-primary" value='Register' disabled id='register_button'>
-            </div>
+            <div>Email:{{ form.email }}</div>
+            <p class="error-message" id="error-email"></p>
         </div>
-    </form>
+        <div id="tab1" style='display: none;'>
+            <div>Synchronize email contacts:{{ form.sync_email }}</div>
+            <div>Send news/offers:{{ form.send_news }}</div>
+            <div>Personalize ads:{{ form.personalize_ads }}</div>
+        </div>
+        <div id="tab2" style='display: none;'>
+            <div>Name: <input type="text" readonly value="Name123" id='prev-name'></div>
+            <div>Email: <input type="text" readonly value="Email123" id="prev-email"></div>
+            <button class='btn btn-primary' id="mid-signup-btn">Sign up</button>
+        </div>
+        <div id="tab3" style='display: none;'>
+            <div>Code:{{ form.code }}</div>
+            <p class="error-message" id="error-code"></p>
+        </div>
+        <div id="tab4" style='display: none;'>
+            <div>Password:{{ form.password }}</div>
+            <p class="error-message" id="error-password"></p>
+            <input type="submit" class="btn btn-primary" value='Register' disabled id='register-btn'>
+        </div>
+    </div>
 </div>
-{% endblock body_navbar %}
+{% endblock body_base %}

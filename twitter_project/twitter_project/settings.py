@@ -129,6 +129,8 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+META_MEDIA_ROOT = os.path.join(BASE_DIR, 'meta')
+META_MEDIA_URL = '/meta/'
 
 
 AUTHENTICATION_BACKENDS = (

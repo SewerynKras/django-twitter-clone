@@ -1,6 +1,5 @@
 from django.views.generic import TemplateView
 from profiles import models, forms, helpers
-from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.http import JsonResponse, HttpResponse
 from twitter_project.logging import logger
@@ -30,17 +29,6 @@ class SignupView(TemplateView):
         context['form'] = forms.SignUpForm
         return context
 
-    def post(self, request):
-        form = forms.SignUpForm(request.POST)
-        if form.is_valid():
-            profile = form.save(commit=False)
-            user = User(name=form.cleaned_data['name_verify'])
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            profile.user = user
-            profile.save()
-            redirect("/")
-
 
 class LoginView(TemplateView):
     template_name = "profiles/login.html"
@@ -65,7 +53,7 @@ class LoginView(TemplateView):
             error(request, str(e))
             return redirect("/login")
 
-        login(request, user)
+        login(request, user, backend="twitter_project.backends.CustomLoginBackend")
         # go back to the homepage
         return redirect("/home")
 
@@ -93,7 +81,7 @@ class LandingPageView(TemplateView):
             error(request, str(e))
             return redirect("/login")
 
-        login(request, user)
+        login(request, user, backend="twitter_project.backends.CustomLoginBackend")
         # go back to the homepage
         return redirect("/home")
 
@@ -164,3 +152,39 @@ def follow_AJAX(request):
         return JsonResponse({"followed": followed})
     else:
         return JsonResponse({}, status=405)
+
+
+def register_AJAX(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+
+        if not name:
+            return JsonResponse({"name": "Missing/Incorrect value"}, status=400)
+        email = request.POST.get("email")
+        if not email:
+            return JsonResponse({"email": "Missing/Incorrect value"}, status=400)
+        pasword = request.POST.get("password")
+        if not pasword:
+            return JsonResponse({"password": "Missing/Incorrect value"}, status=400)
+
+        sync_email = request.POST.get("sync_email")
+        sync_email = True if sync_email == "true" else False
+        person_ads = request.POST.get("person_ads")
+        person_ads = True if person_ads == "true" else False
+        send_news = request.POST.get("send_news")
+        send_news = True if send_news == "true" else False
+
+        kwargs = {
+            "name": name,
+            "email": email,
+            "sync_email": sync_email,
+            "person_ads": person_ads,
+            "send_news": send_news
+        }
+        # Password doesnt get logged for security reasons
+        logger.debug(f"Processing a new profile with kwargs: {kwargs}")
+
+        profile = helpers.create_new_profile(**kwargs, password=pasword)
+        login(request, profile.user, backend="twitter_project.backends.CustomLoginBackend")
+
+        return JsonResponse({})

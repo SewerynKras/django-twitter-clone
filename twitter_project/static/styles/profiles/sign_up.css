@@ -1,5 +1,14 @@
-.not-click {
-    pointer-events: none;
+body {
+    background-color: gray;
+}
+
+#main-body {
+    background-color: white;
+    position: fixed;
+    top: 10%;
+    left: 27%;
+    width: 46%;
+    height: 80%;
 }
 
 .error-message {
