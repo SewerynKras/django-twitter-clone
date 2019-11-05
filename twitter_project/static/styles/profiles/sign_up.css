@@ -9,8 +9,161 @@ body {
     left: 27%;
     width: 46%;
     height: 80%;
+    border-radius: 5%;
 }
 
 .error-message {
     color: red;
+}
+
+#cp-logo {
+    height: 1em;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#prev-btn {
+    float: left;
+    margin-left: 5%;
+    margin-top: 2%;
+}
+
+#prev-btn:hover {
+    background-color: rgba(0, 127, 255, 0.1);
+    color: rgb(0, 127, 255);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+
+#next-btn,
+#signup-btn {
+    float: right;
+    margin-right: 5%;
+    margin-top: 2%;
+    background-color: rgb(0, 127, 255);
+    border: none;
+}
+
+#next-btn:disabled {
+    background-color: rgba(0, 127, 255, 0.5);
+}
+
+#control-panel {
+    left: 0;
+    top: 0;
+    height: 10%;
+    width: 100%;
+    position: absolute;
+}
+
+#page-counter {
+    margin: auto;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    font-weight: bold;
+}
+
+#contents {
+    margin-top: 12%;
+}
+
+.page-header {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+#inputs {
+    margin-top: 10%;
+}
+
+.input-label {
+    position: absolute;
+    z-index: 1;
+    font-size: 0.8em;
+    width: 100%;
+}
+
+.fancy-input {
+    bottom: 0;
+    padding-top: 1.1em;
+    width: 100%;
+    background-color: rgb(245, 248, 250);
+    border: none;
+    border-bottom: 1px gray solid;
+}
+
+.fancy-input:focus {
+    border-bottom: 1px rgb(0, 127, 255) solid;
+}
+
+
+.cb-header {
+    font-weight: bold;
+}
+
+.cb-label {
+    display: inline-block;
+    width: 80%
+}
+
+.cb-text {
+    font-size: small;
+}
+
+.cb-box {
+    margin-bottom: 5%;
+    display: flex;
+}
+
+#checkboxes {
+    margin-top: 10%;
+}
+
+#char-counter {
+    margin-left: auto;
+    width: fit-content;
+    color: gray;
+    font-size: small;
+}
+
+.cb-tick {
+    margin: auto;
+}
+
+input:focus {
+    outline: none;
+}
+
+#confirm-inputs {
+    margin-top: 10%;
+}
+
+#confirm-inputs>.input-container {
+    margin-bottom: 4%;
+}
+
+#ignored-text {
+    font-size: small;
+    margin-top: 12%;
+    margin-bottom: 5%;
+}
+
+#mid-signup-btn {
+    width: 100%;
+}
+
+#code-small-text {
+    font-size: small;
+    color: darkgray;
+    margin-top: 5%;
+    margin-bottom: 10%;
 }

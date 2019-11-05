@@ -4,6 +4,9 @@ var CACHED_EMAIL = "";
 var CACHED_EMAIL_RESULT = false;
 
 $(function () {
+    var $logo = $("#cp-logo");
+    var $page_counter = $("#page-counter");
+
     var $name = $("#id_name");
     var $name_error = $("#error-name");
     var $prev_name = $("#prev-name");
@@ -29,8 +32,6 @@ $(function () {
 
     var $register_btn = $("#register-btn");
 
-    var $page_counter = $("#page-counter");
-
 
     var tabs = [$("#tab0"), $("#tab1"), $("#tab2"), $("#tab3"), $("#tab4")];
 
@@ -38,29 +39,50 @@ $(function () {
         tabs[CURRENT_TAB].hide();
         tabs[num].show();
 
-        // no previous page button on the first page
-        if (num == 0)
-            $prev_btn.hide();
-        else
-            $prev_btn.show();
-
-        // no next page button on the last page or
-        // when it's replaced by the sign up button
-        if (num == 4 || num == 2)
-            $next_btn.hide();
-        else
-            $next_btn.show();
+        // Hide/show all the navigation buttons and decoration
+        // depending on the tab.
+        switch (num) {
+            case 0:
+                $prev_btn.hide();
+                $next_btn.show();
+                $logo.show();
+                $page_counter.hide();
+                break
+            case 1:
+                $prev_btn.show();
+                $next_btn.show();
+                $logo.show();
+                $page_counter.hide();
+                break
+            case 2:
+                $prev_btn.show();
+                $next_btn.hide();
+                $logo.hide();
+                $page_counter.show();
+                break
+            case 3:
+                $prev_btn.show();
+                $next_btn.show();
+                $logo.hide();
+                $page_counter.show();
+                break
+            case 4:
+                $prev_btn.show();
+                $next_btn.hide();
+                $logo.hide();
+                $page_counter.show();
+                break
+        }
 
         $prev_name.val($name.val());
         $prev_email.val($email.val());
-        $page_counter.text(num + 1 + " of 5");
+        $page_counter.text("Step " + (num + 1) + " of 5");
         CURRENT_TAB = num;
     }
 
     $next_btn.click(next_page);
     $mid_signup_btn.click(next_page);
     $prev_btn.click(prev_page);
-
 
 
     /**

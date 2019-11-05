@@ -9,34 +9,107 @@
 
 <div class="container" id='main-body'>
 
-    <button class='btn btn-primary' id='prev-btn' style='display: none;'>Prev</button>
-    <button class='btn btn-primary' id='next-btn' disabled>Next</button>
-    <p id='page-counter'>1 of 5</p>
+    <div id='control-panel'>
+        <i class='material-icons' id='prev-btn'>keyboard_backspace</i>
+        <div id='page-counter' style="display: none;">1 of 5</div>
+        <img src="/meta/media/logo_blue.svg" id='cp-logo'>
+        <button class='btn btn-primary' id='next-btn' disabled>Next</button>
+    </div>
     <div id='contents'>
         <div id="tab0" style='display: none;'>
-            <div>Name:{{ form.name }}</div>
-            <p class="error-message" id="error-name"></p>
-            <div id='char-counter'>
-                <span id="char-count">0</span>/50
+            <span class='page-header'>Create your account</span>
+            <div id='inputs'>
+                <div class='input-container'>
+                    <div class='input-label'>Name</div>
+                    {{ form.name }}
+                    <div id='char-counter'>
+                        <span id="char-count">0</span>/50
+                    </div>
+                </div>
+                <p class="error-message" id="error-name"></p>
+                <div class='input-container'>
+                    <div class='input-label'>Email</div>
+                    {{ form.email }}
+                </div>
+                <p class="error-message" id="error-email"></p>
             </div>
-            <div>Email:{{ form.email }}</div>
-            <p class="error-message" id="error-email"></p>
         </div>
         <div id="tab1" style='display: none;'>
-            <div>Synchronize email contacts:{{ form.sync_email }}</div>
-            <div>Send news/offers:{{ form.send_news }}</div>
-            <div>Personalize ads:{{ form.personalize_ads }}</div>
+            <span class='page-header'>Customize your expirience</span>
+            <div id='checkboxes'>
+                <div class='cb-box'>
+                    <div class='cb-label'>
+                        <div class='cb-header'>
+                            Get more out of Twitter
+                        </div>
+                        <div class='cb-text'>
+                            Receive email about your Twitter activity and recommendations.
+                        </div>
+                    </div>
+                    <div class='cb-tick'>
+                        {{ form.send_news }}
+                    </div>
+                </div>
+                <div class='cb-box'>
+                    <div class='cb-label'>
+                        <div class='cb-header'>
+                            Connect with people you know
+                        </div>
+                        <div class='cb-text'>
+                            Let others find your Twitter account by your email address.
+                        </div>
+                    </div>
+                    <div class='cb-tick'>
+                        {{ form.sync_email }}
+                    </div>
+                </div>
+                <div class='cb-box'>
+                    <div class='cb-label'>
+                        <div class='cb-header'>
+                            Personalize ads
+                        </div>
+                        <div class='cb-text'>
+                            You will always see ads on Twitter based on your Twitter activity. When this setting is
+                            enabled,
+                            Twitter may further personalize ads from Twitter advertisers, on and off Twitter, by
+                            combining
+                            your Twitter activity with other online activity and information from our partners.
+                        </div>
+                    </div>
+                    <div class='cb-tick'>
+                        {{ form.personalize_ads }}
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="tab2" style='display: none;'>
-            <div>Name: <input type="text" readonly value="Name123" id='prev-name'></div>
-            <div>Email: <input type="text" readonly value="Email123" id="prev-email"></div>
+            <span class='page-header'>Create your account</span>
+            <div id='confirm-inputs'>
+                <div class='input-container'>
+                    <input type="text" readonly id='prev-name' class='fancy-input'>
+                </div>
+                <div class='input-container'>
+                    <input type="text" readonly id="prev-email" class='fancy-input'>
+                </div>
+            </div>
+
+            <div id='ignored-text'>
+                By signing up, you agree to our <a href="">Terms</a>, <a href="">Privacy Policy</a>,
+                and <a href="">Cookie use</a>. You also agree that you're over 13 years of age.
+            </div>
             <button class='btn btn-primary' id="mid-signup-btn">Sign up</button>
         </div>
         <div id="tab3" style='display: none;'>
-            <div>Code:{{ form.code }}</div>
+            <span class='page-header'>Create your account</span>
+            <div id='code-small-text'>Please enter the code we've sent you below
+                (or enter 1234 for now, this feature doesn't work yet)</div>
+            <div class='input-container'>
+                {{ form.code }}
+            </div>
             <p class="error-message" id="error-code"></p>
         </div>
         <div id="tab4" style='display: none;'>
+            <span class='page-header'>Create your account</span>
             <div>Password:{{ form.password }}</div>
             <p class="error-message" id="error-password"></p>
             <input type="submit" class="btn btn-primary" value='Register' disabled id='register-btn'>

@@ -3,10 +3,13 @@ from profiles import models
 
 
 class SignUpForm(forms.ModelForm):
-    name = forms.CharField(required=True, max_length=50)
-    email = forms.EmailField(required=True)
-    code = forms.CharField(required=True, max_length=4)
-    password = forms.CharField(widget=forms.PasswordInput, required=True)
+    name = forms.CharField(required=True, max_length=50,
+                           widget=forms.TextInput(attrs={"class": "fancy-input"}))
+    email = forms.EmailField(required=True,
+                             widget=forms.TextInput(attrs={"class": "fancy-input"}))
+    code = forms.CharField(required=True, max_length=4,
+                           widget=forms.TextInput(attrs={"class": "fancy-input"}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"class": "fancy-input"}), required=True)
 
     class Meta:
         model = models.Profile
