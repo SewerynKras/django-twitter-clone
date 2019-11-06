@@ -1,5 +1,5 @@
 body {
-    background-color: gray;
+    background-color: rgb(170, 184, 194);
 }
 
 #main-body {
@@ -33,8 +33,8 @@ body {
 }
 
 #prev-btn:hover {
-    background-color: rgba(0, 127, 255, 0.1);
-    color: rgb(0, 127, 255);
+    background-color: rgba(29, 161, 242, 0.1);
+    color: rgba(29, 161, 242, 1);
     border-radius: 50%;
     cursor: pointer;
 }
@@ -45,12 +45,12 @@ body {
     float: right;
     margin-right: 5%;
     margin-top: 2%;
-    background-color: rgb(0, 127, 255);
+    background-color: rgba(29, 161, 242, 1);
     border: none;
 }
 
 #next-btn:disabled {
-    background-color: rgba(0, 127, 255, 0.5);
+    background-color: rgba(29, 161, 242, 0.5);
 }
 
 #control-panel {
@@ -98,11 +98,11 @@ body {
     width: 100%;
     background-color: rgb(245, 248, 250);
     border: none;
-    border-bottom: 1px gray solid;
+    border-bottom: 1px rgb(170, 184, 194) solid;
 }
 
 .fancy-input:focus {
-    border-bottom: 1px rgb(0, 127, 255) solid;
+    border-bottom: 1px rgb(29, 161, 242) solid;
 }
 
 
@@ -131,7 +131,7 @@ body {
 #char-counter {
     margin-left: auto;
     width: fit-content;
-    color: gray;
+    color: rgb(170, 184, 194);
     font-size: small;
 }
 
@@ -163,7 +163,7 @@ input:focus {
 
 #code-small-text {
     font-size: small;
-    color: darkgray;
+    color: rgb(101, 119, 134);
     margin-top: 5%;
     margin-bottom: 10%;
 }

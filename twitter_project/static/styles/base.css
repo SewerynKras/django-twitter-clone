@@ -40,8 +40,8 @@
 }
 
 #main-body {
-    border-left: 1px solid gray;
-    border-right: 1px solid gray;
+    border-left: 0.5px solid rgb(101, 119, 134, 0.4);
+    border-right: 0.5px solid rgb(101, 119, 134, 0.4);
 }
 
 #main-body-contents {
@@ -65,17 +65,19 @@
 #left-body li {
     padding: 10px;
     width: fit-content;
+    font-family: roboto;
+    font-weight: bold;
 }
 
 #left-body li:hover {
-    background-color: rgba(0, 200, 255, 0.1);
-    color: rgb(0, 200, 255);
+    background-color: rgba(29, 161, 242, 0.1);
+    color: rgba(29, 161, 242, 1);
     border-radius: 50%;
     cursor: pointer;
 }
 
 #header {
-    border-bottom: gray 1px solid;
+    border-bottom: rgb(101, 119, 134, 0.4) 1px solid;
     position: fixed;
     background-color: #15202b;
     height: 2.5em;
@@ -87,4 +89,11 @@
 #header-text {
     font-weight: bold;
     padding-left: 1em;
+}
+
+#nav-logo {
+    height: 2em;
+    width: 2em;
+    margin-left: 10%;
+    margin-bottom: 10%;
 }

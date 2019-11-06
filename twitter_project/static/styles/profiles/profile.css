@@ -15,13 +15,13 @@
 
 .profile-btn {
     float: right;
-    background-color: #007bff;
+    background-color: rgba(29, 161, 242, 1);
     color: white;
 }
 
 .is-followed {
     background-color: transparent;
-    color: #007bff;
+    color: rgba(29, 161, 242, 1);
 }
 
 #profile-display-name {
@@ -31,7 +31,7 @@
 
 #profile-clickable-name {
     display: block;
-    color: darkgray;
+    color: rgb(101, 119, 134);
 }
 
 #profile-bio {
@@ -39,7 +39,7 @@
 }
 
 #bonus-info {
-    color: darkgray;
+    color: rgb(101, 119, 134);
     font-size: 0.9em;
 }
 
@@ -58,7 +58,7 @@
 
 #profile-following .num,
 #profile-followers .num {
-    color: darkgray;
+    color: rgb(101, 119, 134);
 }
 
 #profile-followers {

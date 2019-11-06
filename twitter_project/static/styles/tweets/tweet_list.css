@@ -35,7 +35,7 @@
 
 .poll-choice-wrapper {
     display: block;
-    background-color: gray;
+    background-color: rgb(170, 184, 194);
     height: 40px;
     position: relative;
 }
@@ -80,7 +80,7 @@
 }
 
 .tweet-container {
-    border: 1px solid gray;
+    border: 0.1px solid rgb(101, 119, 134, 0.4);
     display: flex;
     width: 100%;
 }
@@ -93,12 +93,14 @@
 .tweet-text {
     word-break: break-word;
     white-space: pre-wrap;
+    font-family: roboto;
+    font-weight: 300;
 }
 
 .tweet-date,
 .tweet-separator-dot,
 .tweet-clickable-name {
-    color: gray;
+    color: rgb(170, 184, 194);
 }
 
 .tweet-separator-dot {
@@ -120,7 +122,7 @@
 }
 
 .tweet-username {
-    color: gray
+    color: rgb(170, 184, 194)
 }
 
 .tweet-clickable-name:hover .tweet-display-name {
@@ -141,11 +143,11 @@
 .action-btn {
     border-radius: 50%;
     display: inline-block;
-    color: gray !important;
+    color: rgb(170, 184, 194) !important;
 }
 
 .tweet-comment-to {
-    color: gray !important;
+    color: rgb(170, 184, 194) !important;
 }
 
 .tweet-reply-clickable-name {

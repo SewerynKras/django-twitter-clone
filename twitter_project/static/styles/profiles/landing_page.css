@@ -11,7 +11,7 @@
     position: absolute;
     z-index: 0;
 
-    background-color: #00abfd;
+    background-color: rgba(29, 161, 242, 1);
 }
 
 #lp-right {
@@ -67,14 +67,14 @@ form {
     width: 100%;
     position: absolute;
     bottom: 0;
-    border-top: 0.5px solid gray;
+    border-top: 0.5px solid rgb(170, 184, 194);
 }
 
 #footer-links {
     display: flex;
     justify-content: space-evenly;
     font-size: 0.6em;
-    color: gray;
+    color: rgb(170, 184, 194);
     margin-left: 10%;
     margin-right: 10%;
     height: 100%;
