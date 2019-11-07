@@ -70,6 +70,14 @@
     });
 
 </script>
+
+{% elif main_body == "search" %}
+<script>
+    $(function () {
+        show_search("{{q}}", false)
+    });
+
+</script>
 {% endif %}
 
 {% endblock body_navbar %}

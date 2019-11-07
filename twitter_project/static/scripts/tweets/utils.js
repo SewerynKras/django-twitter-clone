@@ -12,6 +12,7 @@ var $gif_selector;
 var FIRST_TWEET;
 var LAST_TWEET;
 var PROFILE;
+var QUERY;
 
 
 /**
@@ -89,6 +90,7 @@ function reset_scroll_states() {
     LAST_TWEET = null;
     FIRST_TWEET = null;
     PROFILE = null;
+    QUERY = null;
 }
 
 /**
@@ -102,7 +104,7 @@ function append_tweets_to_main(set_first = false) {
         LAST_TWEET = $list.eq(-1).find(".tweet-container");
         if (set_first)
             FIRST_TWEET = $list.eq(0).find(".tweet-container");
-    }, PROFILE, LAST_TWEET, null);
+    }, PROFILE, QUERY, LAST_TWEET, null);
     LAST_TWEET = null;
 }
 
@@ -115,14 +117,14 @@ function prepend_tweets_to_main() {
             $list.insertBefore(FIRST_TWEET);
             FIRST_TWEET = $list.eq(0).find(".tweet-container");
         }
-    }, PROFILE, null, FIRST_TWEET);
+    }, PROFILE, QUERY, null, FIRST_TWEET);
 }
 
 
 function show_home(push_state = true) {
     show_left_body();
     show_right_body();
-    reset_scroll_states()
+    reset_scroll_states();
     $main_body_contents.empty();
     load_new_tweet_form(function ($form) {
         $main_body_contents.html($form);
@@ -200,6 +202,19 @@ function show_profile(profile_id, push_state = false) {
         profile_id: profile_id,
     }, `/${profile_id}`, push_state);
     $header_text.text(profile_id)
+}
+
+function show_search(query, push_state = false) {
+    show_left_body();
+    show_right_body();
+    reset_scroll_states();
+    QUERY = query;
+    $main_body_contents.empty();
+    append_tweets_to_main(true);
+    change_url({
+        state: "search",
+        query: query
+    }, `/search?q=${query}`, push_state)
 }
 
 
@@ -355,6 +370,12 @@ $(document).ready(function () {
         show_profile(profile_id, true);
     })
 
+    let $searchbar = $right_body.find("#right-search-bar");
+    $searchbar.on("submit", function (e) {
+        e.preventDefault();
+        let q = $(this).find("input").val();
+        show_search(q, true);
+    })
 
     resize_elements();
     window.onpopstate = function (event) {
@@ -372,6 +393,8 @@ $(document).ready(function () {
                 show_retweet_form(event.state.tweet_id, false);
             } else if (event.state.state == "profile") {
                 show_profile(event.state.profile_id, false);
+            } else if (event.state.state == "search") {
+                show_search(event.state.query, false)
             }
         }
     };

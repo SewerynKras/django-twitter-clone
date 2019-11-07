@@ -36,6 +36,18 @@ class SingleTweet(TemplateView):
         return context
 
 
+class SearchPage(TemplateView):
+    template_name = "tweets/homepage.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['gif_list'] = models.GifCategory.objects.all()
+        context['main_body'] = "search"
+
+        context['q'] = self.request.GET.get("q")
+        return context
+
+
 def get_new_tweet_form_AJAX(request):
     logger.debug("Processing raw request: " + str(request))
 
@@ -141,6 +153,8 @@ def get_tweets_AJAX(request):
                 return HttpResponse(status=404)
 
         auth_id = request.GET.get("single_author")
+        query = request.GET.get("q")
+
         if auth_id:
             try:
                 auth = get_single_author(auth_id)
@@ -148,6 +162,8 @@ def get_tweets_AJAX(request):
                 # 404 == not found
                 return HttpResponse(status=404)
             tweets = helpers.get_tweet_list_by_single_auth(auth, before=before, after=after)
+        elif query:
+            tweets = helpers.get_tweet_list_by_query(query, before=before, after=after)
         else:
             tweets = helpers.get_tweet_list(profile, before=before, after=after)
 

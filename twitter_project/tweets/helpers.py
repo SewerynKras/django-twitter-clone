@@ -154,6 +154,38 @@ def get_tweet_list_by_single_auth(author, before=None, after=None):
     return tweets
 
 
+def get_tweet_list_by_query(query, before=None, after=None):
+    """
+    Queries all tweets based on the given query.
+    (This is used mostly in searches).
+    Resulting queryset is reverse ordered by date.
+
+    Arguments:
+        author {Profile}
+
+    Keyword Arguments:
+        before {datetime} -- (default: {None})
+        after {datetime} -- (default: {None})
+
+    Returns:
+        Queryset
+    """
+    logger.debug(f"Getting tweet list by query: {query}")
+
+    tweets = models.Tweet.objects.filter(text__icontains=query)
+
+    if before:
+        # lt == less than == before
+        tweets = tweets.filter(date__lt=before.date)
+
+    if after:
+        # gt == greater than == after
+        tweets = tweets.filter(date__gt=after.date)
+
+    tweets = tweets.order_by("-date")
+    return tweets
+
+
 def get_single_tweet(id):
     """
     Queries a single tweet with the given id.

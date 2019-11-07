@@ -449,19 +449,21 @@ function get_single_tweet_AJAX(tweet_id, minified, callback) {
  * Sends an AJAX GET request and calls the given callback function with
  * the parsed response
  */
-function get_tweet_list_AJAX(single_author, before, after, callback) {
+function get_tweet_list_AJAX(single_author, query, before, after, callback) {
     $.ajax({
         url: "/ajax/get_tweets/",
         data: {
             single_author: single_author,
             after: after,
-            before: before
+            before: before,
+            q: query
         },
         dataType: "html",
         type: "get",
         success: function (response) {
             new_tweet_list = $($.parseHTML(response)).find(".tweet-in-list");
-            callback(new_tweet_list)
+            if (new_tweet_list.length > 0)
+                callback(new_tweet_list)
         }
     });
 }
@@ -479,13 +481,14 @@ function load_single_tweet(tweet_id, callback, minified = false) {
 }
 
 
-function load_tweet_list(callback, single_author = null, before = null, after = null) {
+function load_tweet_list(callback, single_author = null, query = null, before = null, after = null) {
     if (before)
         before = before.attr("tweet-id")
     if (after)
         after = after.attr("tweet-id")
     get_tweet_list_AJAX(
         single_author,
+        query,
         before,
         after,
         function ($list) {
