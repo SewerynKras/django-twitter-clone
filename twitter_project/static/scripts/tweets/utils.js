@@ -9,6 +9,7 @@ var $reply_form_preview;
 var $reply_form_name;
 var $reply_form_new_tweet;
 var $gif_selector;
+var $nav_names;
 var FIRST_TWEET;
 var LAST_TWEET;
 var PROFILE;
@@ -63,11 +64,10 @@ function check_last_tweet() {
     if (!LAST_TWEET)
         return
 
-    if (window.scrollY >= LAST_TWEET.offset().top - $(window).height()) {
+    if ($main_body.scrollTop() >= LAST_TWEET.offset().top - $(window).height()) {
         append_tweets_to_main();
     }
 }
-$(document).on("scroll", check_last_tweet)
 
 /**
  * Every couple seconds check if the user is at the top of the tweet list
@@ -324,6 +324,14 @@ function show_gif_selector() {
     $gif_selector.show();
 }
 
+function hide_nav_names() {
+    $nav_names.hide();
+}
+
+function show_nav_names() {
+    $nav_names.show();
+}
+
 
 /**
  * This will be called every time the window is resized or an AJAX call
@@ -345,6 +353,7 @@ $(document).ready(function () {
     $cover = $("#cover");
 
     $gif_selector = $("#gif-selector");
+    $nav_names = $(".text-next-to");
 
     $reply_form = $("#reply-form");
     $reply_form_preview = $reply_form.find("#reply-preview");
@@ -377,7 +386,9 @@ $(document).ready(function () {
         show_search(q, true);
     })
 
+    $main_body.on("scroll", check_last_tweet)
     resize_elements();
+
     window.onpopstate = function (event) {
         if (event.state) {
             hide_all_cover();

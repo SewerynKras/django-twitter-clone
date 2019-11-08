@@ -48,45 +48,75 @@
     <div id="cover" style='display:none'></div>
     {% block body_base %}
 
-    <div id='body'>
+    <div id='content'>
         <!--navigation-->
         <div class="navbar navbar-inverse navbar-fixed-left" id='left-body'>
             <div id='left-nav'>
                 <ul class="nav navbar-nav">
                     <img src="/meta/media/logo_white.svg" id='nav-logo'>
                     <li>
-                        <a id='nav-to-home'><i class='material-icons navbar-icon'>home</i>Home</a>
+                        <a id='nav-to-home'><i class='material-icons navbar-icon'>home</i>
+                            <span class='text-next-to'>
+                                Home
+                            </span>
+                        </a>
                     </li>
                     <li>
-                        <a id='nav-to-search'><i class='material-icons navbar-icon'>search</i> Explore </a>
+                        <a id='nav-to-search'><i class='material-icons navbar-icon'>search</i>
+                            <span class='text-next-to'>
+                                Explore
+                            </span>
+                        </a>
                     </li>
                     <li>
                         <a id='nav-to-notifications'><i class='material-icons navbar-icon'>notifications</i>
-                            Notifications</a>
+                            <span class='text-next-to'>
+                                Notifications
+                            </span>
+                        </a>
                     </li>
                     <li>
-                        <a id='nav-to-messages'><i class='material-icons navbar-icon'>message</i> Messages </a>
+                        <a id='nav-to-messages'><i class='material-icons navbar-icon'>message</i>
+                            <span class='text-next-to'>
+                                Messages
+                            </span>
+                        </a>
                     </li>
                     <li>
-                        <a id='nav-to-bookmarks'><i class='material-icons navbar-icon'>bookmark_border</i> Bookmarks</a>
+                        <a id='nav-to-bookmarks'><i class='material-icons navbar-icon'>bookmark_border</i>
+                            <span class='text-next-to'>
+                                Bookmarks
+                            </span>
+                        </a>
                     </li>
                     <li>
-                        <a id='nav-to-lists'><i class='material-icons navbar-icon'>list_alt</i> Lists </a></li>
+                        <a id='nav-to-lists'><i class='material-icons navbar-icon'>list_alt</i>
+                            <span class='text-next-to'>
+                                Lists
+                            </span>
+                        </a></li>
                     <li>
                         <a id='nav-to-profile'><img src={{ user.profile.profile_pic.url }}
                                 class="img-fluid rounded-circle navbar-profile-pic"
                                 username={{ user.profile.username }}>
-                            Profile </a>
+                            <span class='text-next-to'>
+                                Profile
+                            </span>
+                        </a>
                     </li>
                     <li>
-                        <a id='nav-to-more'><i class='material-icons navbar-icon'>more</i> More </a>
+                        <a id='nav-to-more'><i class='material-icons navbar-icon'>more</i>
+                            <span class='text-next-to'>
+                                More
+                            </span>
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="navbar navbar-inverse navbar-fixed-right" id='right-body'>
             <form class="form-inline" id='right-search-bar'>
-                <input class="form-control" type="search" placeholder="Search">
+                <input class="form-control" type="search" placeholder="Search Twitter">
             </form>
         </div>
         <div id='main-body'>

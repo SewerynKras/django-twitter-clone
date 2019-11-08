@@ -8,40 +8,70 @@
     z-index: 500;
 }
 
-#left-body,
-#right-body {
-    display: block;
-}
-
-#right-body {
-    flex: 0 0 21em;
-    order: 1;
-}
-
-#left-body {
-    flex: 0 0 16em;
-    order: -1;
-}
-
-#left-nav,
-#right-search-bar {
-    position: fixed;
-}
-
-#left-nav {
-    padding-left: 3em;
-}
-
-#body {
+#content,
+body,
+html {
     background: #15202b;
     color: white;
-    min-height: 100vh;
-    display: flex;
+    overflow: hidden;
+    height: 99%;
 }
 
 #main-body {
     border-left: 0.5px solid rgb(101, 119, 134, 0.4);
     border-right: 0.5px solid rgb(101, 119, 134, 0.4);
+    float: left;
+    overflow-y: scroll;
+    height: 100%;
+    width: 40%;
+
+
+    /* Remove the scrollbar */
+
+    /* Firefox */
+    scrollbar-width: none;
+    /* IE 10+ */
+    -ms-overflow-style: none;
+}
+
+#main-body::-webkit-scrollbar {
+    /* WebKit */
+    width: 0;
+    height: 0;
+}
+
+#left-body {
+    float: left;
+    width: 25%;
+    height: 100%;
+}
+
+#right-body {
+    width: 35%;
+    float: right;
+    height: 100%;
+}
+
+#right-search-bar {
+    position: absolute;
+    left: 10%;
+    width: 70%;
+    top: 0;
+}
+
+#right-search-bar input {
+    background-color: rgba(101, 119, 134, 0.2);
+    color: rgb(170, 184, 194);
+    border: none;
+    width: 100%;
+}
+
+#left-nav {
+    right: 10%;
+    top: 1%;
+    font-size: 1.5em;
+    position: absolute;
+    font-weight: bold;
 }
 
 #main-body-contents {
@@ -52,28 +82,27 @@
     width: 100%;
 }
 
-.navbar-icon,
-.navbar-link {
-    font-size: 20px;
+.navbar-icon {
+    bottom: -5px;
+    position: relative;
+    font-size: 1.3em;
 }
 
 .navbar-profile-pic {
-    width: 20px;
-    height: 20px
+    width: 1.3em;
+    height: 1.3em;
 }
 
-#left-body li {
-    padding: 10px;
-    width: fit-content;
-    font-family: roboto;
-    font-weight: bold;
-}
 
-#left-body li:hover {
+#left-nav li:hover {
     background-color: rgba(29, 161, 242, 0.1);
     color: rgba(29, 161, 242, 1);
     border-radius: 50%;
     cursor: pointer;
+}
+
+#left-nav li {
+    margin-bottom: 12%;
 }
 
 #header {
@@ -92,8 +121,7 @@
 }
 
 #nav-logo {
-    height: 2em;
-    width: 2em;
-    margin-left: 10%;
+    height: 1.3em;
+    width: 1.3em;
     margin-bottom: 10%;
 }
