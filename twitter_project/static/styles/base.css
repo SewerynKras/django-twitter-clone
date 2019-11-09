@@ -14,7 +14,7 @@ html {
     background: #15202b;
     color: white;
     overflow: hidden;
-    height: 99%;
+    height: 100%;
 }
 
 #main-body {
@@ -68,6 +68,7 @@ html {
 
 #left-nav {
     right: 10%;
+    height: 100%;
     top: 1%;
     font-size: 1.5em;
     position: absolute;
@@ -101,8 +102,9 @@ html {
     cursor: pointer;
 }
 
-#left-nav li {
-    margin-bottom: 12%;
+#left-nav ul {
+    justify-content: space-between;
+    height: 70%;
 }
 
 #header {
@@ -124,4 +126,31 @@ html {
     height: 1.3em;
     width: 1.3em;
     margin-bottom: 10%;
+}
+
+
+@media (max-width: 1000px) {
+    .text-next-to {
+        display: none;
+    }
+
+    #left-body {
+        width: 50px;
+    }
+
+    #main-body {
+        float: none;
+        margin-left: 55px;
+        width: auto;
+    }
+
+    #right-body {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    #right-body {
+        display: none;
+    }
 }

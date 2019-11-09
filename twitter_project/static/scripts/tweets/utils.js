@@ -32,22 +32,6 @@ function set_gif_url() {
     $(this).css("background-image", `url(${$(this).attr("gif-url")})`);
 }
 
-function hide_right_body() {
-    $right_body.hide();
-}
-
-function show_right_body() {
-    $right_body.show();
-}
-
-function hide_left_body() {
-    $left_body.hide();
-}
-
-function show_left_body() {
-    $left_body.show();
-}
-
 function change_url(state, url, push_state) {
     if (push_state)
         history.pushState(state, "", url)
@@ -122,8 +106,6 @@ function prepend_tweets_to_main() {
 
 
 function show_home(push_state = true) {
-    show_left_body();
-    show_right_body();
     reset_scroll_states();
     $main_body_contents.empty();
     load_new_tweet_form(function ($form) {
@@ -137,8 +119,6 @@ function show_home(push_state = true) {
 }
 
 function show_single_tweet(tweet_id, author, push_state = true) {
-    show_left_body();
-    show_right_body();
     reset_scroll_states()
     $main_body_contents.empty();
     load_single_tweet(tweet_id, function ($tweet, $comments) {
@@ -188,8 +168,6 @@ function show_retweet_form(tweet_id, push_state = true) {
 
 
 function show_profile(profile_id, push_state = false) {
-    show_left_body();
-    show_right_body();
     reset_scroll_states()
     PROFILE = profile_id;
     $main_body_contents.empty();
@@ -205,8 +183,6 @@ function show_profile(profile_id, push_state = false) {
 }
 
 function show_search(query, push_state = false) {
-    show_left_body();
-    show_right_body();
     reset_scroll_states();
     QUERY = query;
     $main_body_contents.empty();
