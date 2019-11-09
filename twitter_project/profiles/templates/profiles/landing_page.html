@@ -5,36 +5,35 @@
 
 {% block body_base %}
 
-<script src="{% static "scripts/profiles/landing_page.js" %}" async></script>
 <link rel="stylesheet" href="{% static "styles/profiles/landing_page.css" %}">
 
-<div id='main-body'>
-    <div id='landing-page'>
+<div id='landing-page'>
+    <img src="/meta/media/logo_blue.svg" id='bird'>
 
-        <div id="lp-left">
-            <img src="/meta/media/logo_blue.svg" id='bird'>
-            <div id="bulletpoints">
+    <div id="lp-left">
+        <div id="bulletpoints">
 
-                <div class="bp-cont">
-                    <i class='material-icons'>search</i> Follow your interests.
-                </div>
-                <div class="bp-cont">
-                    <i class='material-icons'>people</i> Hear what people are talking about.
-                </div>
-                <div class="bp-cont">
-                    <i class='material-icons'>chat_bubble_outline</i> Join the conversation.
-                </div>
+            <div class="bp-cont">
+                <i class='material-icons'>search</i> Follow your interests.
+            </div>
+            <div class="bp-cont">
+                <i class='material-icons'>people</i> Hear what people are talking about.
+            </div>
+            <div class="bp-cont">
+                <i class='material-icons'>chat_bubble_outline</i> Join the conversation.
             </div>
         </div>
+    </div>
 
-        <div id="lp-right">
+    <div id="lp-right">
 
-            <form method="post">
-                {% csrf_token %}
-                {{ login_form }}
-                <button class='btn btn-outline-primary'>Log in</button>
-            </form>
+        <form method="post">
+            {% csrf_token %}
+            {{ login_form }}
+            <button class='btn btn-outline-primary'>Log in</button>
+        </form>
 
+        <div id="r-contents">
             <div id="r-header">
                 <img src="/meta/media/logo_blue.svg" class='twitter-logo'>
                 See what’s happening in the world right now
@@ -48,63 +47,62 @@
             <button onclick="location.href={% url 'profiles:login' %}" class='btn btn-outline-primary btn-block'>Log
                 in</button>
         </div>
-
     </div>
 
-    <div id='footer'>
-        <div id='footer-links'>
-            <span class='footer-text'>
-                About
-            </span>
-            <span class='footer-text'>
-                Help Center
-            </span>
-            <span class='footer-text'>
-                Blog
-            </span>
-            <span class='footer-text'>
-                Status
-            </span>
-            <span class='footer-text'>
-                Jobs
-            </span>
-            <span class='footer-text'>
-                Terms
-            </span>
-            <span class='footer-text'>
-                Privacy Policy
-            </span>
-            <span class='footer-text'>
-                Cookies
-            </span>
-            <span class='footer-text'>
-                Ads info
-            </span>
-            <span class='footer-text'>
-                Brand
-            </span>
-            <span class='footer-text'>
-                Apps
-            </span>
-            <span class='footer-text'>
-                Advertise
-            </span>
-            <span class='footer-text'>
-                Marketing
-            </span>
-            <span class='footer-text'>
-                Businesses
-            </span>
-            <span class='footer-text'>
-                Developers
-            </span>
-            <span class='footer-text'>
-                Directory
-            </span>
-            <span class='footer-text'>
-                Settings
-            </span>
-        </div>
+</div>
+<div id='footer'>
+    <div id='footer-links'>
+        <span class='footer-text'>
+            About
+        </span>
+        <span class='footer-text'>
+            Help Center
+        </span>
+        <span class='footer-text'>
+            Blog
+        </span>
+        <span class='footer-text'>
+            Status
+        </span>
+        <span class='footer-text'>
+            Jobs
+        </span>
+        <span class='footer-text'>
+            Terms
+        </span>
+        <span class='footer-text'>
+            Privacy Policy
+        </span>
+        <span class='footer-text'>
+            Cookies
+        </span>
+        <span class='footer-text'>
+            Ads info
+        </span>
+        <span class='footer-text'>
+            Brand
+        </span>
+        <span class='footer-text'>
+            Apps
+        </span>
+        <span class='footer-text'>
+            Advertise
+        </span>
+        <span class='footer-text'>
+            Marketing
+        </span>
+        <span class='footer-text'>
+            Businesses
+        </span>
+        <span class='footer-text'>
+            Developers
+        </span>
+        <span class='footer-text'>
+            Directory
+        </span>
+        <span class='footer-text'>
+            Settings
+        </span>
     </div>
 </div>
 {% endblock body_base %}

@@ -1,6 +1,14 @@
+#landing-page {
+    width: 100%;
+    height: 100%;
+}
+
+
 #lp-left {
     width: 50%;
     height: 100%;
+
+    float: left;
 
     padding-top: 25%;
     padding-bottom: 25%;
@@ -8,21 +16,24 @@
     padding-right: 10%;
     color: white;
     font-weight: bold;
-    position: absolute;
+    /* position: absolute; */
     z-index: 0;
 
-    background-color: rgba(29, 161, 242, 1);
+    background-color: rgba(113, 201, 248, 1);
 }
 
 #lp-right {
     width: 50%;
     height: 100%;
 
+    float: right;
+
     padding-top: 25%;
     padding-bottom: 25%;
     padding-left: 10%;
     padding-right: 10%;
-    position: absolute;
+
+    position: relative;
     background-color: white;
     z-index: 4;
     right: 0;
@@ -32,6 +43,7 @@
 form {
     position: fixed;
     top: 0;
+    z-index: 5;
 }
 
 #r-header,
@@ -41,25 +53,11 @@ form {
 
 #r-header {
     margin-bottom: 2em;
+    font-size: larger;
 }
 
 .bp-cont {
     margin-bottom: 2em;
-}
-
-#main-body {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-}
-
-#landing-page {
-    display: flex;
-    width: 100%;
-    height: 95%;
-    position: absolute;
 }
 
 #footer {
@@ -68,16 +66,15 @@ form {
     position: absolute;
     bottom: 0;
     border-top: 0.5px solid rgb(170, 184, 194);
+    z-index: 10;
+    background-color: white;
 }
 
 #footer-links {
-    display: flex;
-    justify-content: space-evenly;
-    font-size: 0.6em;
+    font-size: small;
     color: rgb(170, 184, 194);
-    margin-left: 10%;
-    margin-right: 10%;
-    height: 100%;
+    margin: auto;
+    width: fit-content;
 }
 
 .twitter-logo {
@@ -87,12 +84,23 @@ form {
 
 #bird {
     position: absolute;
+    max-height: 100%;
     height: 100%;
     top: 0;
-    z-index: 1;
+    max-width: 100%;
+    width: 100%;
 }
 
-#bulletpoints {
-    position: absolute;
+#bulletpoints,
+#r-contents {
+    margin: auto;
+    width: fit-content;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 2;
+}
+
+#r-contents {
+    color: black;
 }
