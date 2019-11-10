@@ -1,14 +1,17 @@
-body {
-    background-color: rgb(170, 184, 194);
+#bg-container {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.7);
+    height: 100%;
+    width: 100%;
 }
 
-#main-body {
+#sign-up-container {
     background-color: white;
-    position: fixed;
-    top: 10%;
-    left: 27%;
-    width: 46%;
+    margin: auto;
+    position: relative;
+    width: 600px;
     height: 80%;
+    top: 10%;
     border-radius: 5%;
 }
 
@@ -58,7 +61,7 @@ body {
     top: 0;
     height: 10%;
     width: 100%;
-    position: absolute;
+    position: relative;
 }
 
 #page-counter {
@@ -70,10 +73,6 @@ body {
     right: 0;
     width: fit-content;
     font-weight: bold;
-}
-
-#contents {
-    margin-top: 12%;
 }
 
 .page-header {
@@ -166,4 +165,21 @@ input:focus {
     color: rgb(101, 119, 134);
     margin-top: 5%;
     margin-bottom: 10%;
+}
+
+#contents {
+    margin-left: 7%;
+    margin-right: 7%;
+}
+
+@media (max-width: 1000px) {
+    #bg-container {
+        background-color: white;
+    }
+
+    #sign-up-container {
+        top: 0;
+        width: unset;
+        max-width: 600px;
+    }
 }
