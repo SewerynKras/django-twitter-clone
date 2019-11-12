@@ -268,7 +268,10 @@ function setup_single_tweet() {
     // Make each poll choice clickable
     // NOTE: I'm using one() here for the same reason as above 
     let poll_btns = $tweet.find(".poll-choice-wrapper");
-    poll_btns.one("click", choose_poll_option_AJAX);
+    poll_btns.one("click", function (e) {
+        e.stopPropagation();
+        choose_poll_option_AJAX
+    });
 
     // Make each poll reflect whether or not the user has voted in it
     let polls = $tweet.find(".tweet-media-poll");
