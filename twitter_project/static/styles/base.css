@@ -57,6 +57,7 @@ html {
     left: 10%;
     width: 70%;
     top: 0;
+    height: 50px;
 }
 
 #right-search-bar input {
@@ -64,6 +65,101 @@ html {
     color: rgb(170, 184, 194);
     border: none;
     width: 100%;
+}
+
+#who-to-follow {
+    height: 325px;
+    background-color: #192734;
+    border-radius: 10%;
+    position: absolute;
+    left: 10%;
+    top: 70px;
+    width: 70%;
+}
+
+#who-to-follow-header,
+#who-to-follow-more {
+    height: 50px;
+    position: relative;
+    margin-left: 5%;
+}
+
+#who-to-follow-header span {
+    font-weight: bold;
+    font-size: larger;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#who-to-follow-more a {
+    color: rgba(29, 161, 242, 1);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.suggestion-name .tweet-display-name {
+    display: block;
+}
+
+.follow-suggestion {
+    height: 75px;
+    border-top: 0.5px solid rgb(101, 119, 134, 0.4);
+    border-bottom: 0.5px solid rgb(101, 119, 134, 0.4);
+    padding-right: 5%;
+    padding-left: 5%;
+}
+
+.suggestion-pic {
+    width: 20%;
+    height: 100%;
+    float: left;
+    position: relative;
+}
+
+.suggestion-pic img {
+    max-height: 100%;
+    max-width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+}
+
+.suggestion-name {
+    width: 50%;
+    float: left;
+    padding-left: 2%;
+    height: 100%;
+    position: relative;
+}
+
+.suggestion-clickable-name {
+    position: absolute;
+    width: 90%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.suggestion-clickable-name span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.suggestion-btn {
+    width: 20%;
+    float: left;
+    height: 100%;
+    position: relative;
+}
+
+.suggestion-btn button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #left-nav {

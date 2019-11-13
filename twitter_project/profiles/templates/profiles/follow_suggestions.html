@@ -1,0 +1,16 @@
+{% for profile in profiles %}
+<div class='follow-suggestion' profile-id="{{profile.username}}">
+    <div class='suggestion-pic'>
+        <img src={{ profile.profile_pic.url }} class="img-fluid rounded-circle">
+    </div>
+    <div class='suggestion-name'>
+        <div class='suggestion-clickable-name'>
+            <span class='tweet-display-name'>{{profile.display_name}}</span>
+            <span class="tweet-username">@{{profile.username}}</span>
+        </div>
+    </div>
+    <div class='suggestion-btn'>
+        <button type="button" id="follow-suggestion" class="btn btn-outline-primary">Follow</button>
+    </div>
+</div>
+{% endfor %}

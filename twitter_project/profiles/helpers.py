@@ -3,6 +3,7 @@ from profiles.models import Profile, User, Follow
 from django.db.models.functions import Lower
 from twitter_project.logging import logger
 from django.conf import settings
+from django.db.models import Count
 
 
 def get_username(name):
@@ -113,3 +114,18 @@ def create_new_profile(name, email, password, sync_email, person_ads, send_news)
     profile.randomize_media()
     profile.save()
     return profile
+
+
+def get_follow_suggestions(profile):
+    # dont suggest following someone that the user already follows
+    following = Follow.objects.filter(follower=profile)
+    profiles = Profile.objects.exclude(pk__in=following.values("following__pk"))
+
+    # dont suggest following themselves
+    profiles = profiles.exclude(pk=profile.pk)
+
+    # order by number of followers
+    profiles = profiles.annotate(fl=Count("follow_following"))
+    profiles = profiles.order_by("-fl")
+
+    return profiles

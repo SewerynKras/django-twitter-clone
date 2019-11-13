@@ -188,3 +188,34 @@ def register_AJAX(request):
         login(request, profile.user, backend="twitter_project.backends.CustomLoginBackend")
 
         return JsonResponse({})
+
+
+def get_follow_suggestions_AJAX(request):
+    logger.debug("Processing raw request: " + str(request))
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return HttpResponse(status=401)
+
+        profile = request.user.profile
+        limit = request.GET.get("limit")
+
+        if not limit:
+            limit = 3
+        else:
+            try:
+                limit = int(limit)
+            except ValueError:
+                # 400 == bad request
+                return HttpResponse(status=400)
+            if limit > 20:
+                limit = 20
+
+        profiles = helpers.get_follow_suggestions(profile)[:limit]
+        context = {"profiles": profiles}
+        rendered_template = render(request=request,
+                                   template_name="profiles/follow_suggestions.html",
+                                   context=context)
+        return HttpResponse(rendered_template)
+
+    # 405 == method not allowed
+    return HttpResponse(status=405)

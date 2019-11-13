@@ -10,6 +10,8 @@ var $reply_form_name;
 var $reply_form_new_tweet;
 var $gif_selector;
 var $nav_names;
+var $who_to_follow;
+var $who_to_follow_list;
 var FIRST_TWEET;
 var LAST_TWEET;
 var PROFILE;
@@ -106,6 +108,7 @@ function prepend_tweets_to_main() {
 
 
 function show_home(push_state = true) {
+    populate_follow_suggestions();
     reset_scroll_states();
     $main_body_contents.empty();
     load_new_tweet_form(function ($form) {
@@ -198,6 +201,31 @@ function hide_all_cover() {
     $reply_form.hide();
     $gif_selector.hide();
     $cover.hide();
+}
+
+function get_follow_suggestions_AJAX(callback) {
+    $.ajax({
+        url: "/ajax/get_follow_suggestions/",
+        data: {
+            "limit": 3
+        },
+        type: "get",
+        dataType: "html",
+        headers: {
+            'X-CSRFToken': Cookies.get('csrftoken')
+        },
+        success: function (response) {
+            let $list = $($.parseHTML(response));
+            callback($list);
+        }
+    });
+}
+
+function populate_follow_suggestions() {
+    get_follow_suggestions_AJAX(function ($list) {
+        $who_to_follow.show();
+        $who_to_follow_list.html($list);
+    })
 }
 
 /**
@@ -335,6 +363,9 @@ $(document).ready(function () {
     $reply_form_preview = $reply_form.find("#reply-preview");
     $reply_form_name = $reply_form.find(".tweet-reply-clickable-name");
     $reply_form_new_tweet = $reply_form.find("#reply-new");
+
+    $who_to_follow = $right_body.find("#who-to-follow");
+    $who_to_follow_list = $right_body.find("#who-to-follow-list");
 
     $(window).resize(function (e) {
         resize_elements()
