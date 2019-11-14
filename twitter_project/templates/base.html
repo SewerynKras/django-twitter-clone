@@ -108,10 +108,18 @@
                         </a>
                     </li>
                     <li>
-                        <a id='nav-to-more'><i class='material-icons navbar-icon'>more</i>
-                            <span class='text-next-to'>
-                                More
-                            </span>
+                        <div class="dropdown" style='display: inline;'>
+                            <a id='nav-to-more' data-toggle="dropdown"><i class='material-icons navbar-icon'>more</i>
+                                <span class='text-next-to'>
+                                    More
+                                </span>
+                            </a>
+                            <div class="dropdown-menu link-dropdown">
+                                <a class="dropdown-item logout-link" href="{% url 'profiles:logout' %}">
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
                         </a>
                     </li>
                 </ul>

@@ -30,7 +30,7 @@ class Command(BaseCommand):
             username = get_username(name)
             password = fake.password()
 
-            user = User(username=name, password=password)
+            user = User(username=username + "@mail.com", password=password)
             user.save()
             profile = Profile(
                 user=user,

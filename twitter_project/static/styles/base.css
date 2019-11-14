@@ -230,6 +230,23 @@ html {
     margin-bottom: 10%;
 }
 
+.dropdown-menu {
+    background-color: #15202b;
+    color: white;
+    border: 0.5px solid rgb(101, 119, 134, 0.4);
+    position: absolute !important;
+
+}
+
+.dropdown-item {
+    color: white;
+}
+
+.dropdown-item:hover {
+    background-color: #233547;
+    color: white;
+}
+
 
 @media (max-width: 1000px) {
     .text-next-to {

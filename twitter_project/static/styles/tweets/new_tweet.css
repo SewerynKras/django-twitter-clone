@@ -294,7 +294,6 @@ img.emoji {
     width: 40%;
     top: 15%;
     left: 30%;
-    overflow-Y: scroll;
     background-color: #15202b;
     color: white;
     z-index: 501;
