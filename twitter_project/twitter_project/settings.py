@@ -161,7 +161,8 @@ INVALID_USERNAME_MESSAGE = """
                             Please double-check and try again.
                            """
 
-FORBIDDEN_NAMES = ["home", "tweet", "login", "logout", "ajax", "signup", "admin"]
+FORBIDDEN_NAMES = ["home", "tweet", "login", "logout", "ajax",
+                   "signup", "admin", "related_users"]
 
 # Defines the maximum amount of elements returned by an AJAX call
 # (used in infinite scrolling)

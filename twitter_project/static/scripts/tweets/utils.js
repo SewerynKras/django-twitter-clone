@@ -195,7 +195,20 @@ function show_search(query, push_state = false) {
     change_url({
         state: "search",
         query: query
-    }, `/search?q=${query}`, push_state)
+    }, `/search?q=${query}`, push_state);
+}
+
+function show_follow_suggestions(push_state = false) {
+    reset_scroll_states();
+    $main_body_contents.empty();
+    $who_to_follow.hide();
+    load_follow_suggestions(function ($list) {
+        $main_body_contents.html($list);
+    }, 30) //limit
+    change_url({
+        state: "suggestions"
+    }, '/related_users', push_state);
+    $header_text.text("Who to follow");
 }
 
 
@@ -205,11 +218,11 @@ function hide_all_cover() {
     $cover.hide();
 }
 
-function get_follow_suggestions_AJAX(callback) {
+function get_follow_suggestions_AJAX(callback, limit) {
     $.ajax({
         url: "/ajax/get_follow_suggestions/",
         data: {
-            "limit": 3
+            "limit": limit
         },
         type: "get",
         dataType: "html",
@@ -223,10 +236,8 @@ function get_follow_suggestions_AJAX(callback) {
     });
 }
 
-function populate_follow_suggestions() {
+function load_follow_suggestions(callback, limit) {
     get_follow_suggestions_AJAX(function ($list) {
-        $who_to_follow.show();
-        $who_to_follow_list.html($list);
         $list.each(function () {
             let profile_id = $(this).attr("profile-id");
             let $btn = $(this).find("button");
@@ -241,7 +252,16 @@ function populate_follow_suggestions() {
                 show_profile(profile_id, true);
             })
         })
-    })
+        callback($list);
+    }, limit) //limit
+
+}
+
+function populate_follow_suggestions() {
+    load_follow_suggestions(function ($list) {
+        $who_to_follow.show();
+        $who_to_follow_list.html($list);
+    }, 3)
 }
 
 /**
@@ -429,6 +449,8 @@ $(document).ready(function () {
                 show_profile(event.state.profile_id, false);
             } else if (event.state.state == "search") {
                 show_search(event.state.query, false)
+            } else if (event.state.state == "suggestions") {
+                this.show_follow_suggestions(false);
             }
         }
     };

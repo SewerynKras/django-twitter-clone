@@ -20,6 +20,15 @@ class ProfileView(TemplateView):
         return context
 
 
+class SuggestionsView(TemplateView):
+    template_name = "tweets/homepage.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['main_body'] = "suggestions"
+        return context
+
+
 class SignupView(TemplateView):
     template_name = "profiles/sign_up.html"
     login_required = False
@@ -207,8 +216,8 @@ def get_follow_suggestions_AJAX(request):
             except ValueError:
                 # 400 == bad request
                 return HttpResponse(status=400)
-            if limit > 20:
-                limit = 20
+            if limit > 30:
+                limit = 30
 
         profiles = helpers.get_follow_suggestions(profile)[:limit]
         context = {"profiles": profiles}

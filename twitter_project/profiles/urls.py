@@ -14,6 +14,7 @@ urlpatterns = [
     path("", views.LandingPageView.as_view(), name="landing_page"),
     path("ajax/get_profile/", views.get_profile_AJAX, name='get_profile'),
     path("ajax/follow/", views.follow_AJAX, name='follow'),
+    path("related_users/", views.SuggestionsView.as_view(), name='suggestions'),
     path("ajax/get_follow_suggestions/", views.get_follow_suggestions_AJAX, name='who-to-follow'),
     path("<slug:profile_id>/", views.ProfileView.as_view(), name="profile"),
 ]
