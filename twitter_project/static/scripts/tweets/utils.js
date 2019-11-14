@@ -122,6 +122,7 @@ function show_home(push_state = true) {
 }
 
 function show_single_tweet(tweet_id, author, push_state = true) {
+    populate_follow_suggestions();
     reset_scroll_states()
     $main_body_contents.empty();
     load_single_tweet(tweet_id, function ($tweet, $comments) {
@@ -171,6 +172,7 @@ function show_retweet_form(tweet_id, push_state = true) {
 
 
 function show_profile(profile_id, push_state = false) {
+    populate_follow_suggestions();
     reset_scroll_states()
     PROFILE = profile_id;
     $main_body_contents.empty();
@@ -225,6 +227,20 @@ function populate_follow_suggestions() {
     get_follow_suggestions_AJAX(function ($list) {
         $who_to_follow.show();
         $who_to_follow_list.html($list);
+        $list.each(function () {
+            let profile_id = $(this).attr("profile-id");
+            let $btn = $(this).find("button");
+
+            $btn.one("click", function (e) {
+                e.stopPropagation();
+                follow_AJAX(profile_id);
+                $(this).hide();
+            })
+            // clicking anywhere opens the profile page
+            $(this).click(function () {
+                show_profile(profile_id, true);
+            })
+        })
     })
 }
 

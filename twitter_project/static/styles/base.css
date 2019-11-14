@@ -112,6 +112,12 @@ html {
     padding-left: 5%;
 }
 
+.follow-suggestion:hover {
+    cursor: pointer;
+    background-color: #233547;
+
+}
+
 .suggestion-pic {
     width: 20%;
     height: 100%;
