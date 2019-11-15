@@ -139,9 +139,10 @@ function show_single_tweet(tweet_id, author, push_state = true) {
 
 function show_reply_form(tweet_id, push_state = true) {
     $cover.show();
-    $reply_form.show();
+    clear_reply_form();
     load_single_tweet(tweet_id,
         function ($tweet) {
+            $reply_form.show();
             $reply_form_preview.html($tweet);
             $reply_form_name.text(
                 "@" + $tweet.find(".tweet-container").attr("author-username"));
@@ -159,8 +160,9 @@ function show_reply_form(tweet_id, push_state = true) {
 
 function show_retweet_form(tweet_id, push_state = true) {
     $cover.show();
-    $reply_form.show();
+    clear_reply_form();
     load_new_tweet_form(function ($form) {
+        $reply_form.show();
         $reply_form.html($form)
     }, "", tweet_id)
 
@@ -211,6 +213,12 @@ function show_follow_suggestions(push_state = false) {
     $header_text.text("Who to follow");
 }
 
+
+function clear_reply_form() {
+    $reply_form_preview.html("");
+    $reply_form_name.html("");
+    $reply_form_new_tweet.html("");
+}
 
 function hide_all_cover() {
     $reply_form.hide();

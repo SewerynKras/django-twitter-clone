@@ -9,7 +9,6 @@
 <script src="{% static "scripts/profiles/profile.js" %}"></script>
 <link rel="stylesheet" href="{% static "styles/tweets/tweet_list.css" %}">
 <link rel="stylesheet" href="{% static "styles/tweets/new_tweet.css" %}">
-<link rel="stylesheet" href="{% static "styles/tweets/utils.css" %}">
 <link rel="stylesheet" href="{% static "styles/profiles/profile.css" %}">
 <link href="{% static "lib/emoji-picker/jquery.lsxemojipicker.css" %}" rel="stylesheet">
 <script src="{% static "lib/emoji-picker/jquery.lsxemojipicker.js" %}"></script>
@@ -20,7 +19,7 @@
             <span aria-hidden="true" id='gif-icon-btn-text'>&times;</span>
         </button>
         <input class="form-control" id="gif-search-bar" type="search" placeholder="Search for GIFs">
-        <button class="btn" id="gif-search-submit" type="submit">Search</button>
+        <button class="btn btn-primary" id="gif-search-submit" type="submit">Search</button>
     </form>
     <div id='gif-preview-list'>
         {% for gif_cat in gif_list %}

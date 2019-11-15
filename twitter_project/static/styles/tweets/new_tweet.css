@@ -8,8 +8,13 @@
 }
 
 .new-tweet-input {
-    display: inline;
     word-break: break-all;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.expanded {
+    width: 80% !important;
 }
 
 .new-tweet-textarea {
@@ -239,12 +244,13 @@ img.emoji {
     width: 40%;
     top: 15%;
     left: 30%;
-    background-color: rgb(101, 119, 134);
+    background-color: #15202b;
     z-index: 501;
+    border-radius: 2%;
 }
 
-#gf-search-form {
-    height: 20%;
+#gif-search-form {
+    padding: 2%;
 }
 
 #gif-list,
@@ -268,17 +274,22 @@ img.emoji {
     width: 100%;
     background: linear-gradient(to bottom, transparent, 70%, black);
     color: white;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: larger;
+    font-weight: bolder;
 }
 
-#gif-search-close-btn {
+#gif-icon-btn {
     display: inline-block;
     width: 10%;
+    padding: 0;
 }
 
 #gif-search-bar {
     display: inline-block;
     width: 70%;
+    background-color: #15202b;
+    color: lightgray;
+    border: 0.5px solid rgba(29, 161, 242, 1);
 }
 
 #gif-search-submit {
@@ -290,11 +301,16 @@ img.emoji {
 
 #reply-form {
     position: fixed;
-    height: 70%;
-    width: 40%;
+    max-width: 600px;
     top: 15%;
     left: 30%;
     background-color: #15202b;
     color: white;
-    z-index: 501;
+    z-index: 500;
+    padding: 2%;
+    border-radius: 5%;
+}
+
+#reply-form .new-tweet {
+    border: 0;
 }

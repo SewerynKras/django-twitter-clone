@@ -440,7 +440,6 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                     "retweet_id": retweet_to,
                     "media": media
                 };
-                console.log(data);
                 $.ajax({
                     url: "/ajax/new_tweet/",
                     headers: {
@@ -454,8 +453,11 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                         $submit_btn.one("click", new_tweet_AJAX)
                         $textfield.text("");
                         check_tweet_len();
+                        $reply_form.hide();
+                        hide_all_cover();
                     },
-                    error: function () {
+                    error: function (response) {
+                        console.log(response)
                         $submit_btn.removeClass("disabled");
                         $submit_btn.one("click", new_tweet_AJAX)
                         check_tweet_len();
