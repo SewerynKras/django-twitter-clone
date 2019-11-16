@@ -22,7 +22,7 @@ def get_username(name):
 
     if name.lower() not in settings.FORBIDDEN_NAMES:
         # get all usernames that start with $name
-        pattern = fr'^{name}\d*'
+        pattern = fr'^({name})\d*$'
         usernames = Profile.objects.filter(username__iregex=pattern).order_by(Lower("username"))
 
         # in case the name is unique and not forbidden

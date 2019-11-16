@@ -428,7 +428,7 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                 };
                 if (type)
                     var media = {
-                        type: typ,
+                        type: type,
                         values: values
                     }
                 else
@@ -455,6 +455,8 @@ function load_new_tweet_form(callback, replying_to = "", retweet_to = "") {
                         check_tweet_len();
                         $reply_form.hide();
                         hide_all_cover();
+                        hide_all_media()
+                        check_first_tweet();
                     },
                     error: function (response) {
                         console.log(response)

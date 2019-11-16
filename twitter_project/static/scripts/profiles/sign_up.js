@@ -206,7 +206,7 @@ $(function () {
         let re = RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
         let password = $password.val();
         if (!(re.test(password))) {
-            $password_error.text("Password must be at least 8 characters long and" +
+            $password_error.text("Password must be at least 8 characters long and " +
                 "contain lowercase/uppercase characters and at least 1 number.")
             callback(false);
             return
