@@ -18,7 +18,6 @@ class MainPage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['gif_list'] = models.GifCategory.objects.all()
         context['main_body'] = "main_page"
         return context
 
@@ -28,7 +27,6 @@ class SingleTweet(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['gif_list'] = models.GifCategory.objects.all()
         context['main_body'] = "tweet"
 
         context['tweet_id'] = self.kwargs.get("tweet_id")
@@ -41,7 +39,6 @@ class SearchPage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['gif_list'] = models.GifCategory.objects.all()
         context['main_body'] = "search"
 
         context['q'] = self.request.GET.get("q")
@@ -387,3 +384,13 @@ def rt_AJAX(request):
         return JsonResponse({})
     else:
         return JsonResponse({}, status=405)
+
+
+def get_gif_categories_AJAX(request):
+    logger.debug("Processing raw request: " + str(request))
+    if request.method == "GET":
+        context = {"gif_list": models.GifCategory.objects.all()}
+        template = render(request, "tweets/gif_suggestions.html", context=context)
+        return HttpResponse(template)
+    else:
+        return HttpResponse({}, status=405)

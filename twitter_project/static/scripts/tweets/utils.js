@@ -234,9 +234,6 @@ function get_follow_suggestions_AJAX(callback, limit) {
         },
         type: "get",
         dataType: "html",
-        headers: {
-            'X-CSRFToken': Cookies.get('csrftoken')
-        },
         success: function (response) {
             let $list = $($.parseHTML(response));
             callback($list);

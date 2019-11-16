@@ -37,13 +37,32 @@ $(document).ready(function () {
         search_gifs();
     })
 
-    $gif_prev_list.find(".gif-preview").each(set_gif_thumb);
 
-    $gif_prev_list.find(".gif-preview").click(function (e) {
-        e.preventDefault();
-        select_gif_prev_list($(this));
-    })
+    function populate_gif_categories() {
+        $prev_list = $gif_selector.find("#gif-preview-list");
+        if ($prev_list.html() == false)
+            get_gif_categories_AJAX(function ($list) {
+                $list.each(set_gif_thumb);
+                $list.each(function () {
+                    $(this).click(function () {
+                        select_gif_prev_list($(this));
+                    })
+                })
+                $prev_list.html($list);
+            })
+    }
 
+    function get_gif_categories_AJAX(callback) {
+        $.ajax({
+            url: "/ajax/get_gif_categories/",
+            type: "get",
+            dataType: "html",
+            success: function (response) {
+                let $list = $($.parseHTML(response));
+                callback($list);
+            }
+        });
+    }
 
     /**
      * Hides the gif selector.
@@ -109,6 +128,7 @@ $(document).ready(function () {
      * Resets the gif-list to its original state
      */
     function reset_gif_list() {
+        populate_gif_categories();
         $gif_list.empty();
         $gif_list.hide();
         $gif_prev_list.show();

@@ -1,0 +1,7 @@
+{% for gif_cat in gif_list %}
+<div class="gif-preview" thumb-url="{{gif_cat.gif.thumb_url}}" gif-url="{{gif_cat.gif.gif_url}}">
+    <div class="gif-preview-text">
+        {{gif_cat.category_name}}
+    </div>
+</div>
+{% endfor %}
