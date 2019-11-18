@@ -379,6 +379,10 @@ def rt_AJAX(request):
             return JsonResponse({"tweet_id": "This tweet doesn't exists."},
                                 status=404)
 
+        if models.Tweet.objects.filter(retweet_to=tweet, author=profile).exists():
+            return JsonResponse({"tweet_id": "You cannot retweet the same tweet multiple times."},
+                                status=400)
+
         new_tweet = models.Tweet(text=None, retweet_to=tweet, author=profile)
         new_tweet.save()
         return JsonResponse({})
