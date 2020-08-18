@@ -1,4 +1,12 @@
-# Twitter clone in Django
+# [ARCHIVED] Twitter clone in Django
+
+## Notice
+
+*I have recreated this project using a more modern tech stack (Angular, Django REST, PostgreSQL):\
+[frontend](https://github.com/SewerynKras/twitter-clone-fronted)\
+[backend](https://github.com/SewerynKras/twitter-clone-backend)*
+
+## Old docs
 
 My first big web development project after completing a django fullstack developer course.
 
